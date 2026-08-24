@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; margin: 0; background: #f4f5f7; color: #222; }
+    header { background: #1F3864; color: #fff; padding: 14px 20px; }
+    header h1 { margin: 0; font-size: 18px; }
+    nav { display: flex; gap: 4px; background: #2E5395; padding: 0 16px; flex-wrap: wrap; }
+    nav button { background: none; border: none; color: #e6ecfa; padding: 10px 14px; cursor: pointer; font-size: 14px; }
+    nav button.active { background: #f4f5f7; color: #1F3864; font-weight: bold; border-radius: 6px 6px 0 0; }
+    main { padding: 20px; max-width: 1200px; margin: 0 auto; }
+    .cards { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+    .card { background: #fff; border-radius: 8px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.1); min-width: 140px; flex: 1; }
+    .card .num { font-size: 26px; font-weight: bold; color: #1F3864; }
+    .card .lbl { font-size: 12px; color: #666; margin-top: 2px; }
+    .card.warn .num { color: #A32D2D; }
+    .card.ok .num { color: #27500A; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); font-size: 12px; }
+    th, td { padding: 7px 9px; border-bottom: 1px solid #eee; text-align: left; white-space: nowrap; }
+    th { background: #D9E2F3; position: sticky; top: 0; }
+    tr:hover { background: #f9fafc; }
+    .tablewrap { max-height: 520px; overflow: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; white-space: nowrap; }
+    .badge.dat { background: #EAF3DE; color: #27500A; }
+    .badge.dieukien { background: #FAEEDA; color: #854F0B; }
+    .badge.khongdat { background: #FCEBEB; color: #791F1F; }
+    .badge.chua { background: #eee; color: #666; }
+    .badge.ok2 { background: #EAF3DE; color: #27500A; }
+    .badge.thieu { background: #FCEBEB; color: #791F1F; }
+    section { display: none; }
+    section.active { display: block; }
+    form { background: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    form label { display: flex; flex-direction: column; font-size: 12px; color: #555; gap: 4px; }
+    form input, form select, form textarea { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; font-family: inherit; }
+    form textarea { resize: vertical; }
+    form .full { grid-column: 1 / -1; }
+    form button { grid-column: 1 / -1; padding: 10px; background: #1F3864; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+    h2 { font-size: 16px; color: #1F3864; }
+    .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; }
+    .msg.ok { background: #EAF3DE; color: #27500A; }
+    .msg.err { background: #FCEBEB; color: #791F1F; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .toolbar button { padding: 6px 12px; border: 1px solid #1F3864; background: #fff; color: #1F3864; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .note { font-size: 12px; color: #777; margin-bottom: 10px; }
+    .filterbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .filterbar input[type="text"], .filterbar input:not([type]), .filterbar input[type="date"], .filterbar select { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+    .filterbar input[placeholder] { flex: 1; min-width: 200px; }
+    .filterbar label.inline { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #555; }
+    .filterbar .count { font-size: 12px; color: #666; margin-left: auto; white-space: nowrap; }
+    .btnmini { padding: 6px 10px; border: 1px solid #1F3864; background: #fff; color: #1F3864; border-radius: 6px; cursor: pointer; font-size: 12px; white-space: nowrap; }
+    .btnmini:hover { background: #1F3864; color: #fff; }
+    .pagebar { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 10px; font-size: 12px; color: #555; }
+    .totalbox { background: #EAF0FB; border: 1px solid #C7D6F0; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; font-size: 13px; color: #1F3864; }
+    .subnav { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 2px solid #E5E1D2; flex-wrap: wrap; }
+    .subnav .subtab { padding: 8px 14px; background: none; border: none; border-bottom: 3px solid transparent; color: #7A7563; font-size: 13px; cursor: pointer; font-weight: 500; }
+    .subnav .subtab:hover { color: #1F3864; }
+    .subnav .subtab.active { color: #1F3864; border-bottom-color: #C97A3D; font-weight: bold; }
+    .subpanel { display: none; }
+    .subpanel.active { display: block; }
+
+    /* ===== Layout dạng sidebar ===== */
+    body { background: #F5F1E8; }
+    .app-shell { display: flex; min-height: 100vh; align-items: stretch; }
+    .sidebar { width: 260px; flex-shrink: 0; background: #22301F; color: #E7E3D4; display: flex; flex-direction: column; padding: 18px 0; }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 0 18px 18px; border-bottom: 1px solid rgba(255,255,255,.12); margin-bottom: 12px; }
+    .brand .logo { width: 40px; height: 40px; border-radius: 8px; background: #C97A3D; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #fff; flex-shrink: 0; }
+    .brand-title { font-weight: bold; font-size: 15px; color: #fff; }
+    .brand-sub { font-size: 11px; color: #B7C4AE; margin-top: 2px; }
+    .sidenav { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; flex: 1; overflow-y: auto; }
+    .sidenav .tab { display: flex; align-items: center; gap: 10px; text-align: left; background: none; border: none; color: #D7D3C4; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13.5px; width: 100%; }
+    .sidenav .tab:hover { background: rgba(255,255,255,.06); }
+    .sidenav .tab.active { background: #3E5233; color: #fff; font-weight: bold; }
+    .sidenav .tab .navbadge { margin-left: auto; background: #C97A3D; color: #fff; font-size: 10px; font-weight: bold; padding: 1px 7px; border-radius: 10px; }
+    .sidenav hr { border: none; border-top: 1px solid rgba(255,255,255,.12); margin: 10px 4px; width: calc(100% - 8px); }
+    .navgroup { font-size: 10px; letter-spacing: .04em; color: #8A9782; text-transform: uppercase; padding: 12px 12px 4px; font-weight: bold; }
+    .sidebar-tools { padding: 10px 14px 0; border-top: 1px solid rgba(255,255,255,.12); margin-top: 10px; }
+    .sidebar-tools button { width: 100%; margin-bottom: 6px; padding: 7px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,.25); background: transparent; color: #D7D3C4; font-size: 11.5px; cursor: pointer; }
+    .sidebar-tools button:hover { background: rgba(255,255,255,.08); }
+    .content { flex: 1; padding: 26px 32px; overflow-y: auto; }
+    .page-header { margin-bottom: 18px; }
+    .page-header h1 { margin: 0; font-size: 24px; color: #2A2A20; font-family: Georgia, 'Times New Roman', serif; }
+    .page-header p { margin: 4px 0 0; color: #7A7563; font-size: 13.5px; }
+    @media (max-width: 900px) {
+      .app-shell { flex-direction: column; }
+      .sidebar { width: 100%; }
+      .content { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">H</div>
+        <div>
+          <div class="brand-title">HAK GROUP</div>
+          <div class="brand-sub">QUẢN LÝ HỒ SƠ RỪNG FSC</div>
+        </div>
+      </div>
+      <nav class="sidenav">
+        <button class="tab active" data-t="dashboard" data-title="Dashboard" data-sub="Tổng quan tình trạng hồ sơ, hợp đồng và tiến độ triển khai FSC">🏠 Dashboard</button>
+
+        <div class="navgroup">BƯỚC 1–2: THẨM ĐỊNH &amp; KÝ HỢP ĐỒNG</div>
+        <button class="tab" data-t="thamdinh" data-title="Thẩm định &amp; kiểm tra hợp đồng (BM-FSC-01/02)" data-sub="Checklist tiêu chí thẩm định chủ rừng trước khi ký hợp đồng">🧾 Thẩm định hợp đồng <span class="navbadge" id="navBadgeThamDinh" style="display:none;"></span></button>
+        <button class="tab" data-t="hopdong" data-title="Hợp đồng &amp; hồ sơ rừng" data-sub="Tham chiếu trực tiếp BaoCao_KiemTra + TongHop_HopDong + HD_RUNG">📄 Hợp đồng &amp; hồ sơ rừng <span class="navbadge" id="navBadgeHopDong" style="display:none;"></span></button>
+
+        <div class="navgroup">BƯỚC 3: KHẢO SÁT &amp; THAM VẤN</div>
+        <button class="tab" data-t="khaosatthamvan" data-title="Khảo sát &amp; Tham vấn các bên liên quan" data-sub="Bước 3, QT-FSC-01 — theo dõi, khảo sát thực địa, giám sát khai thác, tham vấn">📋 Khảo sát &amp; Tham vấn <span class="navbadge" id="navBadgeKhaoSat" style="display:none;"></span></button>
+
+        <div class="navgroup">BƯỚC 3–4: KHAI THÁC, CÂN, NGHIỆM THU</div>
+        <button class="tab" data-t="lohang" data-title="Lô hàng mua vào" data-sub="Nguồn: HoSoKeo_DN — sổ nhập nguyên liệu gỗ keo">📦 Lô hàng mua vào</button>
+
+        <div class="navgroup">BƯỚC 5–6: VẬN CHUYỂN &amp; CHẾ BIẾN</div>
+        <button class="tab" data-t="dieudong" data-title="Lệnh điều động vận chuyển nội bộ (BM-FSC-05)" data-sub="Bước 5, QT-FSC-01">🚛 Lệnh điều động vận chuyển</button>
+        <button class="tab" data-t="tieuhao" data-title="Theo dõi tiêu hao chế biến (BM-FSC-06)" data-sub="Bước 6, QT-FSC-01">🏭 Tiêu hao chế biến</button>
+
+        <div class="navgroup">BƯỚC 7–8: XUẤT BÁN &amp; BÁO CÁO NHÀ NƯỚC</div>
+        <button class="tab" data-t="xuathang" data-title="Xuất hàng" data-sub="Nguồn: NL_PC_XH — phiếu cân và tờ khai xuất hàng">🚚 Xuất hàng</button>
+        <button class="tab" data-t="donhangxb" data-title="Đơn hàng xuất bán" data-sub="Nguồn: NL_DH_XB — đơn hàng khách mua, bổ sung cho BM-FSC-07">📤 Đơn hàng xuất bán</button>
+        <button class="tab" data-t="baocaoNN" data-title="Sổ theo dõi báo cáo Nhà nước (BM-FSC-08)" data-sub="Mẫu số 29 (năm), Mẫu số 14 (quý)">🗓️ Báo cáo Nhà nước</button>
+
+        <div class="navgroup">BƯỚC 9 &amp; MỤC 8.3: GIÁM SÁT RỦI RO</div>
+        <button class="tab" data-t="ruiro" data-title="Rủi ro CNRA theo rừng" data-sub="Đánh giá rủi ro quốc gia FSC (CNRA) cho từng lô rừng — BM-FSC-09">⚠️ Rủi ro CNRA <span class="navbadge" id="navBadgeRuiRo" style="display:none;"></span></button>
+        <button class="tab" data-t="giamsat" data-title="Báo cáo giám sát định kỳ" data-sub="Mục 8.3, QT-FSC-01 — kết luận theo 5 mục tiêu giám sát">🔍 Giám sát định kỳ</button>
+
+        <div class="navgroup">KH-FSC-01: TRIỂN KHAI</div>
+        <button class="tab" data-t="tiendo" data-title="Tiến độ triển khai" data-sub="Theo dõi 5 giai đoạn triển khai KH-FSC-01">📈 Tiến độ triển khai</button>
+        <button class="tab" data-t="nghiemthugd" data-title="Nghiệm thu hoàn thành giai đoạn (BM-KH-02)" data-sub="Đối chiếu đầu ra kỳ vọng vs bằng chứng thực nhận">✅ Nghiệm thu giai đoạn</button>
+        <button class="tab" data-t="ruirotk" data-title="Rủi ro/vướng mắc triển khai (BM-KH-03)" data-sub="Ghi nhận rủi ro trong quá trình triển khai KH-FSC-01">⚠️ Rủi ro triển khai</button>
+
+        <hr>
+        <button class="tab" data-t="huongdan" data-title="Hướng dẫn sử dụng" data-sub="Giải thích từng mục, nguồn dữ liệu và cách dùng hệ thống">❓ Hướng dẫn sử dụng</button>
+      </nav>
+      <div class="sidebar-tools">
+        <button onclick="runCheckKetNoi()">🔍 Kiểm tra kết nối 5 file nguồn</button>
+        <button onclick="runPingTest()">🏓 Test kết nối cơ bản</button>
+        <div id="checkResult" style="font-size:11px; color:#B7C4AE; margin-top:4px;"></div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="page-header">
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Tổng quan tình trạng hồ sơ, hợp đồng và tiến độ triển khai FSC</p>
+      </div>
+      <div id="globalError" style="display:none; background:#FCEBEB; color:#791F1F; padding:12px 20px; font-size:13px; white-space:pre-wrap; border-radius:8px; margin-bottom:14px;"></div>
+
+
+    <section id="dashboard" class="active">
+      <div id="dashCards" class="cards"><p>Đang tải...</p></div>
+      <div class="toolbar">
+        <h2 style="margin:0">Trạng thái tiến độ theo giai đoạn (KH-FSC-01)</h2>
+        <div>
+          <button class="btnmini" onclick="exportCSV('tienDoTable','TienDoTrienKhai.csv')">⬇ CSV</button>
+          <button class="btnmini" onclick="printTable('tienDoTable','Tiến độ triển khai KH-FSC-01')">🖨 In</button>
+        </div>
+      </div>
+      <table id="tienDoTable"><thead><tr><th>Giai đoạn</th><th>Mốc kế hoạch</th><th>Ngày thực tế</th><th>Đánh giá</th></tr></thead><tbody></tbody></table>
+    </section>
+
+    <section id="hopdong">
+      <div class="toolbar">
+        <h2 style="margin:0">Hợp đồng &amp; hồ sơ rừng (tham chiếu BaoCao_KiemTra + TongHop_HopDong)</h2>
+        <button onclick="loadHopDong()">↻ Làm mới</button>
+      </div>
+      <p class="note">Cột "Kết quả hồ sơ" và "Hồ sơ còn thiếu" lấy trực tiếp từ hệ thống kiểm tra có sẵn của bạn. Cột "Kết luận giám sát FSC" chỉ hiện khi đã đánh giá ở form bên dưới.</p>
+      <div class="filterbar">
+        <input id="fHopDongSearch" placeholder="🔎 Tìm số HĐ / chủ rừng / mã rừng..." oninput="pageHopDong=1; renderHopDong();">
+        <select id="fHopDongHoSo" onchange="pageHopDong=1; renderHopDong();">
+          <option value="">-- Kết quả hồ sơ: Tất cả --</option>
+          <option value="daydu">Đầy đủ</option>
+          <option value="thieu">Thiếu</option>
+          <option value="chuaco">Chưa có dữ liệu kiểm tra</option>
+        </select>
+        <select id="fHopDongGiamSat" onchange="pageHopDong=1; renderHopDong();">
+          <option value="">-- Kết luận giám sát: Tất cả --</option>
+          <option value="ĐẠT">ĐẠT</option>
+          <option value="ĐẠT CÓ ĐIỀU KIỆN">ĐẠT CÓ ĐIỀU KIỆN</option>
+          <option value="KHÔNG ĐẠT">KHÔNG ĐẠT</option>
+          <option value="chua">Chưa đánh giá</option>
+        </select>
+        <span id="fHopDongCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('hopDongTable','HopDong_HoSoRung.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('hopDongTable','Báo cáo Hợp đồng &amp; Hồ sơ rừng', document.getElementById('fHopDongCount').textContent)">🖨 In</button>
+      </div>
+      <div class="totalbox" id="hopDongTotalBox"></div>
+      <div class="tablewrap">
+      <table id="hopDongTable">
+        <thead><tr><th>Số HĐ</th><th>Mã rừng</th><th>Chủ rừng</th><th>Kết quả hồ sơ</th><th>Hồ sơ còn thiếu</th><th>Chênh lệch DT (%)</th><th>Kết luận giám sát FSC</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+      <div class="pagebar">
+        <button class="btnmini" onclick="pageHopDong--; renderHopDong();">‹ Trang trước</button>
+        <span id="fHopDongPageInfo"></span>
+        <button class="btnmini" onclick="pageHopDong++; renderHopDong();">Trang sau ›</button>
+      </div>
+
+      <div id="chiTietModalBackdrop" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:100;" onclick="if(event.target===this) document.getElementById('chiTietModalBackdrop').style.display='none';">
+        <div style="background:#fff; max-width:640px; margin:60px auto; border-radius:10px; padding:20px; max-height:80vh; overflow:auto;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="margin:0;">Chi tiết hồ sơ đính kèm</h2>
+            <button class="btnmini" onclick="document.getElementById('chiTietModalBackdrop').style.display='none';">✕ Đóng</button>
+          </div>
+          <div id="chiTietModalBody" style="margin-top:14px; font-size:13px; line-height:1.7;"></div>
+        </div>
+      </div>
+
+      <h2>Ghi kết luận giám sát cho 1 hợp đồng</h2>
+      <div id="dgMsg"></div>
+      <form id="formDanhGia">
+        <label>Số hợp đồng
+          <select name="MaHopDong" id="selectHopDong" required><option value="">-- đang tải danh sách --</option></select>
+        </label>
+        <label>Kết luận giám sát
+          <select name="KetLuanGiamSat">
+            <option value="ĐẠT">ĐẠT</option>
+            <option value="ĐẠT CÓ ĐIỀU KIỆN">ĐẠT CÓ ĐIỀU KIỆN</option>
+            <option value="KHÔNG ĐẠT">KHÔNG ĐẠT</option>
+          </select>
+        </label>
+        <label class="full">Phát hiện <input name="PhatHien"></label>
+        <label class="full">Hành động khắc phục <input name="HanhDongKhacPhuc"></label>
+        <label>Người đánh giá <input name="NguoiDanhGia"></label>
+        <label class="full">Ghi chú <input name="GhiChu"></label>
+        <button type="submit">Lưu kết luận</button>
+      </form>
+    </section>
+
+    <section id="lohang">
+      <div class="toolbar">
+        <h2 style="margin:0">Lô hàng mua vào gần đây (nguồn: HoSoKeo_DN)</h2>
+        <button onclick="loadLoHang()">↻ Làm mới</button>
+      </div>
+      <div class="filterbar">
+        <input id="fLoHangSearch" placeholder="🔎 Tìm mã HĐ / chủ rừng / số phiếu cân / số BKLS..." oninput="pageLoHang=1; renderLoHang();">
+        <label class="inline">Từ ngày <input type="date" id="fLoHangTu" onchange="pageLoHang=1; renderLoHang();"></label>
+        <label class="inline">Đến ngày <input type="date" id="fLoHangDen" onchange="pageLoHang=1; renderLoHang();"></label>
+        <span id="fLoHangCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('loHangTable','LoHang_MuaVao.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('loHangTable','Báo cáo Lô hàng mua vào', document.getElementById('fLoHangCount').textContent)">🖨 In</button>
+      </div>
+      <div class="totalbox" id="loHangTotalBox"></div>
+      <div class="tablewrap">
+      <table id="loHangTable">
+        <thead><tr><th>Ngày nhập</th><th>Mã HĐ</th><th>Số phiếu cân</th><th>Số BKLS</th><th>Chủ rừng</th><th>Địa chỉ rừng</th><th>KL (Tấn)</th><th>Đơn giá</th><th>Thanh toán</th></tr></thead>
+        <tbody></tbody>
+        <tfoot id="loHangFoot"></tfoot>
+      </table>
+      </div>
+      <div class="pagebar">
+        <button class="btnmini" onclick="pageLoHang--; renderLoHang();">‹ Trang trước</button>
+        <span id="fLoHangPageInfo"></span>
+        <button class="btnmini" onclick="pageLoHang++; renderLoHang();">Trang sau ›</button>
+      </div>
+    </section>
+
+    <section id="xuathang">
+      <div class="toolbar">
+        <h2 style="margin:0">Xuất hàng gần đây (nguồn: NL_PC_XH)</h2>
+        <button onclick="loadXuatHang()">↻ Làm mới</button>
+      </div>
+      <div class="filterbar">
+        <input id="fXuatHangSearch" placeholder="🔎 Tìm số phiếu / số BKLS / tàu xuất..." oninput="pageXuatHang=1; renderXuatHang();">
+        <select id="fXuatHangTKHQ" onchange="pageXuatHang=1; renderXuatHang();"><option value="">-- Số TKHQ: Tất cả --</option></select>
+        <label class="inline">Từ ngày <input type="date" id="fXuatHangTu" onchange="pageXuatHang=1; renderXuatHang();"></label>
+        <label class="inline">Đến ngày <input type="date" id="fXuatHangDen" onchange="pageXuatHang=1; renderXuatHang();"></label>
+        <span id="fXuatHangCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('xuatHangTable','XuatHang.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('xuatHangTable','Báo cáo Xuất hàng', document.getElementById('fXuatHangCount').textContent)">🖨 In</button>
+      </div>
+      <div class="totalbox" id="xuatHangTotalBox"></div>
+      <div class="tablewrap">
+      <table id="xuatHangTable">
+        <thead><tr><th>Số phiếu</th><th>Ngày cân 1</th><th>Số BKLS</th><th>KL (Tấn)</th><th>KL (M3)</th><th>Đơn vị vận chuyển</th><th>Số TKHQ</th><th>Tàu xuất</th></tr></thead>
+        <tbody></tbody>
+        <tfoot id="xuatHangFoot"></tfoot>
+      </table>
+      </div>
+      <div class="pagebar">
+        <button class="btnmini" onclick="pageXuatHang--; renderXuatHang();">‹ Trang trước</button>
+        <span id="fXuatHangPageInfo"></span>
+        <button class="btnmini" onclick="pageXuatHang++; renderXuatHang();">Trang sau ›</button>
+      </div>
+    </section>
+
+    <section id="ruiro">
+      <h2>Đánh giá rủi ro CNRA theo rừng (BM-FSC-09)</h2>
+      <div id="rrMsg"></div>
+      <form id="formRuiRo">
+        <label>Chọn rừng
+          <select name="MaRung" id="selectRungRuiRo" required onchange="onChonRung()"><option value="">-- đang tải danh sách rừng --</option></select>
+        </label>
+        <label>Số hợp đồng (tự điền theo rừng đã chọn)
+          <input name="SoHopDong" id="inputSoHDRuiRo" readonly style="background:#f4f5f7;">
+        </label>
+        <label>Rủi ro CNRA
+          <select name="RuiRoCNRA"><option>Không đáng kể</option><option>Đáng kể</option></select>
+        </label>
+        <label>Người đánh giá <input name="NguoiDanhGia"></label>
+        <label class="full">Biện pháp giảm thiểu (RMM) nếu Đáng kể <input name="BienPhapRMM"></label>
+        <label class="full">Ghi chú <input name="GhiChu"></label>
+        <button type="submit">Lưu đánh giá</button>
+      </form>
+      <h2>Danh sách đã đánh giá</h2>
+      <div class="filterbar">
+        <input id="fRuiRoSearch" placeholder="🔎 Tìm tự do..." oninput="renderRuiRo()">
+        <select id="fRuiRoHopDong" onchange="renderRuiRo()"><option value="">-- Lọc theo hợp đồng: Tất cả --</option></select>
+        <select id="fRuiRoRung" onchange="renderRuiRo()"><option value="">-- Lọc theo rừng: Tất cả --</option></select>
+        <select id="fRuiRoMuc" onchange="renderRuiRo()">
+          <option value="">-- Rủi ro CNRA: Tất cả --</option>
+          <option value="Không đáng kể">Không đáng kể</option>
+          <option value="Đáng kể">Đáng kể</option>
+        </select>
+        <span id="fRuiRoCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('ruiRoTable','RuiRoCNRA.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('ruiRoTable','Báo cáo Rủi ro CNRA theo rừng', document.getElementById('fRuiRoCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="ruiRoTable"><thead><tr><th>Mã rừng</th><th>Số HĐ</th><th>Rủi ro CNRA</th><th>Biện pháp RMM</th><th>Ngày</th><th></th></tr></thead><tbody></tbody></table>
+      </div>
+    </section>
+
+    <section id="khaosatthamvan">
+      <h2>Khảo sát &amp; Tham vấn các bên liên quan (Bước 3, QT-FSC-01)</h2>
+      <div class="subnav">
+        <button class="subtab active" data-sub="sub-khaosat" onclick="switchSubTab('khaosatthamvan','sub-khaosat')">📋 Bảng theo dõi</button>
+        <button class="subtab" data-sub="sub-nhapkhaosat" onclick="switchSubTab('khaosatthamvan','sub-nhapkhaosat')">📝 Báo cáo khảo sát</button>
+        <button class="subtab" data-sub="sub-nhapgiamsatkt" onclick="switchSubTab('khaosatthamvan','sub-nhapgiamsatkt')">📝 BB Giám sát khai thác</button>
+        <button class="subtab" data-sub="sub-nhapthamvan" onclick="switchSubTab('khaosatthamvan','sub-nhapthamvan')">📝 Tham vấn bên liên quan</button>
+      </div>
+
+      <div id="sub-khaosat" class="subpanel active">
+        <p class="note">⚠ Đây là bảng <b>theo dõi tổng quan</b> Có/Chưa cho từng hợp đồng — nội dung chi tiết nhập ở 3 tab con bên cạnh.</p>
+        <div id="ksMsg"></div>
+        <form id="formKhaoSat">
+          <label>Số hợp đồng
+            <select name="SoHopDong" id="selectHopDongKhaoSat" required><option value="">-- đang tải danh sách --</option></select>
+          </label>
+          <label>Ngày khảo sát <input name="NgayKhaoSat" type="date"></label>
+          <label>Người khảo sát <input name="NguoiKhaoSat"></label>
+          <label>Có Báo cáo khảo sát? <select name="CoBaoCaoKhaoSat"><option>Có</option><option>Chưa</option></select></label>
+          <label>Có BB Giám sát TRONG khai thác? <select name="CoBBGiamSatTrongKhaiThac"><option>Có</option><option>Chưa</option></select></label>
+          <label>Có BB Giám sát SAU khai thác? <select name="CoBBGiamSatSauKhaiThac"><option>Có</option><option>Chưa</option></select></label>
+          <label>Đã tham vấn UBND Xã? <select name="ThamVanUBNDXa"><option>Có</option><option>Chưa</option></select></label>
+          <label>Đã tham vấn Kiểm lâm? <select name="ThamVanKiemLam"><option>Có</option><option>Chưa</option></select></label>
+          <label>Đã tham vấn Chủ rừng lân cận? <select name="ThamVanChuRungLanCan"><option>Có</option><option>Chưa</option></select></label>
+          <label>Đã tham vấn Người dân địa phương? <select name="ThamVanNguoiDanDiaPhuong"><option>Có</option><option>Chưa</option></select></label>
+          <label>Đã tham vấn Công nhân khai thác? <select name="ThamVanCongNhanKhaiThac"><option>Có</option><option>Chưa</option></select></label>
+          <label>Đã tham vấn Người vận chuyển? <select name="ThamVanNguoiVanChuyen"><option>Có</option><option>Chưa</option></select></label>
+          <label class="full">Phát hiện rủi ro (nếu có, từ quá trình tham vấn) <input name="PhatHienRuiRo"></label>
+          <label class="full">Ghi chú <input name="GhiChu"></label>
+          <button type="submit">Lưu tình trạng hồ sơ</button>
+        </form>
+        <h2>Danh sách đã theo dõi</h2>
+        <div class="filterbar">
+          <input id="fKhaoSatSearch" placeholder="🔎 Tìm số hợp đồng..." oninput="renderKhaoSat()">
+          <select id="fKhaoSatTrangThai" onchange="renderKhaoSat()">
+            <option value="">-- Trạng thái: Tất cả --</option>
+            <option value="du">Đầy đủ (8/8 mục)</option>
+            <option value="thieu">Còn thiếu ít nhất 1 mục</option>
+          </select>
+          <span id="fKhaoSatCount" class="count"></span>
+          <button class="btnmini" onclick="exportCSV('khaoSatTable','KhaoSatThamVan.csv')">⬇ CSV</button>
+          <button class="btnmini" onclick="printTable('khaoSatTable','Báo cáo Khảo sát & Tham vấn các bên liên quan', document.getElementById('fKhaoSatCount').textContent)">🖨 In</button>
+        </div>
+        <div class="tablewrap">
+        <table id="khaoSatTable">
+          <thead><tr><th>Số HĐ</th><th>Ngày KS</th><th>Người KS</th><th>Báo cáo KS</th><th>BB trong KT</th><th>BB sau KT</th><th>UBND Xã</th><th>Kiểm lâm</th><th>CR lân cận</th><th>Người dân</th><th>CN khai thác</th><th>Người vận chuyển</th><th>Đầy đủ?</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        </div>
+      </div>
+
+      <div id="sub-nhapkhaosat" class="subpanel">
+        <div class="totalbox" style="display:flex; align-items:center; gap:14px;">
+          <div style="flex:1;">📋 Dữ liệu bên dưới lấy trực tiếp từ Google Form đang dùng thật (sheet <code>KhaoSat_FSC</code>) — <b>không cần nhập lại trong webapp</b>. Để thêm 1 khảo sát mới, bấm nút này để mở đúng Form đó:</div>
+          <button class="btnmini" id="btnMoFormKhaoSat" onclick="moFormKhaoSat()" style="background:#1F3864; color:#fff; white-space:nowrap;">📝 Mở Form nhập khảo sát mới</button>
+        </div>
+        <p class="note">⚠ Dữ liệu hiện <b>chưa có cột "Số hợp đồng"</b> nên chưa nối được với danh sách hợp đồng — nếu bổ sung câu hỏi này vào Form, hệ thống sẽ tự nối mà không cần sửa code. Bấm "Chi tiết" ở mỗi dòng để xem đầy đủ toàn bộ ~60 trường đã khảo sát.</p>
+        <div id="mauWordKhaoSat"></div>
+        <div class="filterbar">
+          <input id="fBCKSSearch" placeholder="🔎 Tìm người khảo sát / địa chỉ rừng / đơn vị khảo sát..." oninput="renderBaoCaoKhaoSat()">
+          <span id="fBCKSCount" class="count"></span>
+          <button class="btnmini" onclick="exportCSV('bcksTable','BaoCaoKhaoSat.csv')">⬇ CSV</button>
+          <button class="btnmini" onclick="printTable('bcksTable','Báo cáo khảo sát thực địa', document.getElementById('fBCKSCount').textContent)">🖨 In</button>
+        </div>
+        <div class="tablewrap">
+        <table id="bcksTable">
+          <thead><tr><th>Ngày KS</th><th>Người KS</th><th>Địa chỉ rừng trồng</th><th>Pháp lý thửa đất</th><th>Mục đích SDĐ</th><th>Xói mòn/sạt lở</th><th>Giá trị bảo tồn</th><th>Đơn vị KS</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        </div>
+        <div id="ksChiTietModalBackdrop" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:100;" onclick="if(event.target===this) document.getElementById('ksChiTietModalBackdrop').style.display='none';">
+          <div style="background:#fff; max-width:680px; margin:40px auto; border-radius:10px; padding:20px; max-height:85vh; overflow:auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h2 style="margin:0;">Chi tiết báo cáo khảo sát</h2>
+              <button class="btnmini" onclick="document.getElementById('ksChiTietModalBackdrop').style.display='none';">✕ Đóng</button>
+            </div>
+            <div id="ksChiTietModalBody" style="margin-top:14px; font-size:13px; line-height:1.7;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sub-nhapgiamsatkt" class="subpanel">
+        <p class="note">Dùng chung 1 form cho cả 2 giai đoạn — chọn "Trong khai thác" hoặc "Sau khai thác" ở mục Giai đoạn giám sát.</p>
+        <div id="mauWordGiamSatKT"></div>
+        <div id="bbgsMsg"></div>
+        <form id="formBienBanGiamSat">
+          <label>Số hợp đồng
+            <select name="SoHopDong" id="selectHopDongBBGS" required><option value="">-- đang tải danh sách --</option></select>
+          </label>
+          <label>Giai đoạn giám sát
+            <select name="GiaiDoanGiamSat"><option>Trong khai thác</option><option>Sau khai thác</option></select>
+          </label>
+          <label>Người kiểm tra <input name="NguoiKiemTra"></label>
+          <label>Ngày kiểm tra <input name="NgayKiemTra" type="date"></label>
+          <label class="full">Hoạt động khai thác (diện tích, hồ sơ, biển báo, nhà thầu, kỹ thuật cắt, khoảng cách an toàn, tràn dầu nhớt)
+            <textarea name="HoatDongKhaiThac" rows="3"></textarea></label>
+          <label class="full">Hoạt động vận chuyển (phương tiện thuê ngoài, hợp đồng vận chuyển, hồ sơ xe còn hiệu lực)
+            <textarea name="HoatDongVanChuyen" rows="2"></textarea></label>
+          <label class="full">Lao động (thuê ngoài/gia đình, độ tuổi, DTTS, bảo hộ LĐ, tai nạn, HĐLĐ, lương/BHXH, lán trại)
+            <textarea name="LaoDong" rows="3"></textarea></label>
+          <label class="full">Môi trường (rác thải, dầu nhớt động cơ, môi trường đất)
+            <textarea name="MoiTruong" rows="2"></textarea></label>
+          <label class="full">Các giá trị bảo tồn (rừng phòng hộ/tự nhiên bị ảnh hưởng, loài thú, vùng đệm ven suối)
+            <textarea name="GiaTriBaoTon" rows="2"></textarea></label>
+          <label class="full">Các hoạt động khác (chống xói mòn, xử lý thực bì)
+            <textarea name="CacHoatDongKhac" rows="2"></textarea></label>
+          <label class="full">Phương án phòng ngừa / khắc phục (nếu phát hiện sai lệch)
+            <textarea name="PhuongAnPhongNgua" rows="2"></textarea></label>
+          <label class="full">Ghi chú <input name="GhiChu"></label>
+          <button type="submit">Lưu biên bản giám sát</button>
+        </form>
+        <h2>Danh sách biên bản đã nhập</h2>
+        <div class="filterbar">
+          <input id="fBBGSSearch" placeholder="🔎 Tìm số hợp đồng / người kiểm tra..." oninput="renderBienBanGiamSat()">
+          <select id="fBBGSGiaiDoan" onchange="renderBienBanGiamSat()">
+            <option value="">-- Giai đoạn: Tất cả --</option>
+            <option value="Trong khai thác">Trong khai thác</option>
+            <option value="Sau khai thác">Sau khai thác</option>
+          </select>
+          <span id="fBBGSCount" class="count"></span>
+          <button class="btnmini" onclick="exportCSV('bbgsTable','BienBanGiamSatKhaiThac.csv')">⬇ CSV</button>
+          <button class="btnmini" onclick="printTable('bbgsTable','Biên bản giám sát khai thác', document.getElementById('fBBGSCount').textContent)">🖨 In</button>
+        </div>
+        <div class="tablewrap">
+        <table id="bbgsTable">
+          <thead><tr><th>Số HĐ</th><th>Giai đoạn</th><th>Người KT</th><th>Ngày KT</th><th>Khai thác</th><th>Vận chuyển</th><th>Lao động</th><th>Môi trường</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        </div>
+      </div>
+
+      <div id="sub-nhapthamvan" class="subpanel">
+        <p class="note">Mỗi lần phỏng vấn 1 bên liên quan, lập 1 bản ghi riêng — có thể lập nhiều bản ghi cùng loại cho cùng 1 hợp đồng (ví dụ phỏng vấn 2 người dân địa phương khác nhau).</p>
+        <div id="mauWordThamVan"></div>
+        <div id="tvMsg"></div>
+        <form id="formThamVan">
+          <label>Số hợp đồng
+            <select name="SoHopDong" id="selectHopDongTV" required><option value="">-- đang tải danh sách --</option></select>
+          </label>
+          <label>Loại bên liên quan
+            <select name="LoaiBenLienQuan">
+              <option>UBND Xã</option>
+              <option>Kiểm lâm</option>
+              <option>Chủ rừng lân cận</option>
+              <option>Người dân địa phương</option>
+              <option>Trưởng thôn</option>
+              <option>Công nhân khai thác</option>
+              <option>Người vận chuyển</option>
+            </select>
+          </label>
+          <label>Tên người được tham vấn <input name="TenNguoiDuocThamVan"></label>
+          <label>Chức vụ <input name="ChucVu"></label>
+          <label>Ngày tham vấn <input name="NgayThamVan" type="date"></label>
+          <label>Kết luận
+            <select name="KetLuan"><option>Không có vấn đề</option><option>Có vấn đề cần lưu ý</option></select>
+          </label>
+          <label class="full">Nội dung tham vấn (câu hỏi &amp; trả lời chính — vd: có tranh chấp không, có cấm khai thác không, chủ đúng như sổ đỏ không...)
+            <textarea name="NoiDungThamVan" rows="4"></textarea></label>
+          <label class="full">Ghi chú <input name="GhiChu"></label>
+          <button type="submit">Lưu bản ghi tham vấn</button>
+        </form>
+        <h2>Danh sách đã tham vấn</h2>
+        <div class="filterbar">
+          <input id="fTVSearch" placeholder="🔎 Tìm số hợp đồng / tên người được tham vấn..." oninput="renderThamVan()">
+          <select id="fTVLoai" onchange="renderThamVan()">
+            <option value="">-- Loại bên liên quan: Tất cả --</option>
+            <option>UBND Xã</option><option>Kiểm lâm</option><option>Chủ rừng lân cận</option>
+            <option>Người dân địa phương</option><option>Trưởng thôn</option>
+            <option>Công nhân khai thác</option><option>Người vận chuyển</option>
+          </select>
+          <span id="fTVCount" class="count"></span>
+          <button class="btnmini" onclick="exportCSV('tvTable','ThamVanBenLienQuan.csv')">⬇ CSV</button>
+          <button class="btnmini" onclick="printTable('tvTable','Tham vấn các bên liên quan', document.getElementById('fTVCount').textContent)">🖨 In</button>
+        </div>
+        <div class="tablewrap">
+        <table id="tvTable">
+          <thead><tr><th>Số HĐ</th><th>Loại bên</th><th>Tên người</th><th>Chức vụ</th><th>Ngày</th><th>Kết luận</th><th>Nội dung</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="giamsat">
+      <h2>Lập báo cáo giám sát định kỳ (BM-FSC-10)</h2>
+      <div id="gsMsg"></div>
+      <form id="formGiamSat">
+        <label>Kỳ giám sát <input name="KyGiamSat" placeholder="Tháng 07/2026"></label>
+        <label>Phạm vi kiểm tra <input name="PhamViKiemTra"></label>
+        <label>MT1 - Đầy đủ hồ sơ
+          <select name="MucTieu1_DayDuHoSo"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>MT2 - Hợp pháp nguồn gốc
+          <select name="MucTieu2_HopPhap"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>MT3 - Nhất quán số liệu
+          <select name="MucTieu3_NhatQuan"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>MT4 - Đúng hạn báo cáo
+          <select name="MucTieu4_DungHan"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>MT5 - Rủi ro FSC/CNRA
+          <select name="MucTieu5_RuiRoFSC"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>Kết luận
+          <select name="KetLuan"><option value="ĐẠT">ĐẠT</option><option value="ĐẠT CÓ ĐIỀU KIỆN">ĐẠT CÓ ĐIỀU KIỆN</option><option value="KHÔNG ĐẠT">KHÔNG ĐẠT</option></select></label>
+        <label class="full">Phát hiện chính <input name="PhatHienChinh"></label>
+        <label class="full">Hành động khắc phục <input name="HanhDongKhacPhuc"></label>
+        <label>Người phụ trách <input name="NguoiPhuTrach"></label>
+        <label>Hạn hoàn thành <input name="HanHoanThanh" type="date"></label>
+        <label>Ngày tái kiểm tra <input name="NgayTaiKiemTra" type="date"></label>
+        <button type="submit">Lưu báo cáo</button>
+      </form>
+      <h2>Lịch sử báo cáo</h2>
+      <div class="filterbar">
+        <input id="fGiamSatSearch" placeholder="🔎 Tìm theo kỳ giám sát..." oninput="renderGiamSat()">
+        <select id="fGiamSatKetLuan" onchange="renderGiamSat()">
+          <option value="">-- Kết luận: Tất cả --</option>
+          <option value="ĐẠT">ĐẠT</option>
+          <option value="ĐẠT CÓ ĐIỀU KIỆN">ĐẠT CÓ ĐIỀU KIỆN</option>
+          <option value="KHÔNG ĐẠT">KHÔNG ĐẠT</option>
+        </select>
+        <span id="fGiamSatCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('giamSatTable','BaoCaoGiamSatDinhKy.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('giamSatTable','Báo cáo giám sát định kỳ', document.getElementById('fGiamSatCount').textContent)">🖨 In</button>
+      </div>
+      <table id="giamSatTable"><thead><tr><th>Kỳ</th><th>Kết luận</th><th>Hạn khắc phục</th><th>Tái kiểm tra</th><th></th></tr></thead><tbody></tbody></table>
+    </section>
+
+    <section id="tiendo">
+      <h2>Cập nhật tiến độ giai đoạn (BM-KH-01)</h2>
+      <div id="tdMsg"></div>
+      <form id="formTienDo">
+        <label>Giai đoạn
+          <select name="GiaiDoan">
+            <option>0. Chuẩn bị</option>
+            <option>1. Đào tạo & Thí điểm</option>
+            <option>2. Triển khai toàn diện</option>
+            <option>3. Đánh giá nội bộ</option>
+            <option>4. Vận hành ổn định</option>
+          </select>
+        </label>
+        <label>Ngày thực tế hoàn thành <input name="NgayThucTe" type="date"></label>
+        <label>Đánh giá
+          <select name="DanhGia"><option>Đúng tiến độ</option><option>Chậm tiến độ</option><option>Có nguy cơ trễ giai đoạn kế tiếp</option></select>
+        </label>
+        <label class="full">Ghi chú <input name="GhiChu"></label>
+        <button type="submit">Cập nhật</button>
+      </form>
+    </section>
+
+    <section id="thamdinh">
+      <h2>🧾 Checklist thẩm định chủ rừng &amp; kiểm tra trước ký hợp đồng (BM-FSC-01/02)</h2>
+      <div id="tdhdMsg"></div>
+      <form id="formTieuChiThamDinh">
+        <label>Số hợp đồng
+          <select name="SoHopDong" id="selectHopDongTDHD" required><option value="">-- đang tải danh sách --</option></select>
+        </label>
+        <label>Ngày thẩm định <input name="NgayThamDinh" type="date"></label>
+        <label>Mục đích SDĐ hợp lệ (không phải rừng phòng hộ/tự nhiên/đặc dụng)? <select name="MucDichSuDungDatHopLe"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>Sổ đỏ/hồ sơ đất còn hạn khai thác? <select name="SoDoConHan"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>CCCD chủ rừng còn hiệu lực? <select name="CCCDConHieuLuc"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>Không thuộc rừng tự nhiên chuyển đổi sau 31/12/2020? <select name="KhongPhaiRungTuNhienSau2020"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>Không có tranh chấp đất đai? <select name="KhongTranhChap"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>Khối lượng HĐ không vượt khả năng cung ứng (sổ đỏ)? <select name="KhoiLuongKhongVuotSoDo"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>Đã có Thông báo giá đầy đủ? <select name="ThongBaoGiaDayDu"><option>Đạt</option><option>Không đạt</option></select></label>
+        <label>Kết luận thẩm định
+          <select name="KetLuanThamDinh"><option>Đồng ý thu mua</option><option>Yêu cầu bổ sung hồ sơ</option><option>Từ chối</option></select>
+        </label>
+        <label>Người thẩm định <input name="NguoiThamDinh"></label>
+        <label class="full">Ghi chú <input name="GhiChu"></label>
+        <button type="submit">Lưu kết quả thẩm định</button>
+      </form>
+      <h2>Danh sách đã thẩm định</h2>
+      <div class="filterbar">
+        <input id="fTDHDSearch" placeholder="🔎 Tìm số hợp đồng..." oninput="renderTieuChiThamDinh()">
+        <span id="fTDHDCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('tdhdTable','ThamDinhHopDong.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('tdhdTable','Checklist thẩm định hợp đồng', document.getElementById('fTDHDCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="tdhdTable">
+        <thead><tr><th>Số HĐ</th><th>Ngày</th><th>Mục đích SDĐ</th><th>Sổ đỏ</th><th>CCCD</th><th>Ko rừng TN 2020</th><th>Ko tranh chấp</th><th>KL≤sổ đỏ</th><th>TB giá</th><th>Kết luận</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="dieudong">
+      <h2>🚛 Lệnh điều động vận chuyển nội bộ (BM-FSC-05)</h2>
+      <div id="ddMsg"></div>
+      <form id="formLenhDieuDong">
+        <label>Loại hàng hóa <input name="LoaiHang" placeholder="Dăm gỗ tươi / Gỗ keo"></label>
+        <label>Ngày lệnh <input name="NgayLenh" type="date"></label>
+        <label>Điểm xuất phát <input name="DiemDi" placeholder="Kho nhà máy"></label>
+        <label>Điểm đến <input name="DiemDen" placeholder="Kho trung chuyển/cảng xuất"></label>
+        <label>Biển kiểm soát xe <input name="BienKiemSoat"></label>
+        <label>Số phiếu cân <input name="SoPhieuCan"></label>
+        <label>Số BKLS gốc đính kèm <input name="SoBKLSGoc"></label>
+        <label>Ngày hoàn thành vận chuyển <input name="NgayHoanThanhVanChuyen" type="date"></label>
+        <label>Ngày lập phiếu xuất kho (≤1 ngày làm việc) <input name="NgayLapPhieuXuatKho" type="date"></label>
+        <label>Người lập lệnh <input name="NguoiLapLenh"></label>
+        <label class="full">Ghi chú <input name="GhiChu"></label>
+        <button type="submit">Lưu lệnh điều động</button>
+      </form>
+      <h2>Danh sách lệnh điều động</h2>
+      <div class="filterbar">
+        <input id="fDDSearch" placeholder="🔎 Tìm biển số / điểm đi / điểm đến..." oninput="renderLenhDieuDong()">
+        <span id="fDDCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('ddTable','LenhDieuDongVanChuyen.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('ddTable','Lệnh điều động vận chuyển nội bộ', document.getElementById('fDDCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="ddTable">
+        <thead><tr><th>Số lệnh</th><th>Ngày</th><th>Loại hàng</th><th>Điểm đi</th><th>Điểm đến</th><th>Biển số</th><th>Số phiếu cân</th><th>Ngày lập PXK</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="tieuhao">
+      <h2>🏭 Theo dõi định mức tiêu hao chế biến (BM-FSC-06)</h2>
+      <div id="thMsg"></div>
+      <form id="formTieuHao">
+        <label>Kỳ theo dõi <input name="KyTheoDoi" placeholder="Tháng 07/2026"></label>
+        <label>Số BKLS xuất chế biến <input name="SoBKLSXuatCheBien"></label>
+        <label>Khối lượng đầu vào (Tấn) <input name="KhoiLuongDauVaoTan" type="number" step="0.01"></label>
+        <label>Định mức tiêu hao công bố (%) <input name="DinhMucTieuHaoPhanTram" type="number" step="0.01"></label>
+        <label>Dăm thành phẩm (Tấn) <input name="DamThanhPhamTan" type="number" step="0.01"></label>
+        <label>Tiêu hao thực tế (%) <input name="TieuHaoThucTePhanTram" type="number" step="0.01"></label>
+        <label class="full">Giải trình chênh lệch (nếu >5%) <input name="GiaiTrinhChenhLech"></label>
+        <label>Người ghi sổ <input name="NguoiGhiSo"></label>
+        <button type="submit">Lưu kỳ tiêu hao</button>
+      </form>
+      <h2>Lịch sử theo dõi tiêu hao</h2>
+      <div class="filterbar">
+        <input id="fTHSearch" placeholder="🔎 Tìm kỳ / số BKLS..." oninput="renderTieuHao()">
+        <span id="fTHCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('thTable','TieuHaoCheBien.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('thTable','Theo dõi tiêu hao chế biến', document.getElementById('fTHCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="thTable">
+        <thead><tr><th>Kỳ</th><th>Số BKLS</th><th>KL đầu vào (T)</th><th>Định mức (%)</th><th>Dăm TP (T)</th><th>Tiêu hao TT (%)</th><th>Giải trình</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="donhangxb">
+      <div class="toolbar">
+        <h2 style="margin:0">📤 Đơn hàng xuất bán (nguồn: NL_DH_XB)</h2>
+        <button onclick="loadDonHangXB()">↻ Làm mới</button>
+      </div>
+      <div class="filterbar">
+        <input id="fDHXBSearch" placeholder="🔎 Tìm khách hàng / tàu / TKHQ..." oninput="pageDHXB=1; renderDonHangXB();">
+        <span id="fDHXBCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('dhxbTable','DonHangXuatBan.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('dhxbTable','Đơn hàng xuất bán', document.getElementById('fDHXBCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="dhxbTable"><thead><tr></tr></thead><tbody></tbody></table>
+      </div>
+      <div class="pagebar">
+        <button class="btnmini" onclick="pageDHXB--; renderDonHangXB();">‹ Trang trước</button>
+        <span id="fDHXBPageInfo"></span>
+        <button class="btnmini" onclick="pageDHXB++; renderDonHangXB();">Trang sau ›</button>
+      </div>
+    </section>
+
+    <section id="baocaoNN">
+      <h2>🗓️ Sổ theo dõi nộp báo cáo định kỳ cơ quan Nhà nước (BM-FSC-08)</h2>
+      <p class="note">Mẫu số 29 (Báo cáo nhập, xuất lâm sản) nộp trước 15/01 hằng năm — Mẫu số 14 (nhập/xuất khẩu gỗ) nộp theo quý.</p>
+      <div id="bcnnMsg"></div>
+      <form id="formBaoCaoNN">
+        <label>Loại báo cáo
+          <select name="LoaiBaoCao"><option>Mẫu số 29 (năm)</option><option>Mẫu số 14 (quý I)</option><option>Mẫu số 14 (quý II)</option><option>Mẫu số 14 (quý III)</option><option>Mẫu số 14 (quý IV)</option></select>
+        </label>
+        <label>Kỳ <input name="Ky" placeholder="Năm 2026 / Quý III-2026"></label>
+        <label>Hạn nộp <input name="HanNop" type="date"></label>
+        <label>Ngày nộp thực tế <input name="NgayNopThucTe" type="date"></label>
+        <label>Đúng hạn? <select name="DungHan"><option>Có</option><option>Không</option></select></label>
+        <label>Đầu mối tiếp nhận (theo mô hình 2 cấp) <input name="DauMoiTiepNhan"></label>
+        <label>Người phụ trách <input name="NguoiPhuTrach"></label>
+        <label class="full">Ghi chú <input name="GhiChu"></label>
+        <button type="submit">Lưu bản ghi báo cáo</button>
+      </form>
+      <h2>Lịch sử nộp báo cáo</h2>
+      <div class="filterbar">
+        <input id="fBCNNSearch" placeholder="🔎 Tìm kỳ / đầu mối..." oninput="renderBaoCaoNN()">
+        <select id="fBCNNDungHan" onchange="renderBaoCaoNN()">
+          <option value="">-- Đúng hạn: Tất cả --</option><option>Có</option><option>Không</option>
+        </select>
+        <span id="fBCNNCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('bcnnTable','SoTheoDoiBaoCaoNhaNuoc.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('bcnnTable','Sổ theo dõi báo cáo Nhà nước', document.getElementById('fBCNNCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="bcnnTable">
+        <thead><tr><th>Loại báo cáo</th><th>Kỳ</th><th>Hạn nộp</th><th>Ngày nộp TT</th><th>Đúng hạn?</th><th>Đầu mối</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="nghiemthugd">
+      <h2>✅ Biên bản nghiệm thu hoàn thành giai đoạn (BM-KH-02)</h2>
+      <div id="nttdMsg"></div>
+      <form id="formNghiemThuGD">
+        <label>Giai đoạn
+          <select name="GiaiDoan">
+            <option>0. Chuẩn bị</option><option>1. Đào tạo & Thí điểm</option>
+            <option>2. Triển khai toàn diện</option><option>3. Đánh giá nội bộ</option>
+            <option>4. Vận hành ổn định</option>
+          </select>
+        </label>
+        <label>Thời gian thực hiện <input name="ThoiGianThucHien" placeholder="Từ ngày - đến ngày"></label>
+        <label class="full">Đầu ra kỳ vọng (theo KH-FSC-01) <input name="DauRaKyVong"></label>
+        <label class="full">Bằng chứng thực nhận (mô tả/tên file) <input name="BangChungThucNhan"></label>
+        <label class="full">Khoảng trống bằng chứng còn tồn <input name="KhoangTrongBangChung"></label>
+        <label>Kết luận
+          <select name="KetLuanNghiemThu"><option>Nghiệm thu</option><option>Nghiệm thu có điều kiện</option><option>Chưa nghiệm thu</option></select>
+        </label>
+        <label class="full">Điều kiện cần hoàn thành trước khi chuyển giai đoạn kế tiếp <input name="DieuKienChuyenGiaiDoan"></label>
+        <label>Người nghiệm thu <input name="NguoiNghiemThu"></label>
+        <label>Ngày nghiệm thu <input name="NgayNghiemThu" type="date"></label>
+        <button type="submit">Lưu biên bản nghiệm thu</button>
+      </form>
+      <h2>Lịch sử nghiệm thu</h2>
+      <div class="filterbar">
+        <input id="fNTGDSearch" placeholder="🔎 Tìm giai đoạn..." oninput="renderNghiemThuGD()">
+        <span id="fNTGDCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('ntgdTable','NghiemThuGiaiDoan.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('ntgdTable','Nghiệm thu hoàn thành giai đoạn', document.getElementById('fNTGDCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="ntgdTable">
+        <thead><tr><th>Giai đoạn</th><th>Thời gian</th><th>Kết luận</th><th>Khoảng trống bằng chứng</th><th>Người nghiệm thu</th><th>Ngày</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="ruirotk">
+      <h2>⚠️ Phiếu ghi nhận rủi ro/vướng mắc triển khai (BM-KH-03)</h2>
+      <div id="rrtkMsg"></div>
+      <form id="formRuiRoTK">
+        <label class="full">Mô tả rủi ro/vướng mắc <input name="MoTa"></label>
+        <label>Mức độ <select name="MucDo"><option>Nhẹ</option><option>Trung bình</option><option>Nghiêm trọng</option></select></label>
+        <label>Giai đoạn liên quan
+          <select name="GiaiDoanLienQuan">
+            <option>0. Chuẩn bị</option><option>1. Đào tạo & Thí điểm</option>
+            <option>2. Triển khai toàn diện</option><option>3. Đánh giá nội bộ</option>
+            <option>4. Vận hành ổn định</option>
+          </select>
+        </label>
+        <label class="full">Biện pháp giảm thiểu <input name="BienPhapGiamThieu"></label>
+        <label>Người phụ trách <input name="NguoiPhuTrach"></label>
+        <label>Hạn xử lý <input name="HanXuLy" type="date"></label>
+        <label>Trạng thái <select name="TrangThai"><option>Chưa xử lý</option><option>Đang xử lý</option><option>Đã xử lý</option></select></label>
+        <button type="submit">Lưu rủi ro/vướng mắc</button>
+      </form>
+      <h2>Danh sách rủi ro/vướng mắc</h2>
+      <div class="filterbar">
+        <input id="fRRTKSearch" placeholder="🔎 Tìm mô tả..." oninput="renderRuiRoTK()">
+        <select id="fRRTKTrangThai" onchange="renderRuiRoTK()">
+          <option value="">-- Trạng thái: Tất cả --</option><option>Chưa xử lý</option><option>Đang xử lý</option><option>Đã xử lý</option>
+        </select>
+        <span id="fRRTKCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('rrtkTable','RuiRoTrienKhai.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('rrtkTable','Rủi ro/vướng mắc triển khai', document.getElementById('fRRTKCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="rrtkTable">
+        <thead><tr><th>Mô tả</th><th>Mức độ</th><th>Giai đoạn</th><th>Biện pháp</th><th>Phụ trách</th><th>Hạn xử lý</th><th>Trạng thái</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="huongdan">
+      <div style="background:#fff; border-radius:10px; padding:22px 26px; box-shadow:0 1px 3px rgba(0,0,0,.1); font-size:14px; line-height:1.8;">
+
+        <h2>📁 Thư viện mẫu Word gốc (Google Drive)</h2>
+        <div id="mauWordList">⏳ Đang tải danh sách file...</div>
+
+        <h2>📘 Hệ thống này dùng để làm gì?</h2>
+        <p>Đây là công cụ kiểm soát &amp; giám sát toàn bộ chuỗi cung ứng gỗ keo theo <b>Quy trình QT-FSC-01</b> và <b>Kế hoạch triển khai KH-FSC-01</b>. Nguyên tắc cốt lõi: <b>không nhập lại dữ liệu đã có</b> — hệ thống đọc trực tiếp 5 Google Sheet nghiệp vụ đang dùng thật, chỉ tạo mới đúng phần chưa từng có (kết luận giám sát, đánh giá rủi ro, tiến độ triển khai).</p>
+
+        <h2>🗂️ Giải thích từng mục bên trái (theo đúng thứ tự trên sidebar)</h2>
+        <table style="width:100%;">
+          <thead><tr><th>Mục</th><th>Nguồn dữ liệu</th><th>Dùng để làm gì</th></tr></thead>
+          <tbody>
+            <tr><td><b>🏠 Dashboard</b></td><td>Tổng hợp từ tất cả sheet</td><td>Nhìn nhanh: bao nhiêu hợp đồng, tỷ lệ hồ sơ đầy đủ, số HĐ chưa đánh giá FSC, rừng rủi ro cao, HĐ chưa theo dõi khảo sát, tiến độ triển khai theo giai đoạn.</td></tr>
+            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 1–2: Thẩm định &amp; ký hợp đồng</td></tr>
+            <tr><td><b>🧾 Thẩm định hợp đồng</b></td><td>Nhập mới (BM-FSC-01/02)</td><td>Checklist 8 tiêu chí trước khi ký HĐ (mục đích SDĐ, sổ đỏ, CCCD, rừng tự nhiên 2020, tranh chấp, khối lượng, thông báo giá) — ra kết luận Đồng ý/Yêu cầu bổ sung/Từ chối.</td></tr>
+            <tr><td><b>📄 Hợp đồng &amp; hồ sơ rừng</b></td><td>HD_RUNG, BaoCao_KiemTra, TongHop_HopDong</td><td>Xem từng hợp đồng: hồ sơ đủ/thiếu gì, chênh lệch diện tích ký vs GPS, bấm <b>"📎 Chi tiết"</b> xem pháp lý rừng + tọa độ Google Maps + ảnh. Ghi <b>kết luận giám sát FSC</b> ở form cuối trang.</td></tr>
+            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3: Khảo sát &amp; tham vấn</td></tr>
+            <tr><td><b>📋 Khảo sát &amp; Tham vấn</b></td><td>4 sub-tab: bảng Có/Chưa (nhập mới) + Google Form thật (KhaoSat_FSC) + BB Giám sát khai thác (nhập mới) + Tham vấn bên liên quan (nhập mới)</td><td>"Bảng theo dõi" xem nhanh HĐ nào thiếu loại hồ sơ nào; 3 sub-tab còn lại là nơi gõ/xem NỘI DUNG THẬT của từng loại hồ sơ.</td></tr>
+            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3–4: Khai thác, cân, nghiệm thu</td></tr>
+            <tr><td><b>📦 Lô hàng mua vào</b></td><td>HoSoKeo_DN</td><td>200 lô nhập gần nhất (phân trang 20/trang), lọc mã HĐ/chủ rừng/ngày, tổng khối lượng &amp; tổng tiền (toàn bộ + theo trang).</td></tr>
+            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 5–6: Vận chuyển &amp; chế biến</td></tr>
+            <tr><td><b>🚛 Lệnh điều động vận chuyển</b></td><td>Nhập mới (BM-FSC-05)</td><td>Lệnh điều động vận chuyển nội bộ — điểm đi/đến, biển số, số phiếu cân, ngày lập phiếu xuất kho.</td></tr>
+            <tr><td><b>🏭 Tiêu hao chế biến</b></td><td>Nhập mới (BM-FSC-06)</td><td>Theo dõi định mức tiêu hao chế biến dăm gỗ theo từng kỳ, so sánh định mức công bố vs thực tế.</td></tr>
+            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 7–8: Xuất bán &amp; báo cáo Nhà nước</td></tr>
+            <tr><td><b>🚚 Xuất hàng</b></td><td>NL_PC_XH</td><td>200 lô xuất gần nhất (phân trang), lọc theo số TKHQ/ngày, tổng khối lượng (chưa có cột tiền trong sheet nguồn).</td></tr>
+            <tr><td><b>📤 Đơn hàng xuất bán</b></td><td>NL_DH_XB</td><td>Đơn hàng khách mua — bổ sung thông tin còn thiếu ở BM-FSC-07 (giá USD, khách hàng, khối lượng theo đơn).</td></tr>
+            <tr><td><b>🗓️ Báo cáo Nhà nước</b></td><td>Nhập mới (BM-FSC-08)</td><td>Theo dõi hạn nộp/ngày nộp thực tế Mẫu số 29 (năm) và Mẫu số 14 (quý) cho cơ quan Kiểm lâm.</td></tr>
+            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 9 &amp; MỤC 8.3: Giám sát rủi ro</td></tr>
+            <tr><td><b>⚠️ Rủi ro CNRA</b></td><td>Nhập mới (BM-FSC-09, chọn rừng từ dropdown)</td><td>Đánh giá rủi ro theo Bộ CNRA Việt Nam cho từng lô rừng — Không đáng kể/Đáng kể, kèm biện pháp giảm thiểu (RMM).</td></tr>
+            <tr><td><b>🔍 Giám sát định kỳ</b></td><td>Nhập mới (BM-FSC-10)</td><td>Báo cáo giám sát — đối chiếu đủ 5 mục tiêu giám sát của QT-FSC-01, ra kết luận ĐẠT/ĐẠT CÓ ĐIỀU KIỆN/KHÔNG ĐẠT.</td></tr>
+            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">KH-FSC-01: Triển khai</td></tr>
+            <tr><td><b>📈 Tiến độ triển khai</b></td><td>Nhập mới (BM-KH-01)</td><td>Cập nhật tiến độ 5 giai đoạn theo KH-FSC-01, so sánh mốc kế hoạch với ngày thực tế.</td></tr>
+            <tr><td><b>✅ Nghiệm thu giai đoạn</b></td><td>Nhập mới (BM-KH-02)</td><td>Đối chiếu đầu ra kỳ vọng từng giai đoạn với bằng chứng thực nhận, ra kết luận Nghiệm thu/Có điều kiện/Chưa.</td></tr>
+            <tr><td><b>⚠️ Rủi ro triển khai</b></td><td>Nhập mới (BM-KH-03)</td><td>Ghi nhận rủi ro/vướng mắc phát sinh khi triển khai — mức độ, biện pháp, người phụ trách, hạn xử lý.</td></tr>
+          </tbody>
+        </table>
+
+        <h2>✅ Quy trình thao tác gợi ý hằng ngày/tuần</h2>
+        <ol>
+          <li>Mở <b>Dashboard</b> xem tổng quan — chú ý các thẻ màu đỏ/cam (cảnh báo) và badge số trên sidebar.</li>
+          <li>Có hợp đồng mới → vào <b>Thẩm định hợp đồng</b> chấm đủ 8 tiêu chí trước khi ký.</li>
+          <li>Vào <b>Hợp đồng &amp; hồ sơ rừng</b>, lọc "Chưa đánh giá" → bấm "Chi tiết" kiểm tra tọa độ/ảnh → ghi kết luận giám sát.</li>
+          <li>Song song, cập nhật tab <b>Khảo sát &amp; Tham vấn</b> (4 sub-tab) ngay khi có kết quả khảo sát/giám sát khai thác/phỏng vấn thực địa.</li>
+          <li>Với hợp đồng có nhiều rừng, dùng tab <b>Rủi ro CNRA</b> đánh giá riêng từng lô.</li>
+          <li>Theo dõi <b>Lệnh điều động</b>, <b>Tiêu hao chế biến</b> khi hàng đi qua các khâu vận chuyển/chế biến.</li>
+          <li>Trước hạn 15/01 và cuối mỗi quý, vào <b>Báo cáo Nhà nước</b> ghi nhận đã nộp Mẫu 29/Mẫu 14.</li>
+          <li>Cuối tuần/tháng, vào <b>Giám sát định kỳ</b> lập báo cáo tổng hợp theo mẫu BM-FSC-10.</li>
+          <li>Theo dõi <b>Tiến độ triển khai</b>, cập nhật <b>Nghiệm thu giai đoạn</b> và <b>Rủi ro triển khai</b> để biết đang đúng/chậm so với KH-FSC-01.</li>
+        </ol>
+
+        <h2>⚠️ Những giới hạn cần biết</h2>
+        <ul>
+          <li><b>Không tự phân loại</b> rừng tự nhiên/phòng hộ/sản xuất — dữ liệu nguồn không có trường này, vẫn cần rà soát thủ công rồi ghi vào tab Rủi ro CNRA.</li>
+          <li><b>Ảnh chủ rừng/hiện trường</b> (HD_Picture) chỉ hiện được tên file, chưa xem trực tiếp trong webapp — cần mở sheet gốc hoặc thư mục Drive tương ứng.</li>
+          <li>Nếu gặp lỗi <b>"Phản hồi bất thường"</b> khi bấm tab: đây là lỗi chập chờn của hạ tầng Google, hệ thống tự thử lại 2 lần — nếu vẫn lỗi, đợi vài giây rồi bấm lại, tránh bấm chuyển tab liên tục.</li>
+          <li>Dùng nút <b>"🔍 Kiểm tra kết nối 5 file nguồn"</b> ở góc dưới bên trái bất cứ khi nào nghi ngờ dữ liệu không cập nhật.</li>
+        </ul>
+
+        <h2>🖨️ In phiếu để ký tay</h2>
+        <p>Mỗi dòng trong các bảng danh sách (Thẩm định, Lệnh điều động, Tiêu hao, Báo cáo NN, Nghiệm thu giai đoạn, Rủi ro triển khai, Rủi ro CNRA, Giám sát định kỳ, BB Giám sát khai thác, Tham vấn) đều có nút <b>🖨</b> — bấm sẽ mở 1 trang in riêng, định dạng như phiếu giấy chính thức (tiêu đề HAK GROUP, bảng thông tin, khối ký tên "Người lập / Người phê duyệt" ở cuối) — in ra là ký tay được ngay, không cần mở lại file Word gốc.</p>
+        <p style="color:#888; font-size:12.5px;">Lưu ý: các mẫu Word gốc (Báo cáo khảo sát, Biên bản giám sát khai thác...) chỉ tồn tại dưới dạng file đã gửi qua chat trước đây — webapp không lưu trữ/liên kết trực tiếp được tới file đó. Nếu muốn có nút tải file mẫu gốc ngay trong webapp, upload các file Word đó lên 1 thư mục Google Drive rồi cho tôi link thư mục, tôi sẽ gắn nút tải trực tiếp vào đây.</p>
+
+        <h2>🔧 Khi cần sửa/mở rộng hệ thống</h2>
+        <p>Toàn bộ hệ thống chỉ gồm 2 file: <code>Code.gs</code> (backend, đọc/ghi Google Sheets) và <code>Index.html</code> (giao diện). Sửa xong dán đè lại đúng 2 file này vào Apps Script rồi <b>Deploy → Manage deployments → New version → Deploy</b> để cập nhật link chính thức.</p>
+
+        <hr style="margin:24px 0; border:none; border-top:1px solid #eee;">
+
+        <h2>📖 TOÀN VĂN QUY TRÌNH QT-FSC-01 (tóm tắt để tra cứu nhanh)</h2>
+        <p><b>Mục tiêu:</b> kiểm soát, giám sát nguồn gốc gỗ nguyên liệu rừng trồng theo tiêu chuẩn FSC, đúng Luật Lâm nghiệp, Thông tư 26/2025/TT-BNNMT và pháp luật thuế/kế toán hiện hành.</p>
+        <p><b>9 bước quy trình:</b></p>
+        <ol>
+          <li><b>Thẩm định &amp; lựa chọn chủ rừng/vùng cung ứng</b> — kiểm tra sổ đỏ/xác nhận đất, CCCD, loại rừng (loại trừ rừng phòng hộ/tự nhiên/đặc dụng), rà soát bản đồ vùng cung ứng. <i>→ webapp: tab Hợp đồng &amp; hồ sơ rừng, mục "Chi tiết".</i></li>
+          <li><b>Ký hợp đồng, thông báo giá</b> — kèm phương án khai thác nếu là rừng phòng hộ là rừng trồng. <i>→ webapp: tab Hợp đồng &amp; hồ sơ rừng.</i></li>
+          <li><b>Đánh giá thực địa &amp; tham vấn các bên liên quan</b> — lập Báo cáo khảo sát, phỏng vấn UBND xã/Kiểm lâm/chủ rừng lân cận/người dân/công nhân/người vận chuyển. <i>→ webapp: tab Nhập Báo cáo khảo sát + Nhập Tham vấn bên liên quan.</i></li>
+          <li><b>Khai thác &amp; lập Bảng kê lâm sản</b> — kèm giám sát trong/sau khai thác. <i>→ webapp: tab Nhập BB Giám sát khai thác.</i></li>
+          <li><b>Cân hàng, nghiệm thu, thanh toán.</b> <i>→ webapp: tab Lô hàng mua vào.</i></li>
+          <li><b>Vận chuyển nội bộ, nhập kho.</b></li>
+          <li><b>Chế biến dăm &amp; theo dõi xuất-nhập-tồn.</b></li>
+          <li><b>Vận chuyển xuất bán/xuất khẩu.</b> <i>→ webapp: tab Xuất hàng.</i></li>
+          <li><b>Lưu trữ hồ sơ &amp; báo cáo định kỳ cho Nhà nước</b> (Mẫu số 29 trước 15/01 hằng năm; Mẫu số 14 theo quý).</li>
+        </ol>
+        <p><b>5 mục tiêu giám sát định kỳ (Mục 8.1, QT-FSC-01):</b> (1) Đầy đủ hồ sơ, (2) Hợp pháp nguồn gốc, (3) Nhất quán số liệu, (4) Tuân thủ thời hạn báo cáo, (5) Kiểm soát rủi ro FSC/CNRA. <i>→ webapp: tab Giám sát định kỳ chấm điểm đúng 5 mục này.</i></p>
+        <p><b>Kết luận định kỳ theo 3 mức:</b> ĐẠT / ĐẠT CÓ ĐIỀU KIỆN / KHÔNG ĐẠT.</p>
+
+        <h2>📅 KẾ HOẠCH TRIỂN KHAI KH-FSC-01 (tóm tắt)</h2>
+        <table style="width:100%;">
+          <thead><tr><th>Giai đoạn</th><th>Thời gian</th><th>Đầu ra chính</th></tr></thead>
+          <tbody>
+            <tr><td>0. Chuẩn bị</td><td>Tuần 1–2</td><td>Bộ biểu mẫu chuẩn + danh sách đầu mối cơ quan thẩm quyền</td></tr>
+            <tr><td>1. Đào tạo &amp; Thí điểm</td><td>Tuần 3–6</td><td>Báo cáo thí điểm, đề xuất điều chỉnh biểu mẫu/quy trình</td></tr>
+            <tr><td>2. Triển khai toàn diện</td><td>Tuần 7–12</td><td>100% lô hàng có hồ sơ đầy đủ; bản đồ vùng cung ứng v1</td></tr>
+            <tr><td>3. Đánh giá nội bộ</td><td>Tuần 13–16</td><td>Báo cáo đánh giá nội bộ năm đầu tiên</td></tr>
+            <tr><td>4. Vận hành ổn định</td><td>Từ tuần 17</td><td>Chu kỳ giám sát định kỳ diễn ra thường xuyên</td></tr>
+          </tbody>
+        </table>
+        <p><i>→ webapp: tab Tiến độ triển khai dùng đúng 5 giai đoạn này để cập nhật thực tế.</i></p>
+
+        <h2>📎 DANH MỤC 13 BIỂU MẪU ĐÍNH KÈM (BM-FSC-01 → 10, BM-KH-01 → 03) — ✅ ĐÃ CÓ ĐỦ 13/13</h2>
+        <table style="width:100%;">
+          <thead><tr><th>Mã</th><th>Tên biểu mẫu</th><th>Áp dụng</th><th>Nơi nhập/xem trong webapp</th></tr></thead>
+          <tbody>
+            <tr><td>BM-FSC-01/02</td><td>Phiếu thẩm định chủ rừng + Kiểm tra hồ sơ trước ký HĐ</td><td>Bước 1–2</td><td>🧾 Thẩm định hợp đồng (checklist) + 📄 Hợp đồng &amp; hồ sơ rừng (tham chiếu)</td></tr>
+            <tr><td>BM-FSC-03/04</td><td>Tiếp nhận BKLS + Nghiệm thu &amp; thanh lý HĐ</td><td>Bước 3–4</td><td>📦 Lô hàng mua vào</td></tr>
+            <tr><td>BM-FSC-05</td><td>Lệnh điều động vận chuyển nội bộ</td><td>Bước 5</td><td>🚛 Lệnh điều động vận chuyển</td></tr>
+            <tr><td>BM-FSC-06</td><td>Phiếu theo dõi định mức tiêu hao chế biến</td><td>Bước 6</td><td>🏭 Tiêu hao chế biến</td></tr>
+            <tr><td>BM-FSC-07</td><td>Checklist hồ sơ xuất bán/xuất khẩu</td><td>Bước 7</td><td>🚚 Xuất hàng + 📤 Đơn hàng xuất bán</td></tr>
+            <tr><td>BM-FSC-08</td><td>Sổ theo dõi nộp báo cáo định kỳ cơ quan Nhà nước</td><td>Bước 8</td><td>🗓️ Báo cáo Nhà nước</td></tr>
+            <tr><td>BM-FSC-09</td><td>Phiếu đánh giá rủi ro CNRA theo vùng cung ứng</td><td>Bước 9</td><td>⚠️ Rủi ro CNRA</td></tr>
+            <tr><td>BM-FSC-10</td><td>Báo cáo giám sát định kỳ</td><td>Mục 8.3</td><td>🔍 Giám sát định kỳ</td></tr>
+            <tr><td>—</td><td>Báo cáo khảo sát (~60 trường, Google Form thật)</td><td>Bước 3</td><td>📋 Khảo sát &amp; Tham vấn → sub-tab "Báo cáo khảo sát"</td></tr>
+            <tr><td>—</td><td>Biên bản giám sát khai thác (trong/sau)</td><td>Bước 3–4</td><td>📋 Khảo sát &amp; Tham vấn → sub-tab "BB Giám sát khai thác"</td></tr>
+            <tr><td>—</td><td>Bản ghi tham vấn bên liên quan</td><td>Bước 3</td><td>📋 Khảo sát &amp; Tham vấn → sub-tab "Tham vấn bên liên quan"</td></tr>
+            <tr><td>BM-KH-01</td><td>Phiếu theo dõi tiến độ theo giai đoạn</td><td>KH-FSC-01</td><td>📈 Tiến độ triển khai</td></tr>
+            <tr><td>BM-KH-02</td><td>Biên bản nghiệm thu hoàn thành giai đoạn</td><td>KH-FSC-01</td><td>✅ Nghiệm thu giai đoạn</td></tr>
+            <tr><td>BM-KH-03</td><td>Phiếu ghi nhận rủi ro/vướng mắc triển khai</td><td>KH-FSC-01</td><td>⚠️ Rủi ro triển khai</td></tr>
+          </tbody>
+        </table>
+        <p style="color:#888; font-size:12.5px;">Mỗi dòng dữ liệu ở các tab nhập mới đều có nút 🖨 để in phiếu đơn (có khối ký tên) — xem mục "In phiếu để ký tay" bên dưới.</p>
+      </div>
+    </section>
+
+  </main>
+  </div>
+
+  <script>
+    // ---- Chuyển sub-tab trong 1 section (dùng cho Khảo sát & Tham vấn) ----
+    const _subLoaded = {};
+    function switchSubTab(sectionId, subId) {
+      const sec = document.getElementById(sectionId);
+      sec.querySelectorAll('.subtab').forEach((b) => b.classList.remove('active'));
+      sec.querySelectorAll('.subpanel').forEach((p) => p.classList.remove('active'));
+      sec.querySelector(`.subtab[data-sub="${subId}"]`).classList.add('active');
+      document.getElementById(subId).classList.add('active');
+      if (_subLoaded[subId]) return;
+      _subLoaded[subId] = true;
+      if (subId === 'sub-nhapkhaosat') { loadBaoCaoKhaoSat(); renderMauWordQuick('mauWordKhaoSat', 'khảo sát'); }
+      if (subId === 'sub-nhapgiamsatkt') { loadBienBanGiamSat(); renderMauWordQuick('mauWordGiamSatKT', 'giám sát'); }
+      if (subId === 'sub-nhapthamvan') { loadThamVan(); renderMauWordQuick('mauWordThamVan', ''); }
+    }
+
+    document.querySelectorAll('.tab').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach((b) => b.classList.remove('active'));
+        document.querySelectorAll('section').forEach((s) => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.t).classList.add('active');
+        document.getElementById('pageTitle').innerHTML = btn.dataset.title || btn.textContent;
+        document.getElementById('pageSubtitle').textContent = btn.dataset.sub || '';
+        if (btn.dataset.t === 'dashboard') loadDashboard();
+        if (btn.dataset.t === 'hopdong') loadHopDong();
+        if (btn.dataset.t === 'lohang') loadLoHang();
+        if (btn.dataset.t === 'xuathang') loadXuatHang();
+        if (btn.dataset.t === 'ruiro') loadRuiRo();
+        if (btn.dataset.t === 'khaosatthamvan') loadKhaoSat();
+        if (btn.dataset.t === 'huongdan') renderMauWordFull();
+        if (btn.dataset.t === 'thamdinh') loadTieuChiThamDinh();
+        if (btn.dataset.t === 'dieudong') loadLenhDieuDong();
+        if (btn.dataset.t === 'tieuhao') loadTieuHao();
+        if (btn.dataset.t === 'donhangxb') loadDonHangXB();
+        if (btn.dataset.t === 'baocaoNN') loadBaoCaoNN();
+        if (btn.dataset.t === 'nghiemthugd') loadNghiemThuGD();
+        if (btn.dataset.t === 'ruirotk') loadRuiRoTK();
+        if (btn.dataset.t === 'giamsat') loadGiamSat();
+      });
+    });
+
+    function showError(msg) {
+      const el = document.getElementById('globalError');
+      el.style.display = 'block';
+      el.style.background = '#FCEBEB';
+      el.style.color = '#791F1F';
+      el.textContent = '❌ Lỗi: ' + msg;
+    }
+    function clearError() {
+      document.getElementById('globalError').style.display = 'none';
+    }
+    /** Mọi lệnh gọi server đều đi qua đây — vì backend trả {ok, data} hoặc {ok:false, error}.
+     * Có tự động THỬ LẠI tối đa 2 lần nếu gặp phản hồi null bất thường (lỗi chập chờn hạ tầng
+     * google.script.run, hay gặp khi bấm chuyển tab liên tục khiến nhiều lệnh gọi chồng lên nhau). */
+    function callServer(fnName, args, onSuccess, _retryCount) {
+      _retryCount = _retryCount || 0;
+      let runner = google.script.run
+        .withSuccessHandler((res) => {
+          console.log('[callServer:' + fnName + '] RAW RESPONSE (lần thử ' + (_retryCount + 1) + ') = ', res);
+          if (res && res.ok === false) { showError('[' + fnName + '] ' + res.error); return; }
+          if (!res || res.ok === undefined) {
+            if (_retryCount < 2) {
+              console.log('[callServer:' + fnName + '] Phản hồi bất thường, tự thử lại sau 500ms...');
+              setTimeout(() => callServer(fnName, args, onSuccess, _retryCount + 1), 500);
+              return;
+            }
+            showError('[' + fnName + '] Phản hồi bất thường sau 3 lần thử: ' + JSON.stringify(res));
+            return;
+          }
+          clearError();
+          onSuccess(res.data);
+        })
+        .withFailureHandler((err) => {
+          console.log('[callServer:' + fnName + '] FAILURE = ', err);
+          if (_retryCount < 2) {
+            setTimeout(() => callServer(fnName, args, onSuccess, _retryCount + 1), 500);
+            return;
+          }
+          showError('[' + fnName + '] ' + (err && err.message ? err.message : err));
+        });
+      runner[fnName].apply(runner, args || []);
+    }
+
+    function runPingTest() {
+      alert('Đang gọi pingTest()... chờ kết quả (alert tiếp theo).');
+      google.script.run
+        .withSuccessHandler((res) => { alert('✅ THÀNH CÔNG — server trả về: ' + res); })
+        .withFailureHandler((err) => { alert('❌ THẤT BẠI — lỗi: ' + (err && err.message ? err.message : JSON.stringify(err))); })
+        .pingTest();
+    }
+
+    function runCheckKetNoi() {
+      document.getElementById('checkResult').textContent = 'Đang kiểm tra...';
+      google.script.run.withSuccessHandler((r) => {
+        const lines = r.external.map((x) => (x.ok ? ('✅ ' + x.ssKey + '/' + x.sheetName + ' (' + x.soDong + ' dòng)') : ('❌ ' + x.ssKey + '/' + x.sheetName + ': ' + x.error)));
+        lines.push(r.ownSheetsReady ? '✅ Sheet dữ liệu riêng đã sẵn sàng' : ('❌ Sheet dữ liệu riêng: ' + r.ownError));
+        const coLoi = lines.some((l) => l.startsWith('❌'));
+        const el = document.getElementById('globalError');
+        el.style.display = 'block';
+        el.style.background = coLoi ? '#FCEBEB' : '#EAF3DE';
+        el.style.color = coLoi ? '#791F1F' : '#27500A';
+        el.textContent = (coLoi ? '' : '✅ Tất cả kết nối ổn định:\n') + lines.join('\n');
+        document.getElementById('checkResult').textContent = 'Xem kết quả ở khung phía trên.';
+      }).withFailureHandler((err) => {
+        document.getElementById('checkResult').textContent = 'Lỗi khi kiểm tra: ' + err.message;
+      }).checkKetNoi();
+    }
+
+    // ---- Xuất CSV / In báo cáo (áp dụng đúng dữ liệu đang hiển thị sau khi lọc) ----
+    function exportCSV(tableId, filename) {
+      const table = document.getElementById(tableId);
+      const rows = Array.from(table.querySelectorAll('tr'));
+      if (rows.length <= 1) { alert('Không có dòng dữ liệu nào để xuất (có thể do bộ lọc đang loại hết).'); return; }
+      const csv = rows.map((row) => Array.from(row.querySelectorAll('th,td'))
+        .map((cell) => '"' + cell.textContent.replace(/"/g, '""').trim() + '"').join(',')).join('\r\n');
+      const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function printTable(tableId, title, countText) {
+      const table = document.getElementById(tableId);
+      if (table.querySelectorAll('tbody tr').length === 0) { alert('Không có dòng dữ liệu nào để in (có thể do bộ lọc đang loại hết).'); return; }
+      const w = window.open('', '_blank');
+      w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>
+        body{font-family:Arial,sans-serif;padding:24px;color:#222;}
+        h1{font-size:16px;color:#1F3864;margin-bottom:4px;}
+        .meta{font-size:11px;color:#666;margin-bottom:16px;}
+        table{width:100%;border-collapse:collapse;font-size:11px;}
+        th,td{border:1px solid #999;padding:5px 7px;text-align:left;}
+        th{background:#D9E2F3;}
+        @media print { body{padding:0;} }
+      </style></head><body>
+        <h1>HAK GROUP — ${title}</h1>
+        <div class="meta">In lúc: ${new Date().toLocaleString('vi-VN')}${countText ? ' | ' + countText : ''}</div>
+        ${table.outerHTML}
+      </body></html>`);
+      w.document.close();
+      w.focus();
+      setTimeout(() => w.print(), 300);
+    }
+
+    function xemChiTiet(soHopDong) {
+      document.getElementById('chiTietModalBackdrop').style.display = 'block';
+      document.getElementById('chiTietModalBody').innerHTML = '⏳ Đang tải...';
+      callServer('getHoSoChiTiet', [soHopDong], (d) => {
+        if (!d) return;
+        let html = `<p><b>Số hợp đồng:</b> ${soHopDong} &nbsp; <span style="color:#666;">(${d.rungList.length} lô rừng thuộc hợp đồng này)</span></p>`;
+        if (!d.rungList.length) {
+          html += `<p style="color:#A32D2D;">⚠ Không tìm thấy dòng nào trong HD_RUNG cho hợp đồng này.</p>`;
+        }
+        d.rungList.forEach((rung, idx) => {
+          html += `<div style="border:1px solid #ddd; border-radius:8px; padding:12px; margin-bottom:12px;">
+            <h3 style="color:#1F3864;font-size:14px;margin-top:0;">🌲 Lô rừng ${idx + 1} — Mã: ${fmt(rung.MaRung)}</h3>
+            <p><b>Chủ rừng:</b> ${fmt(rung.HoVaTenChuRung)} &nbsp; <b>CCCD:</b> ${fmt(rung.SoCCCD)}</p>
+            <p><b>Thường trú:</b> ${fmt(rung.ThuongTru)}</p>
+            <p><b>Địa chỉ rừng trồng:</b> ${fmt(rung.DiaChiRungTrong)} &nbsp; <b>Diện tích:</b> ${fmtNum(rung.DienTich_m2)} m²</p>
+            <p><b>Hồ sơ nguồn gốc:</b> ${fmt(rung.HoSoNguonGoc) || '<i>(chưa có)</i>'} &nbsp; <b>Số giấy tờ:</b> ${fmt(rung.SoGiayTo)} (${fmt(rung.NgayGiayTo)})</p>
+            <p><b>File giấy tờ đính kèm:</b> ${rung.DinhKemGiayTo ? ('<code>' + rung.DinhKemGiayTo + '</code>') : '<i>(chưa có)</i>'}</p>`;
+          if (rung.Gps) {
+            const mapUrl = `https://www.google.com/maps?q=${rung.Gps.Lat},${rung.Gps.Lng}`;
+            html += `<p><b>📍 Tọa độ:</b> ${fmt(rung.Gps.Lat)}, ${fmt(rung.Gps.Lng)} — <a href="${mapUrl}" target="_blank">Mở Google Maps</a></p>`;
+          } else {
+            html += `<p style="color:#A32D2D;">⚠ Chưa có tọa độ GPS cho lô rừng này.</p>`;
+          }
+          if (rung.SoAnh > 0) {
+            html += `<p><b>📷 Ảnh đính kèm (${rung.SoAnh} ảnh):</b></p><ul style="margin:4px 0;">` +
+              rung.AnhFiles.map((f) => `<li><code>${f}</code></li>`).join('') + `</ul>
+              <p style="color:#888;font-size:12px;">Đây là đường dẫn nội bộ trong Drive gắn với Google Form — mở trực tiếp trong sheet HD_Picture (hoặc thư mục Drive tương ứng) để xem ảnh thật.</p>`;
+          } else {
+            html += `<p style="color:#A32D2D;">⚠ Chưa có ảnh nào cho lô rừng này trong HD_Picture.</p>`;
+          }
+          html += `</div>`;
+        });
+        if (d.stk) {
+          html += `<h3 style="color:#1F3864;font-size:14px;">💳 Thanh toán / Ủy quyền (HD_STK)</h3>
+            <p><b>Người được ủy quyền:</b> ${fmt(d.stk.NguoiUyQuyen)}</p>
+            <p><b>Số TK nhận tiền:</b> ${fmt(d.stk.SoTKNhanTien)} — ${fmt(d.stk.NganHang)}</p>
+            <p><b>Có ủy quyền thanh toán:</b> ${fmt(d.stk.UyQuyenThanhToan)}</p>`;
+        }
+        document.getElementById('chiTietModalBody').innerHTML = html;
+      });
+    }
+
+    function badge(kl) {
+      if (kl === 'ĐẠT') return '<span class="badge dat">ĐẠT</span>';
+      if (kl === 'ĐẠT CÓ ĐIỀU KIỆN') return '<span class="badge dieukien">ĐẠT CÓ ĐK</span>';
+      if (kl === 'KHÔNG ĐẠT') return '<span class="badge khongdat">KHÔNG ĐẠT</span>';
+      return '<span class="badge chua">Chưa đánh giá</span>';
+    }
+    function hoSoBadge(kq) {
+      if (String(kq).indexOf('Đầy đủ') > -1) return '<span class="badge ok2">' + kq + '</span>';
+      return '<span class="badge thieu">' + (kq || '') + '</span>';
+    }
+    function fmt(v) { return v === null || v === undefined ? '' : v; }
+    function fmtNum(v) {
+      const n = Number(v);
+      return isNaN(n) ? '0' : n.toLocaleString('vi-VN', { maximumFractionDigits: 2 });
+    }
+    function sumField(rows, field) {
+      return rows.reduce((s, r) => s + (Number(r[field]) || 0), 0);
+    }
+
+    function loadDashboard() {
+      callServer('getDashboardData', [], (d) => {
+        if (!d) return;
+        const tyLeHtml = d.coDuLieuKiemTra
+          ? `<div class="card ok"><div class="num">${d.tyLeDayDu}%</div><div class="lbl">Tỷ lệ hồ sơ đầy đủ</div></div>
+             <div class="card warn"><div class="num">${d.thieuHoSo}</div><div class="lbl">Hợp đồng thiếu hồ sơ</div></div>`
+          : `<div class="card warn"><div class="num">—</div><div class="lbl">BaoCao_KiemTra chưa có dữ liệu (chỉ có dòng tiêu đề) — kiểm tra lại sheet nguồn</div></div>`;
+        document.getElementById('dashCards').innerHTML = `
+          <div class="card"><div class="num">${d.tongHD}</div><div class="lbl">Tổng số hợp đồng (theo HD_RUNG)</div></div>
+          ${tyLeHtml}
+          <div class="card warn"><div class="num">${d.chenhLechCanhBao}</div><div class="lbl">HĐ chênh lệch DT &gt;10%</div></div>
+          <div class="card"><div class="num">${d.dat}</div><div class="lbl">HĐ đã đánh giá ĐẠT</div></div>
+          <div class="card warn"><div class="num">${d.khongDat}</div><div class="lbl">HĐ KHÔNG ĐẠT</div></div>
+          <div class="card"><div class="num">${d.chuaDanhGia}</div><div class="lbl">HĐ chưa đánh giá FSC</div></div>
+          <div class="card warn"><div class="num">${d.vungRuiRoDangKe}</div><div class="lbl">Rừng rủi ro CNRA đáng kể</div></div>
+          <div class="card warn"><div class="num">${d.chuaKhaoSat}</div><div class="lbl">HĐ chưa theo dõi Khảo sát/Tham vấn</div></div>
+          <div class="card warn"><div class="num">${d.chuaThamDinh}</div><div class="lbl">HĐ chưa có checklist thẩm định</div></div>
+        `;
+        const tb = document.querySelector('#tienDoTable tbody');
+        tb.innerHTML = d.tienDo.map((g) => `<tr><td>${fmt(g.GiaiDoan)}</td><td>${fmt(g.MocKeHoach)}</td><td>${fmt(g.NgayThucTeHoanThanh) || '-'}</td><td>${fmt(g.DanhGia) || '-'}</td></tr>`).join('');
+
+        // Cập nhật badge cảnh báo trên sidebar
+        setNavBadge('navBadgeHopDong', d.thieuHoSo);
+        setNavBadge('navBadgeRuiRo', d.vungRuiRoDangKe);
+        setNavBadge('navBadgeKhaoSat', d.chuaKhaoSat);
+        setNavBadge('navBadgeThamDinh', d.chuaThamDinh);
+      });
+    }
+    function setNavBadge(id, count) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (count > 0) { el.style.display = 'inline-block'; el.textContent = count; }
+      else { el.style.display = 'none'; }
+    }
+
+    // ---- Bộ nhớ tạm dữ liệu gốc (chưa lọc) để bộ lọc chạy phía client, không gọi lại server mỗi lần gõ ----
+    const CACHE = { hopDong: [], loHang: [], xuatHang: [], ruiRo: [], giamSat: [], rungList: [], khaoSat: [], baoCaoKhaoSat: [], bienBanGiamSat: [], thamVan: [], tieuChiThamDinh: [], lenhDieuDong: [], tieuHao: [], donHangXB: [], baoCaoNN: [], nghiemThuGD: [], ruiRoTK: [] };
+    const PAGE_SIZE = 20;
+    let pageHopDong = 1;
+    let pageLoHang = 1;
+    let pageXuatHang = 1;
+    let pageDHXB = 1;
+
+    function parseDateLike(v) {
+      if (!v) return null;
+      const d = new Date(v);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    function inRange(dateVal, fromStr, toStr) {
+      if (!fromStr && !toStr) return true;
+      const d = parseDateLike(dateVal);
+      if (!d) return false;
+      if (fromStr && d < new Date(fromStr)) return false;
+      if (toStr && d > new Date(toStr + 'T23:59:59')) return false;
+      return true;
+    }
+
+    function loadHopDong() {
+      callServer('getHopDongList', [], (rows) => {
+        if (!rows) return;
+        CACHE.hopDong = rows;
+        pageHopDong = 1;
+        const sel = document.getElementById('selectHopDong');
+        if (sel) {
+          sel.innerHTML = '<option value="">-- chọn hợp đồng --</option>' +
+            rows.map((r) => `<option value="${r.SoHopDong}">${r.SoHopDong} — ${r.ChuRung || ''}</option>`).join('');
+        }
+        renderHopDong();
+      });
+    }
+    function renderHopDong() {
+      const kw = (document.getElementById('fHopDongSearch').value || '').toLowerCase();
+      const fHoSo = document.getElementById('fHopDongHoSo').value;
+      const fGS = document.getElementById('fHopDongGiamSat').value;
+      const filtered = CACHE.hopDong.filter((r) => {
+        if (kw && !((r.SoHopDong + '' + r.ChuRung + '' + r.MaRung).toLowerCase().includes(kw))) return false;
+        if (fHoSo === 'daydu' && String(r.KetQuaHoSo).indexOf('Đầy đủ') === -1) return false;
+        if (fHoSo === 'thieu' && !(String(r.KetQuaHoSo).indexOf('Thiếu') > -1 || String(r.KetQuaHoSo).indexOf('thiếu') > -1)) return false;
+        if (fHoSo === 'chuaco' && r.KetQuaHoSo !== '(chưa có dữ liệu kiểm tra)') return false;
+        if (fGS === 'chua' && r.KetLuanGiamSat) return false;
+        if (fGS && fGS !== 'chua' && r.KetLuanGiamSat !== fGS) return false;
+        return true;
+      });
+      const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      if (pageHopDong < 1) pageHopDong = 1;
+      if (pageHopDong > totalPages) pageHopDong = totalPages;
+      const pageRows = filtered.slice((pageHopDong - 1) * PAGE_SIZE, pageHopDong * PAGE_SIZE);
+      document.getElementById('hopDongTotalBox').innerHTML =
+        `📊 <b>Tổng cộng (toàn bộ ${filtered.length} hợp đồng đang lọc):</b> ` +
+        `${filtered.filter((r) => String(r.KetQuaHoSo).indexOf('Đầy đủ') > -1).length} đầy đủ hồ sơ · ` +
+        `${filtered.filter((r) => r.KetLuanGiamSat === 'ĐẠT').length} ĐẠT · ` +
+        `${filtered.filter((r) => r.KetLuanGiamSat === 'KHÔNG ĐẠT').length} KHÔNG ĐẠT`;
+      const tb = document.querySelector('#hopDongTable tbody');
+      tb.innerHTML = pageRows.map((r) => `<tr>
+        <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.MaRung)}</td><td>${fmt(r.ChuRung)}</td>
+        <td>${hoSoBadge(r.KetQuaHoSo)}</td><td>${fmt(r.HoSoConThieu)}</td>
+        <td>${fmt(r.ChenhLechDienTichPhanTram)}</td><td>${badge(r.KetLuanGiamSat)}</td>
+        <td><button class="btnmini" onclick="xemChiTiet('${r.SoHopDong}')">📎 Chi tiết</button></td>
+      </tr>`).join('') || '<tr><td colspan="8">Không có dòng nào khớp bộ lọc.</td></tr>';
+      document.getElementById('fHopDongCount').textContent = `${filtered.length} / ${CACHE.hopDong.length} dòng`;
+      document.getElementById('fHopDongPageInfo').textContent = `Trang ${pageHopDong} / ${totalPages}`;
+    }
+
+    function loadLoHang() {
+      document.querySelector('#loHangTable tbody').innerHTML = '<tr><td colspan="9">⏳ Đang tải dữ liệu từ HoSoKeo_DN (sheet lớn, có thể mất vài giây)...</td></tr>';
+      document.getElementById('fLoHangCount').textContent = 'Đang tải...';
+      console.time('getLoHangGanDay');
+      callServer('getLoHangGanDay', [200], (rows) => {
+        console.timeEnd('getLoHangGanDay');
+        if (!rows) return;
+        CACHE.loHang = rows;
+        pageLoHang = 1;
+        renderLoHang();
+      });
+    }
+    function renderLoHang() {
+      const kw = (document.getElementById('fLoHangSearch').value || '').toLowerCase();
+      const tu = document.getElementById('fLoHangTu').value;
+      const den = document.getElementById('fLoHangDen').value;
+      const filtered = CACHE.loHang.filter((r) => {
+        if (kw) {
+          const hay = [r.MaHopDong, r.ChuRung, r.SoPhieuCan, r.SoBKLS].join(' ').toLowerCase();
+          if (!hay.includes(kw)) return false;
+        }
+        if (!inRange(r.NgayNhap, tu, den)) return false;
+        return true;
+      });
+      const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      if (pageLoHang < 1) pageLoHang = 1;
+      if (pageLoHang > totalPages) pageLoHang = totalPages;
+      const pageRows = filtered.slice((pageLoHang - 1) * PAGE_SIZE, pageLoHang * PAGE_SIZE);
+
+      // Tổng toàn bộ (tất cả dòng đang lọc, không chỉ trang hiện tại) — hiện phía trên bảng
+      const tongKL = sumField(filtered, 'KhoiLuongTan');
+      const tongTT = sumField(filtered, 'ThanhToan');
+      document.getElementById('loHangTotalBox').innerHTML =
+        `📊 <b>Tổng cộng (toàn bộ ${filtered.length} dòng đang lọc):</b> ${fmtNum(tongKL)} tấn · ${fmtNum(tongTT)} đồng`;
+
+      const tb = document.querySelector('#loHangTable tbody');
+      tb.innerHTML = pageRows.map((r) => `<tr>
+        <td>${fmt(r.NgayNhap)}</td><td>${fmt(r.MaHopDong)}</td><td>${fmt(r.SoPhieuCan)}</td>
+        <td>${fmt(r.SoBKLS)}</td><td>${fmt(r.ChuRung)}</td><td>${fmt(r.DiaChiRung)}</td>
+        <td>${fmt(r.KhoiLuongTan)}</td><td>${fmt(r.DonGia)}</td><td>${fmt(r.ThanhToan)}</td>
+      </tr>`).join('') || '<tr><td colspan="9">Không có dòng nào khớp bộ lọc.</td></tr>';
+
+      // Tổng theo trang hiện tại — hiện ở dòng cuối bảng (tfoot)
+      const trangKL = sumField(pageRows, 'KhoiLuongTan');
+      const trangTT = sumField(pageRows, 'ThanhToan');
+      document.getElementById('loHangFoot').innerHTML =
+        `<tr style="font-weight:bold;background:#EAF0FB;"><td colspan="6">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangKL)} tấn</td><td></td><td>${fmtNum(trangTT)} đồng</td></tr>`;
+
+      document.getElementById('fLoHangCount').textContent = `${filtered.length} / ${CACHE.loHang.length} dòng (200 gần nhất)`;
+      document.getElementById('fLoHangPageInfo').textContent = `Trang ${pageLoHang} / ${totalPages}`;
+    }
+
+    function loadXuatHang() {
+      document.querySelector('#xuatHangTable tbody').innerHTML = '<tr><td colspan="8">⏳ Đang tải dữ liệu từ NL_PC_XH (sheet lớn, có thể mất vài giây)...</td></tr>';
+      document.getElementById('fXuatHangCount').textContent = 'Đang tải...';
+      console.time('getXuatHangGanDay');
+      callServer('getXuatHangGanDay', [200], (rows) => {
+        console.timeEnd('getXuatHangGanDay');
+        if (!rows) return;
+        CACHE.xuatHang = rows;
+        pageXuatHang = 1;
+        const tkhqSet = [...new Set(rows.map((r) => r.SoTKHQ).filter(Boolean))].sort();
+        document.getElementById('fXuatHangTKHQ').innerHTML = '<option value="">-- Số TKHQ: Tất cả --</option>' +
+          tkhqSet.map((v) => `<option value="${v}">${v}</option>`).join('');
+        renderXuatHang();
+      });
+    }
+    function renderXuatHang() {
+      const kw = (document.getElementById('fXuatHangSearch').value || '').toLowerCase();
+      const fTKHQ = document.getElementById('fXuatHangTKHQ').value;
+      const tu = document.getElementById('fXuatHangTu').value;
+      const den = document.getElementById('fXuatHangDen').value;
+      const filtered = CACHE.xuatHang.filter((r) => {
+        if (kw) {
+          const hay = [r.SoPhieu, r.SoBKLS, r.TauXuat].join(' ').toLowerCase();
+          if (!hay.includes(kw)) return false;
+        }
+        if (fTKHQ && String(r.SoTKHQ) !== fTKHQ) return false;
+        if (!inRange(r.NgayCan1, tu, den)) return false;
+        return true;
+      });
+      const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      if (pageXuatHang < 1) pageXuatHang = 1;
+      if (pageXuatHang > totalPages) pageXuatHang = totalPages;
+      const pageRows = filtered.slice((pageXuatHang - 1) * PAGE_SIZE, pageXuatHang * PAGE_SIZE);
+
+      // Lưu ý: NL_PC_XH không có cột đơn giá/thành tiền, nên chỉ tổng được khối lượng (Tấn & M3)
+      const tongTan = sumField(filtered, 'KhoiLuongTan');
+      const tongM3 = sumField(filtered, 'KhoiLuongM3');
+      document.getElementById('xuatHangTotalBox').innerHTML =
+        `📊 <b>Tổng cộng (toàn bộ ${filtered.length} dòng đang lọc):</b> ${fmtNum(tongTan)} tấn · ${fmtNum(tongM3)} m³ ` +
+        `<span style="font-weight:normal;color:#888;">(sheet NL_PC_XH không có cột giá/thành tiền nên không tổng được tiền)</span>`;
+
+      const tb = document.querySelector('#xuatHangTable tbody');
+      tb.innerHTML = pageRows.map((r) => `<tr>
+        <td>${fmt(r.SoPhieu)}</td><td>${fmt(r.NgayCan1)}</td><td>${fmt(r.SoBKLS)}</td>
+        <td>${fmt(r.KhoiLuongTan)}</td><td>${fmt(r.KhoiLuongM3)}</td>
+        <td>${fmt(r.DonViVanChuyen)}</td><td>${fmt(r.SoTKHQ)}</td><td>${fmt(r.TauXuat)}</td>
+      </tr>`).join('') || '<tr><td colspan="8">Không có dòng nào khớp bộ lọc.</td></tr>';
+
+      const trangTan = sumField(pageRows, 'KhoiLuongTan');
+      const trangM3 = sumField(pageRows, 'KhoiLuongM3');
+      document.getElementById('xuatHangFoot').innerHTML =
+        `<tr style="font-weight:bold;background:#EAF0FB;"><td colspan="3">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangTan)} tấn</td><td>${fmtNum(trangM3)} m³</td><td colspan="3"></td></tr>`;
+
+      document.getElementById('fXuatHangCount').textContent = `${filtered.length} / ${CACHE.xuatHang.length} dòng (200 gần nhất)`;
+      document.getElementById('fXuatHangPageInfo').textContent = `Trang ${pageXuatHang} / ${totalPages}`;
+    }
+
+    function loadRuiRo() {
+      callServer('getDanhGiaRuiRoRungList', [], (rows) => {
+        if (!rows) return;
+        CACHE.ruiRo = rows;
+        renderRuiRo();
+      });
+      // Nạp danh sách rừng cho dropdown (chỉ tải nếu chưa có, tránh gọi lại server mỗi lần mở tab)
+      if (!CACHE.rungList.length) {
+        callServer('getRungList', [], (rows) => {
+          if (!rows) return;
+          CACHE.rungList = rows;
+          const sel = document.getElementById('selectRungRuiRo');
+          sel.innerHTML = '<option value="">-- chọn rừng --</option>' +
+            rows.map((r, i) => `<option value="${r.MaRung}" data-sohd="${r.SoHopDong}" data-idx="${i}">${r.MaRung || '(không có mã)'} — HĐ ${r.SoHopDong} — ${r.ChuRung}</option>`).join('');
+          // Đổ dữ liệu vào 2 dropdown lọc (loại trùng)
+          const hopDongSet = [...new Set(rows.map((r) => r.SoHopDong).filter(Boolean))];
+          const rungSet = [...new Set(rows.map((r) => r.MaRung).filter(Boolean))];
+          document.getElementById('fRuiRoHopDong').innerHTML = '<option value="">-- Lọc theo hợp đồng: Tất cả --</option>' +
+            hopDongSet.map((v) => `<option value="${v}">${v}</option>`).join('');
+          document.getElementById('fRuiRoRung').innerHTML = '<option value="">-- Lọc theo rừng: Tất cả --</option>' +
+            rungSet.map((v) => `<option value="${v}">${v}</option>`).join('');
+        });
+      }
+    }
+    function onChonRung() {
+      const sel = document.getElementById('selectRungRuiRo');
+      const opt = sel.options[sel.selectedIndex];
+      document.getElementById('inputSoHDRuiRo').value = opt ? (opt.dataset.sohd || '') : '';
+    }
+    function renderRuiRo() {
+      const kw = (document.getElementById('fRuiRoSearch').value || '').toLowerCase();
+      const muc = document.getElementById('fRuiRoMuc').value;
+      const fHopDong = document.getElementById('fRuiRoHopDong').value;
+      const fRung = document.getElementById('fRuiRoRung').value;
+      const filtered = CACHE.ruiRo.filter((r) => {
+        if (kw && !((r.MaRung + '' + r.SoHopDong).toLowerCase().includes(kw))) return false;
+        if (muc && r.RuiRoCNRA !== muc) return false;
+        if (fHopDong && String(r.SoHopDong) !== fHopDong) return false;
+        if (fRung && String(r.MaRung) !== fRung) return false;
+        return true;
+      });
+      const tb = document.querySelector('#ruiRoTable tbody');
+      tb.innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.MaRung)}</td><td>${fmt(r.SoHopDong)}</td>
+        <td>${r.RuiRoCNRA === 'Đáng kể' ? '<span class="badge khongdat">Đáng kể</span>' : '<span class="badge ok2">Không đáng kể</span>'}</td>
+        <td>${fmt(r.BienPhapRMM)}</td><td>${fmt(r.NgayDanhGia)}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('ruiro', window._ruiRoFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="6">Chưa có dữ liệu.</td></tr>';
+      window._ruiRoFiltered = filtered;
+      document.getElementById('fRuiRoCount').textContent = `${filtered.length} / ${CACHE.ruiRo.length} dòng`;
+    }
+
+    function loadKhaoSat() {
+      callServer('getKhaoSatList', [], (rows) => {
+        if (!rows) return;
+        CACHE.khaoSat = rows;
+        renderKhaoSat();
+      });
+      // Nạp danh sách hợp đồng cho dropdown (dùng chung dữ liệu đã có nếu đã tải)
+      if (CACHE.hopDong.length) {
+        fillSelectHopDongKhaoSat();
+      } else {
+        callServer('getHopDongList', [], (rows) => {
+          if (!rows) return;
+          CACHE.hopDong = rows;
+          fillSelectHopDongKhaoSat();
+        });
+      }
+    }
+    function fillSelectHopDongKhaoSat() {
+      const sel = document.getElementById('selectHopDongKhaoSat');
+      sel.innerHTML = '<option value="">-- chọn hợp đồng --</option>' +
+        CACHE.hopDong.map((r) => `<option value="${r.SoHopDong}">${r.SoHopDong} — ${r.ChuRung || ''}</option>`).join('');
+    }
+    const KS_FIELDS = ['CoBaoCaoKhaoSat', 'CoBBGiamSatTrongKhaiThac', 'CoBBGiamSatSauKhaiThac', 'ThamVanUBNDXa', 'ThamVanKiemLam', 'ThamVanChuRungLanCan', 'ThamVanNguoiDanDiaPhuong', 'ThamVanCongNhanKhaiThac', 'ThamVanNguoiVanChuyen'];
+    function ksBadge(v) {
+      return v === 'Có' ? '<span class="badge ok2">Có</span>' : '<span class="badge thieu">Chưa</span>';
+    }
+    function renderKhaoSat() {
+      const kw = (document.getElementById('fKhaoSatSearch').value || '').toLowerCase();
+      const tt = document.getElementById('fKhaoSatTrangThai').value;
+      const filtered = CACHE.khaoSat.filter((r) => {
+        if (kw && !String(r.SoHopDong).toLowerCase().includes(kw)) return false;
+        const soDu = KS_FIELDS.filter((f) => r[f] === 'Có').length;
+        const dayDu = soDu === KS_FIELDS.length;
+        if (tt === 'du' && !dayDu) return false;
+        if (tt === 'thieu' && dayDu) return false;
+        return true;
+      });
+      const tb = document.querySelector('#khaoSatTable tbody');
+      tb.innerHTML = filtered.map((r) => {
+        const soDu = KS_FIELDS.filter((f) => r[f] === 'Có').length;
+        const dayDu = soDu === KS_FIELDS.length;
+        return `<tr>
+          <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.NgayKhaoSat)}</td><td>${fmt(r.NguoiKhaoSat)}</td>
+          <td>${ksBadge(r.CoBaoCaoKhaoSat)}</td><td>${ksBadge(r.CoBBGiamSatTrongKhaiThac)}</td><td>${ksBadge(r.CoBBGiamSatSauKhaiThac)}</td>
+          <td>${ksBadge(r.ThamVanUBNDXa)}</td><td>${ksBadge(r.ThamVanKiemLam)}</td><td>${ksBadge(r.ThamVanChuRungLanCan)}</td>
+          <td>${ksBadge(r.ThamVanNguoiDanDiaPhuong)}</td><td>${ksBadge(r.ThamVanCongNhanKhaiThac)}</td><td>${ksBadge(r.ThamVanNguoiVanChuyen)}</td>
+          <td>${dayDu ? '<span class="badge ok2">Đầy đủ</span>' : '<span class="badge thieu">Thiếu ' + (KS_FIELDS.length - soDu) + ' mục</span>'}</td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="13">Chưa có dữ liệu.</td></tr>';
+      document.getElementById('fKhaoSatCount').textContent = `${filtered.length} / ${CACHE.khaoSat.length} dòng`;
+    }
+
+    // ---- BM-FSC-01/02: Checklist thẩm định hợp đồng ----
+    function loadTieuChiThamDinh() {
+      callServer('getTieuChiThamDinhList', [], (rows) => {
+        if (!rows) return;
+        CACHE.tieuChiThamDinh = rows;
+        renderTieuChiThamDinh();
+      });
+      ensureHopDongLoaded(() => fillHopDongSelect('selectHopDongTDHD'));
+    }
+    function tdBadge(v) { return v === 'Đạt' ? '<span class="badge ok2">Đạt</span>' : '<span class="badge thieu">Không đạt</span>'; }
+    function renderTieuChiThamDinh() {
+      const kw = (document.getElementById('fTDHDSearch').value || '').toLowerCase();
+      const filtered = CACHE.tieuChiThamDinh.filter((r) => !kw || String(r.SoHopDong).toLowerCase().includes(kw));
+      document.querySelector('#tdhdTable tbody').innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.NgayThamDinh)}</td>
+        <td>${tdBadge(r.MucDichSuDungDatHopLe)}</td><td>${tdBadge(r.SoDoConHan)}</td><td>${tdBadge(r.CCCDConHieuLuc)}</td>
+        <td>${tdBadge(r.KhongPhaiRungTuNhienSau2020)}</td><td>${tdBadge(r.KhongTranhChap)}</td>
+        <td>${tdBadge(r.KhoiLuongKhongVuotSoDo)}</td><td>${tdBadge(r.ThongBaoGiaDayDu)}</td><td>${fmt(r.KetLuanThamDinh)}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('tdhd', window._tdhdFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="11">Chưa có dữ liệu.</td></tr>';
+      document.getElementById('fTDHDCount').textContent = `${filtered.length} / ${CACHE.tieuChiThamDinh.length} dòng`;
+      window._tdhdFiltered = filtered;
+    }
+    document.getElementById('formTieuChiThamDinh').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('tdhdMsg').innerHTML = '<div class="msg ok">Đã lưu kết quả thẩm định.</div>';
+        e.target.reset(); loadTieuChiThamDinh();
+      }).withFailureHandler((err) => {
+        document.getElementById('tdhdMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addTieuChiThamDinh(obj);
+    });
+
+    // ---- BM-FSC-05: Lệnh điều động vận chuyển ----
+    function loadLenhDieuDong() {
+      callServer('getLenhDieuDongList', [], (rows) => {
+        if (!rows) return;
+        CACHE.lenhDieuDong = rows;
+        renderLenhDieuDong();
+      });
+    }
+    function renderLenhDieuDong() {
+      const kw = (document.getElementById('fDDSearch').value || '').toLowerCase();
+      const filtered = CACHE.lenhDieuDong.filter((r) => !kw || [r.BienKiemSoat, r.DiemDi, r.DiemDen].join(' ').toLowerCase().includes(kw));
+      document.querySelector('#ddTable tbody').innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.SoLenh)}</td><td>${fmt(r.NgayLenh)}</td><td>${fmt(r.LoaiHang)}</td>
+        <td>${fmt(r.DiemDi)}</td><td>${fmt(r.DiemDen)}</td><td>${fmt(r.BienKiemSoat)}</td>
+        <td>${fmt(r.SoPhieuCan)}</td><td>${fmt(r.NgayLapPhieuXuatKho)}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('dd', window._ddFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="9">Chưa có dữ liệu.</td></tr>';
+      document.getElementById('fDDCount').textContent = `${filtered.length} / ${CACHE.lenhDieuDong.length} dòng`;
+      window._ddFiltered = filtered;
+    }
+    document.getElementById('formLenhDieuDong').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('ddMsg').innerHTML = '<div class="msg ok">Đã lưu lệnh điều động.</div>';
+        e.target.reset(); loadLenhDieuDong();
+      }).withFailureHandler((err) => {
+        document.getElementById('ddMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addLenhDieuDong(obj);
+    });
+
+    // ---- BM-FSC-06: Tiêu hao chế biến ----
+    function loadTieuHao() {
+      callServer('getTieuHaoCheBienList', [], (rows) => {
+        if (!rows) return;
+        CACHE.tieuHao = rows;
+        renderTieuHao();
+      });
+    }
+    function renderTieuHao() {
+      const kw = (document.getElementById('fTHSearch').value || '').toLowerCase();
+      const filtered = CACHE.tieuHao.filter((r) => !kw || [r.KyTheoDoi, r.SoBKLSXuatCheBien].join(' ').toLowerCase().includes(kw));
+      document.querySelector('#thTable tbody').innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.KyTheoDoi)}</td><td>${fmt(r.SoBKLSXuatCheBien)}</td><td>${fmt(r.KhoiLuongDauVaoTan)}</td>
+        <td>${fmt(r.DinhMucTieuHaoPhanTram)}</td><td>${fmt(r.DamThanhPhamTan)}</td>
+        <td>${fmt(r.TieuHaoThucTePhanTram)}</td><td>${fmt(r.GiaiTrinhChenhLech)}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('th', window._thFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="8">Chưa có dữ liệu.</td></tr>';
+      document.getElementById('fTHCount').textContent = `${filtered.length} / ${CACHE.tieuHao.length} dòng`;
+      window._thFiltered = filtered;
+    }
+    document.getElementById('formTieuHao').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('thMsg').innerHTML = '<div class="msg ok">Đã lưu kỳ tiêu hao.</div>';
+        e.target.reset(); loadTieuHao();
+      }).withFailureHandler((err) => {
+        document.getElementById('thMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addTieuHaoCheBien(obj);
+    });
+
+    // ---- Đơn hàng xuất bán (NL_DH_XB, chỉ đọc) ----
+    function loadDonHangXB() {
+      document.querySelector('#dhxbTable tbody').innerHTML = '<tr><td>⏳ Đang tải...</td></tr>';
+      callServer('getDonHangXuatBanList', [200], (rows) => {
+        if (!rows) return;
+        CACHE.donHangXB = rows;
+        pageDHXB = 1;
+        if (rows.length) {
+          const cols = Object.keys(rows[0]).filter((k) => k !== 'Timestamp' && k !== 'Email Address');
+          document.querySelector('#dhxbTable thead tr').innerHTML = cols.map((c) => `<th>${c}</th>`).join('');
+          window._dhxbCols = cols;
+        }
+        renderDonHangXB();
+      });
+    }
+    function renderDonHangXB() {
+      const kw = (document.getElementById('fDHXBSearch').value || '').toLowerCase();
+      const cols = window._dhxbCols || [];
+      const filtered = CACHE.donHangXB.filter((r) => !kw || cols.some((c) => String(r[c] || '').toLowerCase().includes(kw)));
+      const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      if (pageDHXB < 1) pageDHXB = 1;
+      if (pageDHXB > totalPages) pageDHXB = totalPages;
+      const pageRows = filtered.slice((pageDHXB - 1) * PAGE_SIZE, pageDHXB * PAGE_SIZE);
+      document.querySelector('#dhxbTable tbody').innerHTML = pageRows.map((r) => '<tr>' + cols.map((c) => `<td>${fmt(r[c])}</td>`).join('') + '</tr>').join('') || `<tr><td colspan="${cols.length || 1}">Không có dữ liệu.</td></tr>`;
+      document.getElementById('fDHXBCount').textContent = `${filtered.length} / ${CACHE.donHangXB.length} dòng (200 gần nhất)`;
+      document.getElementById('fDHXBPageInfo').textContent = `Trang ${pageDHXB} / ${totalPages}`;
+    }
+
+    // ---- BM-FSC-08: Báo cáo Nhà nước ----
+    function loadBaoCaoNN() {
+      callServer('getSoTheoDoiBaoCaoList', [], (rows) => {
+        if (!rows) return;
+        CACHE.baoCaoNN = rows;
+        renderBaoCaoNN();
+      });
+    }
+    function renderBaoCaoNN() {
+      const kw = (document.getElementById('fBCNNSearch').value || '').toLowerCase();
+      const dh = document.getElementById('fBCNNDungHan').value;
+      const filtered = CACHE.baoCaoNN.filter((r) => {
+        if (kw && ![r.Ky, r.DauMoiTiepNhan].join(' ').toLowerCase().includes(kw)) return false;
+        if (dh && r.DungHan !== dh) return false;
+        return true;
+      });
+      document.querySelector('#bcnnTable tbody').innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.LoaiBaoCao)}</td><td>${fmt(r.Ky)}</td><td>${fmt(r.HanNop)}</td><td>${fmt(r.NgayNopThucTe)}</td>
+        <td>${r.DungHan === 'Có' ? '<span class="badge ok2">Có</span>' : '<span class="badge thieu">Không</span>'}</td>
+        <td>${fmt(r.DauMoiTiepNhan)}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('bcnn', window._bcnnFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="7">Chưa có dữ liệu.</td></tr>';
+      document.getElementById('fBCNNCount').textContent = `${filtered.length} / ${CACHE.baoCaoNN.length} dòng`;
+      window._bcnnFiltered = filtered;
+    }
+    document.getElementById('formBaoCaoNN').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('bcnnMsg').innerHTML = '<div class="msg ok">Đã lưu bản ghi báo cáo.</div>';
+        e.target.reset(); loadBaoCaoNN();
+      }).withFailureHandler((err) => {
+        document.getElementById('bcnnMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addSoTheoDoiBaoCao(obj);
+    });
+
+    // ---- BM-KH-02: Nghiệm thu giai đoạn ----
+    function loadNghiemThuGD() {
+      callServer('getNghiemThuGiaiDoanList', [], (rows) => {
+        if (!rows) return;
+        CACHE.nghiemThuGD = rows;
+        renderNghiemThuGD();
+      });
+    }
+    function renderNghiemThuGD() {
+      const kw = (document.getElementById('fNTGDSearch').value || '').toLowerCase();
+      const filtered = CACHE.nghiemThuGD.filter((r) => !kw || String(r.GiaiDoan).toLowerCase().includes(kw));
+      document.querySelector('#ntgdTable tbody').innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.GiaiDoan)}</td><td>${fmt(r.ThoiGianThucHien)}</td>
+        <td>${r.KetLuanNghiemThu === 'Nghiệm thu' ? '<span class="badge ok2">Nghiệm thu</span>' : (r.KetLuanNghiemThu === 'Chưa nghiệm thu' ? '<span class="badge khongdat">Chưa</span>' : '<span class="badge dieukien">Có ĐK</span>')}</td>
+        <td>${fmt(r.KhoangTrongBangChung)}</td><td>${fmt(r.NguoiNghiemThu)}</td><td>${fmt(r.NgayNghiemThu)}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('ntgd', window._ntgdFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="7">Chưa có dữ liệu.</td></tr>';
+      document.getElementById('fNTGDCount').textContent = `${filtered.length} / ${CACHE.nghiemThuGD.length} dòng`;
+      window._ntgdFiltered = filtered;
+    }
+    document.getElementById('formNghiemThuGD').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('nttdMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản nghiệm thu.</div>';
+        e.target.reset(); loadNghiemThuGD();
+      }).withFailureHandler((err) => {
+        document.getElementById('nttdMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addNghiemThuGiaiDoan(obj);
+    });
+
+    // ---- BM-KH-03: Rủi ro/vướng mắc triển khai ----
+    function loadRuiRoTK() {
+      callServer('getRuiRoTrienKhaiList', [], (rows) => {
+        if (!rows) return;
+        CACHE.ruiRoTK = rows;
+        renderRuiRoTK();
+      });
+    }
+    function renderRuiRoTK() {
+      const kw = (document.getElementById('fRRTKSearch').value || '').toLowerCase();
+      const tt = document.getElementById('fRRTKTrangThai').value;
+      const filtered = CACHE.ruiRoTK.filter((r) => {
+        if (kw && !String(r.MoTa).toLowerCase().includes(kw)) return false;
+        if (tt && r.TrangThai !== tt) return false;
+        return true;
+      });
+      document.querySelector('#rrtkTable tbody').innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.MoTa)}</td><td>${fmt(r.MucDo)}</td><td>${fmt(r.GiaiDoanLienQuan)}</td>
+        <td>${fmt(r.BienPhapGiamThieu)}</td><td>${fmt(r.NguoiPhuTrach)}</td><td>${fmt(r.HanXuLy)}</td>
+        <td>${r.TrangThai === 'Đã xử lý' ? '<span class="badge ok2">Đã xử lý</span>' : (r.TrangThai === 'Đang xử lý' ? '<span class="badge dieukien">Đang xử lý</span>' : '<span class="badge thieu">Chưa xử lý</span>')}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('rrtk', window._rrtkFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="8">Chưa có dữ liệu.</td></tr>';
+      document.getElementById('fRRTKCount').textContent = `${filtered.length} / ${CACHE.ruiRoTK.length} dòng`;
+      window._rrtkFiltered = filtered;
+    }
+    document.getElementById('formRuiRoTK').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('rrtkMsg').innerHTML = '<div class="msg ok">Đã lưu rủi ro/vướng mắc.</div>';
+        e.target.reset(); loadRuiRoTK();
+      }).withFailureHandler((err) => {
+        document.getElementById('rrtkMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addRuiRoTrienKhai(obj);
+    });
+
+    // ---- In 1 phiếu đơn (định dạng như mẫu Word gốc, có khối ký tên — để in ra ký tay) ----
+    const PHIEU_CONFIGS = {
+      tdhd: { title: 'PHIẾU THẨM ĐỊNH CHỦ RỪNG / KIỂM TRA HỒ SƠ (BM-FSC-01/02)', ma: 'BM-FSC-01/02', sig: ['NGƯỜI THẨM ĐỊNH', 'PHÊ DUYỆT (QA/FSC)'],
+        labels: { SoHopDong: 'Số hợp đồng', NgayThamDinh: 'Ngày thẩm định', MucDichSuDungDatHopLe: 'Mục đích SDĐ hợp lệ', SoDoConHan: 'Sổ đỏ còn hạn', CCCDConHieuLuc: 'CCCD còn hiệu lực', KhongPhaiRungTuNhienSau2020: 'Không phải rừng TN sau 2020', KhongTranhChap: 'Không tranh chấp', KhoiLuongKhongVuotSoDo: 'Khối lượng ≤ sổ đỏ', ThongBaoGiaDayDu: 'Thông báo giá đầy đủ', KetLuanThamDinh: 'Kết luận thẩm định', NguoiThamDinh: 'Người thẩm định', GhiChu: 'Ghi chú' } },
+      dd: { title: 'LỆNH ĐIỀU ĐỘNG VẬN CHUYỂN NỘI BỘ (BM-FSC-05)', ma: 'BM-FSC-05', sig: ['NGƯỜI LẬP LỆNH (Kho)', 'NGƯỜI VẬN CHUYỂN'],
+        labels: { SoLenh: 'Số lệnh', NgayLenh: 'Ngày lệnh', LoaiHang: 'Loại hàng hóa', DiemDi: 'Điểm xuất phát', DiemDen: 'Điểm đến', BienKiemSoat: 'Biển kiểm soát xe', SoPhieuCan: 'Số phiếu cân', SoBKLSGoc: 'Số BKLS gốc', NgayHoanThanhVanChuyen: 'Ngày hoàn thành vận chuyển', NgayLapPhieuXuatKho: 'Ngày lập phiếu xuất kho', NguoiLapLenh: 'Người lập lệnh', GhiChu: 'Ghi chú' } },
+      th: { title: 'PHIẾU THEO DÕI ĐỊNH MỨC TIÊU HAO CHẾ BIẾN (BM-FSC-06)', ma: 'BM-FSC-06', sig: ['NGƯỜI GHI SỔ (Kế toán tổng hợp)', 'XÁC NHẬN (QA/FSC)'],
+        labels: { KyTheoDoi: 'Kỳ theo dõi', SoBKLSXuatCheBien: 'Số BKLS xuất chế biến', KhoiLuongDauVaoTan: 'Khối lượng đầu vào (Tấn)', DinhMucTieuHaoPhanTram: 'Định mức tiêu hao công bố (%)', DamThanhPhamTan: 'Dăm thành phẩm (Tấn)', TieuHaoThucTePhanTram: 'Tiêu hao thực tế (%)', GiaiTrinhChenhLech: 'Giải trình chênh lệch', NguoiGhiSo: 'Người ghi sổ' } },
+      bcnn: { title: 'SỔ THEO DÕI NỘP BÁO CÁO ĐỊNH KỲ CƠ QUAN NHÀ NƯỚC (BM-FSC-08)', ma: 'BM-FSC-08', sig: ['NGƯỜI THEO DÕI (Kế toán tổng hợp)', 'XÁC NHẬN (QA/FSC)'],
+        labels: { LoaiBaoCao: 'Loại báo cáo', Ky: 'Kỳ', HanNop: 'Hạn nộp', NgayNopThucTe: 'Ngày nộp thực tế', DungHan: 'Đúng hạn', DauMoiTiepNhan: 'Đầu mối tiếp nhận', NguoiPhuTrach: 'Người phụ trách', GhiChu: 'Ghi chú' } },
+      ntgd: { title: 'BIÊN BẢN NGHIỆM THU HOÀN THÀNH GIAI ĐOẠN (BM-KH-02)', ma: 'BM-KH-02', sig: ['ĐẠI DIỆN TỔ FSC', 'PHÊ DUYỆT (Ban Giám đốc)'],
+        labels: { GiaiDoan: 'Giai đoạn nghiệm thu', ThoiGianThucHien: 'Thời gian thực hiện', DauRaKyVong: 'Đầu ra kỳ vọng', BangChungThucNhan: 'Bằng chứng thực nhận', KhoangTrongBangChung: 'Khoảng trống bằng chứng', KetLuanNghiemThu: 'Kết luận', DieuKienChuyenGiaiDoan: 'Điều kiện chuyển giai đoạn kế tiếp', NguoiNghiemThu: 'Người nghiệm thu', NgayNghiemThu: 'Ngày nghiệm thu' } },
+      rrtk: { title: 'PHIẾU GHI NHẬN RỦI RO / VƯỚNG MẮC TRIỂN KHAI (BM-KH-03)', ma: 'BM-KH-03', sig: ['NGƯỜI LẬP (QA/FSC)', 'PHÊ DUYỆT (Ban Giám đốc)'],
+        labels: { MoTa: 'Mô tả rủi ro/vướng mắc', MucDo: 'Mức độ', GiaiDoanLienQuan: 'Giai đoạn liên quan', BienPhapGiamThieu: 'Biện pháp giảm thiểu', NguoiPhuTrach: 'Người phụ trách', HanXuLy: 'Hạn xử lý', TrangThai: 'Trạng thái' } },
+      ruiro: { title: 'PHIẾU ĐÁNH GIÁ RỦI RO CNRA THEO RỪNG (BM-FSC-09)', ma: 'BM-FSC-09', sig: ['NGƯỜI ĐÁNH GIÁ (QA/FSC)', 'PHÊ DUYỆT (Ban Giám đốc)'],
+        labels: { MaRung: 'Mã rừng', SoHopDong: 'Số hợp đồng', RuiRoCNRA: 'Rủi ro CNRA', BienPhapRMM: 'Biện pháp giảm thiểu (RMM)', NguoiDanhGia: 'Người đánh giá', NgayDanhGia: 'Ngày đánh giá', GhiChu: 'Ghi chú' } },
+      giamsat: { title: 'BÁO CÁO GIÁM SÁT ĐỊNH KỲ (BM-FSC-10)', ma: 'BM-FSC-10', sig: ['NGƯỜI LẬP (QA/FSC)', 'PHÊ DUYỆT (Ban Giám đốc)'],
+        labels: { KyGiamSat: 'Kỳ giám sát', PhamViKiemTra: 'Phạm vi kiểm tra', MucTieu1_DayDuHoSo: 'MT1 - Đầy đủ hồ sơ', MucTieu2_HopPhap: 'MT2 - Hợp pháp nguồn gốc', MucTieu3_NhatQuan: 'MT3 - Nhất quán số liệu', MucTieu4_DungHan: 'MT4 - Đúng hạn báo cáo', MucTieu5_RuiRoFSC: 'MT5 - Rủi ro FSC/CNRA', PhatHienChinh: 'Phát hiện chính', KetLuan: 'Kết luận', HanhDongKhacPhuc: 'Hành động khắc phục', NguoiPhuTrach: 'Người phụ trách', HanHoanThanh: 'Hạn hoàn thành', NgayTaiKiemTra: 'Ngày tái kiểm tra' } },
+      bbgs: { title: 'BIÊN BẢN GIÁM SÁT KHAI THÁC (TRONG/SAU KHAI THÁC)', ma: '—', sig: ['NGƯỜI KIỂM TRA', 'CHỮ KÝ CHỦ RỪNG'],
+        labels: { SoHopDong: 'Số hợp đồng', GiaiDoanGiamSat: 'Giai đoạn giám sát', NguoiKiemTra: 'Người kiểm tra', NgayKiemTra: 'Ngày kiểm tra', HoatDongKhaiThac: 'Hoạt động khai thác', HoatDongVanChuyen: 'Hoạt động vận chuyển', LaoDong: 'Lao động', MoiTruong: 'Môi trường', GiaTriBaoTon: 'Các giá trị bảo tồn', CacHoatDongKhac: 'Các hoạt động khác', PhuongAnPhongNgua: 'Phương án phòng ngừa', GhiChu: 'Ghi chú' } },
+      tv: { title: 'BẢN GHI THAM VẤN BÊN LIÊN QUAN', ma: '—', sig: ['NGƯỜI THAM VẤN', 'NGƯỜI ĐƯỢC THAM VẤN'],
+        labels: { SoHopDong: 'Số hợp đồng', LoaiBenLienQuan: 'Loại bên liên quan', TenNguoiDuocThamVan: 'Tên người được tham vấn', ChucVu: 'Chức vụ', NgayThamVan: 'Ngày tham vấn', NoiDungThamVan: 'Nội dung tham vấn', KetLuan: 'Kết luận', GhiChu: 'Ghi chú' } },
+      dg: { title: 'PHIẾU GHI KẾT LUẬN GIÁM SÁT HỢP ĐỒNG', ma: '—', sig: ['NGƯỜI ĐÁNH GIÁ', 'PHÊ DUYỆT (Ban Giám đốc)'],
+        labels: { MaHopDong: 'Số hợp đồng', NgayDanhGia: 'Ngày đánh giá', KetLuanGiamSat: 'Kết luận giám sát', PhatHien: 'Phát hiện', HanhDongKhacPhuc: 'Hành động khắc phục', NguoiDanhGia: 'Người đánh giá', GhiChu: 'Ghi chú' } },
+    };
+    function printSinglePhieu(cfgKey, record) {
+      const cfg = PHIEU_CONFIGS[cfgKey];
+      if (!cfg || !record) return;
+      let rows = '';
+      Object.keys(cfg.labels).forEach((k) => {
+        rows += `<tr><td style="font-weight:bold;width:32%;background:#F0F0F0;">${cfg.labels[k]}</td><td>${fmt(record[k]) || ''}</td></tr>`;
+      });
+      const w = window.open('', '_blank');
+      w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${cfg.title}</title><style>
+        body{font-family:"Times New Roman",Georgia,serif;padding:30px;color:#222;}
+        h1{font-size:14px;text-align:center;margin:0 0 4px;}
+        h2{font-size:16px;text-align:center;margin:0 0 4px;text-transform:uppercase;}
+        .meta{text-align:center;font-size:12px;font-style:italic;color:#555;margin-bottom:20px;}
+        table{width:100%;border-collapse:collapse;font-size:13px;}
+        td{border:1px solid #333;padding:8px 10px;vertical-align:top;}
+        .sig{display:flex;justify-content:space-around;margin-top:50px;text-align:center;font-size:13px;}
+        .sig div{width:45%;}
+        .sig .line{margin-top:70px;font-style:italic;font-size:12px;}
+        @media print{ body{padding:10px;} }
+      </style></head><body>
+        <h1>HAK GROUP</h1>
+        <h2>${cfg.title}</h2>
+        <div class="meta">Mã biểu mẫu: ${cfg.ma} &nbsp;|&nbsp; In lúc: ${new Date().toLocaleString('vi-VN')}</div>
+        <table>${rows}</table>
+        <div class="sig">
+          <div>${cfg.sig[0]}<div class="line">(Ký, ghi rõ họ tên)</div></div>
+          <div>${cfg.sig[1]}<div class="line">(Ký, ghi rõ họ tên)</div></div>
+        </div>
+      </body></html>`);
+      w.document.close();
+      w.focus();
+      setTimeout(() => w.print(), 300);
+    }
+
+    // ---- Thư viện mẫu Word gốc (Google Drive) ----
+    let mauWordCache = null;
+    function loadMauWordLinks(cb) {
+      if (mauWordCache) { cb(mauWordCache); return; }
+      callServer('getMauWordLinks', [], (rows) => {
+        if (!rows) { rows = []; }
+        mauWordCache = rows;
+        cb(rows);
+      });
+    }
+    function renderMauWordFull() {
+      loadMauWordLinks((files) => {
+        const el = document.getElementById('mauWordList');
+        if (!files.length) { el.innerHTML = '<p style="color:#A32D2D;">Không tìm thấy file nào trong thư mục Drive, hoặc chưa có quyền đọc thư mục.</p>'; return; }
+        el.innerHTML = '<ul>' + files.map((f) => `<li><a href="${f.url}" target="_blank">📄 ${f.name}</a></li>`).join('') + '</ul>';
+      });
+    }
+    function renderMauWordQuick(elId, keyword) {
+      loadMauWordLinks((files) => {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        const match = files.filter((f) => f.name.toLowerCase().includes(keyword.toLowerCase()));
+        if (!match.length) { el.innerHTML = ''; return; }
+        el.innerHTML = '<div class="totalbox">📄 Mẫu tham khảo: ' + match.map((f) => `<a href="${f.url}" target="_blank">${f.name}</a>`).join(' &nbsp;|&nbsp; ') + '</div>';
+      });
+    }
+
+    function loadGiamSat() {
+      callServer('getGiamSatList', [], (rows) => {
+        if (!rows) return;
+        CACHE.giamSat = rows;
+        renderGiamSat();
+      });
+    }
+    function renderGiamSat() {
+      const kw = (document.getElementById('fGiamSatSearch').value || '').toLowerCase();
+      const kl = document.getElementById('fGiamSatKetLuan').value;
+      const filtered = CACHE.giamSat.filter((r) => {
+        if (kw && !String(r.KyGiamSat || '').toLowerCase().includes(kw)) return false;
+        if (kl && r.KetLuan !== kl) return false;
+        return true;
+      });
+      const tb = document.querySelector('#giamSatTable tbody');
+      tb.innerHTML = filtered.map((r, idx) => `<tr><td>${fmt(r.KyGiamSat)}</td><td>${badge(r.KetLuan)}</td><td>${fmt(r.HanHoanThanh) || '-'}</td><td>${fmt(r.NgayTaiKiemTra) || '-'}</td><td><button class="btnmini" onclick="printSinglePhieu('giamsat', window._giamSatFiltered[${idx}])">🖨</button></td></tr>`).join('');
+      window._giamSatFiltered = filtered;
+      document.getElementById('fGiamSatCount').textContent = `${filtered.length} / ${CACHE.giamSat.length} dòng`;
+    }
+
+    function formToObj(form) {
+      const obj = {};
+      new FormData(form).forEach((v, k) => { obj[k] = v; });
+      return obj;
+    }
+
+    function ensureHopDongLoaded(cb) {
+      if (CACHE.hopDong.length) { cb(); return; }
+      callServer('getHopDongList', [], (rows) => {
+        if (!rows) return;
+        CACHE.hopDong = rows;
+        cb();
+      });
+    }
+    function fillHopDongSelect(selectId) {
+      const sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.innerHTML = '<option value="">-- chọn hợp đồng --</option>' +
+        CACHE.hopDong.map((r) => `<option value="${r.SoHopDong}">${r.SoHopDong} — ${r.ChuRung || ''}</option>`).join('');
+    }
+
+    // ---- Báo cáo khảo sát thực địa (đọc trực tiếp Google Form KhaoSat_FSC) ----
+    let khaoSatFormUrl = null;
+    function loadBaoCaoKhaoSat() {
+      callServer('getBaoCaoKhaoSatThucTeList', [], (rows) => {
+        if (!rows) return;
+        CACHE.baoCaoKhaoSat = rows;
+        renderBaoCaoKhaoSat();
+      });
+      if (!khaoSatFormUrl) {
+        callServer('getKhaoSatFormUrl', [], (url) => {
+          khaoSatFormUrl = url || '';
+        });
+      }
+    }
+    function moFormKhaoSat() {
+      if (khaoSatFormUrl) { window.open(khaoSatFormUrl, '_blank'); }
+      else { alert('Chưa lấy được link Form (đang tải hoặc sheet không còn liên kết với Form nào). Thử lại sau vài giây.'); }
+    }
+    function truncateText(t, n) { t = String(t || ''); return t.length > n ? t.slice(0, n) + '…' : t; }
+    function renderBaoCaoKhaoSat() {
+      const kw = (document.getElementById('fBCKSSearch').value || '').toLowerCase();
+      const filtered = (CACHE.baoCaoKhaoSat || []).filter((r) => {
+        if (!kw) return true;
+        const hay = [r['Người khảo sát'], r['Địa chỉ rừng trồng'], r['Đơn vị khảo sát']].join(' ').toLowerCase();
+        return hay.includes(kw);
+      });
+      const tb = document.querySelector('#bcksTable tbody');
+      tb.innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r['Ngày khảo sát'])}</td><td>${fmt(r['Người khảo sát'])}</td>
+        <td>${truncateText(r['Địa chỉ rừng trồng'], 40)}</td><td>${fmt(r['Pháp lý thửa đất'])}</td>
+        <td>${fmt(r['Mục đích sử dụng đất'])}</td><td>${truncateText(r['Xói mòn_sạt lỡ'], 30)}</td>
+        <td>${truncateText(r['Các giá trị bảo tồn '], 40)}</td><td>${fmt(r['Đơn vị khảo sát'])}</td>
+        <td><button class="btnmini" onclick="xemChiTietKhaoSat(${idx})">📎 Chi tiết</button></td>
+      </tr>`).join('') || '<tr><td colspan="9">Chưa có báo cáo khảo sát nào (hoặc chưa tải xong).</td></tr>';
+      document.getElementById('fBCKSCount').textContent = `${filtered.length} / ${(CACHE.baoCaoKhaoSat || []).length} dòng`;
+      window._bcksFiltered = filtered;
+    }
+    function xemChiTietKhaoSat(idx) {
+      const r = (window._bcksFiltered || [])[idx];
+      if (!r) return;
+      document.getElementById('ksChiTietModalBackdrop').style.display = 'block';
+      const skip = ['Timestamp', 'Email Address'];
+      let html = '<table style="width:100%;"><tbody>';
+      Object.keys(r).forEach((k) => {
+        if (skip.includes(k)) return;
+        let v = r[k];
+        if (k === 'Hình ảnh khảo sát' && v) v = `<a href="${v}" target="_blank">Xem ảnh/link đính kèm</a>`;
+        html += `<tr><td style="font-weight:bold;width:38%;color:#1F3864;">${k}</td><td>${v || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
+      });
+      html += '</tbody></table>';
+      document.getElementById('ksChiTietModalBody').innerHTML = html;
+    }
+
+    // ---- Biên bản giám sát khai thác ----
+    function loadBienBanGiamSat() {
+      callServer('getBienBanGiamSatList', [], (rows) => {
+        if (!rows) return;
+        CACHE.bienBanGiamSat = rows;
+        renderBienBanGiamSat();
+      });
+      ensureHopDongLoaded(() => fillHopDongSelect('selectHopDongBBGS'));
+    }
+    function renderBienBanGiamSat() {
+      const kw = (document.getElementById('fBBGSSearch').value || '').toLowerCase();
+      const gd = document.getElementById('fBBGSGiaiDoan').value;
+      const filtered = (CACHE.bienBanGiamSat || []).filter((r) => {
+        if (kw && !((String(r.SoHopDong) + r.NguoiKiemTra).toLowerCase().includes(kw))) return false;
+        if (gd && r.GiaiDoanGiamSat !== gd) return false;
+        return true;
+      });
+      const tb = document.querySelector('#bbgsTable tbody');
+      tb.innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.GiaiDoanGiamSat)}</td><td>${fmt(r.NguoiKiemTra)}</td><td>${fmt(r.NgayKiemTra)}</td>
+        <td>${truncateText(r.HoatDongKhaiThac, 40)}</td><td>${truncateText(r.HoatDongVanChuyen, 40)}</td>
+        <td>${truncateText(r.LaoDong, 40)}</td><td>${truncateText(r.MoiTruong, 40)}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('bbgs', window._bbgsFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="9">Chưa có biên bản nào.</td></tr>';
+      window._bbgsFiltered = filtered;
+      document.getElementById('fBBGSCount').textContent = `${filtered.length} / ${(CACHE.bienBanGiamSat || []).length} dòng`;
+    }
+
+    // ---- Tham vấn bên liên quan ----
+    function loadThamVan() {
+      callServer('getThamVanList', [], (rows) => {
+        if (!rows) return;
+        CACHE.thamVan = rows;
+        renderThamVan();
+      });
+      ensureHopDongLoaded(() => fillHopDongSelect('selectHopDongTV'));
+    }
+    function renderThamVan() {
+      const kw = (document.getElementById('fTVSearch').value || '').toLowerCase();
+      const loai = document.getElementById('fTVLoai').value;
+      const filtered = (CACHE.thamVan || []).filter((r) => {
+        if (kw && !((String(r.SoHopDong) + r.TenNguoiDuocThamVan).toLowerCase().includes(kw))) return false;
+        if (loai && r.LoaiBenLienQuan !== loai) return false;
+        return true;
+      });
+      const tb = document.querySelector('#tvTable tbody');
+      tb.innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.LoaiBenLienQuan)}</td><td>${fmt(r.TenNguoiDuocThamVan)}</td>
+        <td>${fmt(r.ChucVu)}</td><td>${fmt(r.NgayThamVan)}</td>
+        <td>${r.KetLuan === 'Có vấn đề cần lưu ý' ? '<span class="badge thieu">Có vấn đề</span>' : '<span class="badge ok2">Không vấn đề</span>'}</td>
+        <td>${truncateText(r.NoiDungThamVan, 60)}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('tv', window._tvFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="8">Chưa có bản ghi tham vấn nào.</td></tr>';
+      window._tvFiltered = filtered;
+      document.getElementById('fTVCount').textContent = `${filtered.length} / ${(CACHE.thamVan || []).length} dòng`;
+    }
+
+    document.getElementById('formBienBanGiamSat').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('bbgsMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản giám sát.</div>';
+        e.target.reset();
+        loadBienBanGiamSat();
+      }).withFailureHandler((err) => {
+        document.getElementById('bbgsMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addBienBanGiamSat(obj);
+    });
+
+    document.getElementById('formThamVan').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('tvMsg').innerHTML = '<div class="msg ok">Đã lưu bản ghi tham vấn.</div>';
+        e.target.reset();
+        loadThamVan();
+      }).withFailureHandler((err) => {
+        document.getElementById('tvMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addThamVan(obj);
+    });
+
+    document.getElementById('formKhaoSat').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('ksMsg').innerHTML = '<div class="msg ok">Đã lưu tình trạng hồ sơ khảo sát/tham vấn.</div>';
+        e.target.reset();
+        loadKhaoSat();
+      }).withFailureHandler((err) => {
+        document.getElementById('ksMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addKhaoSat(obj);
+    });
+
+    document.getElementById('formDanhGia').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('dgMsg').innerHTML = '<div class="msg ok">Đã lưu kết luận giám sát.</div>';
+        e.target.reset();
+        loadHopDong();
+      }).withFailureHandler((err) => {
+        document.getElementById('dgMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addDanhGiaHopDong(obj);
+    });
+
+    document.getElementById('formRuiRo').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('rrMsg').innerHTML = '<div class="msg ok">Đã lưu đánh giá rủi ro.</div>';
+        e.target.reset();
+        loadRuiRo();
+      }).withFailureHandler((err) => {
+        document.getElementById('rrMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addDanhGiaRuiRoRung(obj);
+    });
+
+    document.getElementById('formGiamSat').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('gsMsg').innerHTML = '<div class="msg ok">Đã lưu báo cáo giám sát.</div>';
+        e.target.reset();
+        loadGiamSat();
+      }).withFailureHandler((err) => {
+        document.getElementById('gsMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addGiamSat(obj);
+    });
+
+    document.getElementById('formTienDo').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('tdMsg').innerHTML = '<div class="msg ok">Đã cập nhật tiến độ.</div>';
+        loadDashboard();
+      }).withFailureHandler((err) => {
+        document.getElementById('tdMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).updateTienDo(obj.GiaiDoan, obj.NgayThucTe, obj.DanhGia, obj.GhiChu);
+    });
+
+    loadDashboard();
+  </script>
+</body>
+</html>
