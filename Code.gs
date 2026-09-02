@@ -102,7 +102,7 @@ function _toObjRows(values) {
     .filter((r) => r.some((c) => c !== '' && c !== null))
     .map((r) => { const o = {}; headers.forEach((h, i) => { o[h] = r[i]; }); return o; });
 }
-/** Đọc toàn bộ sheet — chỉ dùng cho sheet nhỏ (dưới ~2000 dòng), ví dụ BaoCao_KiemTra, TongHop_HopDong, HD_RUNG */
+/** Đọc toàn bộ sheet — chỉ dùng cho sheet nhỏ (dưới ~2000 dòng), ví dụ BaoCao_KiemTra, HD_RUNG */
 function _extReadAll(ssKey, sheetName) {
   const sh = _ext(ssKey, sheetName);
   if (!sh) return [];
@@ -167,12 +167,9 @@ function checkKetNoi() {
   // Ghi chú: DNTT/DN không nằm trong danh sách kiểm tra vì hiện dashboard KHÔNG đọc sheet này
   // (đã thay bằng HD_RUNG + HoSoKeo_DN làm bảng gốc). Nếu sau này cần đối chiếu công nợ từ
   // DNTT_GK_DN, sẽ bổ sung lại đúng tên sheet thật tại thời điểm đó.
-  // HDMB/TongHop_HopDong đã bị XÓA khỏi Google Sheet nguồn (xác nhận 2026) nên cũng bỏ khỏi
-  // danh sách kiểm tra — nếu vẫn để trong targets, checkKetNoi() sẽ báo lỗi ❌ vĩnh viễn dù
-  // đây không phải sự cố cần xử lý. getHopDongList()/_getDashboardDataInner() vẫn gọi
-  // _extReadAll('HDMB','TongHop_HopDong') như cũ — hàm này tự trả về [] khi không thấy sheet
-  // nên không văng lỗi, chỉ khiến cột "Chênh lệch DT (%)" và thẻ "HĐ chênh lệch DT >10%" trên
-  // Dashboard luôn trống/0. Nếu muốn bỏ hẳn 2 chỗ hiển thị đó, cần sửa thêm Index.html.
+  // HDMB/TongHop_HopDong đã bị XÓA vĩnh viễn khỏi Google Sheet nguồn nên cũng bỏ khỏi danh
+  // sách kiểm tra ở đây — tính năng "Chênh lệch diện tích ký vs GPS" phụ thuộc sheet này
+  // cũng đã được gỡ hoàn toàn khỏi getHopDongList()/_getDashboardDataInner() và Index.html.
   const results = targets.map(([ssKey, sheetName]) => {
     try {
       const ss = SpreadsheetApp.openById(SS_IDS[ssKey]);
@@ -249,21 +246,18 @@ function getRungList() {
 
 // ============ API: DANH SÁCH HỢP ĐỒNG / HỒ SƠ RỪNG (ghép từ dữ liệu có sẵn) ============
 /**
- * Ghép BaoCao_KiemTra (kết quả kiểm tra hồ sơ có sẵn) + TongHop_HopDong (chênh lệch
- * diện tích ký vs GPS) + DanhGiaHopDong (kết luận giám sát FSC do mình đánh giá thêm),
- * theo khóa "Số HĐ". Đây là danh sách để Bước 1/2 (QT-FSC-01) tham chiếu.
+ * Ghép BaoCao_KiemTra (kết quả kiểm tra hồ sơ có sẵn) + DanhGiaHopDong (kết luận
+ * giám sát FSC do mình đánh giá thêm), theo khóa "Số HĐ". Đây là danh sách để
+ * Bước 1/2 (QT-FSC-01) tham chiếu.
  */
 function getHopDongList() {
   return _safe(() => {
     const rung = _extReadAll('HDMB', 'HD_RUNG');                 // SoHopDong, HoVaTenChuRung, ... — bảng gốc, luôn có dữ liệu
     const kiemTra = _extReadAll('HDMB', 'BaoCao_KiemTra');       // Số HĐ, Kết quả, Hồ sơ còn thiếu, Cảnh báo — có thể rỗng nếu chưa chạy
-    const tongHop = _extReadAll('HDMB', 'TongHop_HopDong');      // Số HĐ, Chênh lệch (%)
     const danhGia = _ownReadAll('DanhGiaHopDong');                // MaHopDong, KetLuanGiamSat, ...
 
     const kiemTraMap = {};
     kiemTra.forEach((r) => { kiemTraMap[String(r['Số HĐ'])] = r; });
-    const tongHopMap = {};
-    tongHop.forEach((r) => { tongHopMap[String(r['Số HĐ'])] = r; });
     const danhGiaMap = {};
     danhGia.forEach((r) => { danhGiaMap[String(r.MaHopDong)] = r; });
 
@@ -275,7 +269,6 @@ function getHopDongList() {
       if (seen[soHD]) return;
       seen[soHD] = true;
       const kt = kiemTraMap[soHD] || {};
-      const th = tongHopMap[soHD] || {};
       const dg = danhGiaMap[soHD] || {};
       result.push({
         SoHopDong: soHD,
@@ -284,7 +277,6 @@ function getHopDongList() {
         KetQuaHoSo: kt['Kết quả'] || '(chưa có dữ liệu kiểm tra)',
         HoSoConThieu: kt['Hồ sơ còn thiếu'] || '',
         CanhBao: kt['Cảnh báo'] || '',
-        ChenhLechDienTichPhanTram: th['Chênh lệch (%)'] != null ? th['Chênh lệch (%)'] : '',
         KetLuanGiamSat: dg.KetLuanGiamSat || '',
         NgayDanhGia: dg.NgayDanhGia || '',
       });
@@ -639,7 +631,6 @@ function getDashboardData() {
 function _getDashboardDataInner() {
   const rung = _extReadAll('HDMB', 'HD_RUNG');
   const kiemTra = _extReadAll('HDMB', 'BaoCao_KiemTra');
-  const tongHop = _extReadAll('HDMB', 'TongHop_HopDong');
   const danhGia = _ownReadAll('DanhGiaHopDong');
   const ruiRoRung = _ownReadAll('DanhGiaRuiRoRung');
   const tienDo = _ownReadAll('TienDoTrienKhai');
@@ -655,8 +646,6 @@ function _getDashboardDataInner() {
   const coDuLieuKiemTra = kiemTra.length > 0;
   const dayDu = kiemTra.filter((r) => String(r['Kết quả']).indexOf('Đầy đủ') > -1).length;
   const thieuHoSo = coDuLieuKiemTra ? (kiemTra.length - dayDu) : 0;
-
-  const chenhLechCanhBao = tongHop.filter((r) => Math.abs(Number(r['Chênh lệch (%)']) || 0) > 10).length;
 
   // Một hợp đồng có thể được ghi nhận NHIỀU lượt đánh giá theo thời gian (tái đánh giá).
   // Chỉ lấy KẾT LUẬN GẦN NHẤT của mỗi hợp đồng (giống cách getHopDongList đang làm) để
@@ -679,7 +668,6 @@ function _getDashboardDataInner() {
     tongHD, dayDu, thieuHoSo,
     coDuLieuKiemTra,
     tyLeDayDu: coDuLieuKiemTra ? Math.round((dayDu / kiemTra.length) * 100) : null,
-    chenhLechCanhBao,
     dat, datCoDK, khongDat, chuaDanhGia: Math.max(chuaDanhGia, 0),
     vungRuiRoDangKe,
     soBaoCaoGiamSat: giamSat.length,

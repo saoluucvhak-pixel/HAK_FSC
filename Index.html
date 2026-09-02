@@ -110,7 +110,7 @@
 
         <div class="navgroup">BƯỚC 1–2: THẨM ĐỊNH &amp; KÝ HỢP ĐỒNG</div>
         <button class="tab" data-t="thamdinh" data-title="Thẩm định &amp; kiểm tra hợp đồng (BM-FSC-01/02)" data-sub="Checklist tiêu chí thẩm định chủ rừng trước khi ký hợp đồng">🧾 Thẩm định hợp đồng <span class="navbadge" id="navBadgeThamDinh" style="display:none;"></span></button>
-        <button class="tab" data-t="hopdong" data-title="Hợp đồng &amp; hồ sơ rừng" data-sub="Tham chiếu trực tiếp BaoCao_KiemTra + TongHop_HopDong + HD_RUNG">📄 Hợp đồng &amp; hồ sơ rừng <span class="navbadge" id="navBadgeHopDong" style="display:none;"></span></button>
+        <button class="tab" data-t="hopdong" data-title="Hợp đồng &amp; hồ sơ rừng" data-sub="Tham chiếu trực tiếp BaoCao_KiemTra + HD_RUNG">📄 Hợp đồng &amp; hồ sơ rừng <span class="navbadge" id="navBadgeHopDong" style="display:none;"></span></button>
 
         <div class="navgroup">BƯỚC 3: KHẢO SÁT &amp; THAM VẤN</div>
         <button class="tab" data-t="khaosatthamvan" data-title="Khảo sát &amp; Tham vấn các bên liên quan" data-sub="Bước 3, QT-FSC-01 — theo dõi, khảo sát thực địa, giám sát khai thác, tham vấn">📋 Khảo sát &amp; Tham vấn <span class="navbadge" id="navBadgeKhaoSat" style="display:none;"></span></button>
@@ -178,7 +178,7 @@
 
     <section id="hopdong">
       <div class="toolbar">
-        <h2 style="margin:0">Hợp đồng &amp; hồ sơ rừng (tham chiếu BaoCao_KiemTra + TongHop_HopDong)</h2>
+        <h2 style="margin:0">Hợp đồng &amp; hồ sơ rừng (tham chiếu BaoCao_KiemTra + HD_RUNG)</h2>
         <button onclick="loadHopDong()">↻ Làm mới</button>
       </div>
       <p class="note">Cột "Kết quả hồ sơ" và "Hồ sơ còn thiếu" lấy trực tiếp từ hệ thống kiểm tra có sẵn của bạn. Cột "Kết luận giám sát FSC" chỉ hiện khi đã đánh giá ở form bên dưới.</p>
@@ -204,7 +204,7 @@
       <div class="totalbox" id="hopDongTotalBox"></div>
       <div class="tablewrap">
       <table id="hopDongTable">
-        <thead><tr><th>Số HĐ</th><th>Mã rừng</th><th>Chủ rừng</th><th>Kết quả hồ sơ</th><th>Hồ sơ còn thiếu</th><th>Chênh lệch DT (%)</th><th>Kết luận giám sát FSC</th><th></th></tr></thead>
+        <thead><tr><th>Số HĐ</th><th>Mã rừng</th><th>Chủ rừng</th><th>Kết quả hồ sơ</th><th>Hồ sơ còn thiếu</th><th>Kết luận giám sát FSC</th><th></th></tr></thead>
         <tbody></tbody>
       </table>
       </div>
@@ -1041,7 +1041,7 @@
             <tr><td><b>🏠 Dashboard</b></td><td>Tổng hợp từ tất cả sheet</td><td>Nhìn nhanh: bao nhiêu hợp đồng, tỷ lệ hồ sơ đầy đủ, số HĐ chưa đánh giá FSC, rừng rủi ro cao, HĐ chưa theo dõi khảo sát, tiến độ triển khai theo giai đoạn.</td></tr>
             <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 1–2: Thẩm định &amp; ký hợp đồng</td></tr>
             <tr><td><b>🧾 Thẩm định hợp đồng</b></td><td>Nhập mới (BM-FSC-01/02)</td><td>Checklist 8 tiêu chí trước khi ký HĐ (mục đích SDĐ, sổ đỏ, CCCD, rừng tự nhiên 2020, tranh chấp, khối lượng, thông báo giá) — ra kết luận Đồng ý/Yêu cầu bổ sung/Từ chối.</td></tr>
-            <tr><td><b>📄 Hợp đồng &amp; hồ sơ rừng</b></td><td>HD_RUNG, BaoCao_KiemTra, TongHop_HopDong</td><td>Xem từng hợp đồng: hồ sơ đủ/thiếu gì, chênh lệch diện tích ký vs GPS, bấm <b>"📎 Chi tiết"</b> xem pháp lý rừng + tọa độ Google Maps + ảnh. Ghi <b>kết luận giám sát FSC</b> ở form cuối trang.</td></tr>
+            <tr><td><b>📄 Hợp đồng &amp; hồ sơ rừng</b></td><td>HD_RUNG, BaoCao_KiemTra</td><td>Xem từng hợp đồng: hồ sơ đủ/thiếu gì, bấm <b>"📎 Chi tiết"</b> xem pháp lý rừng + tọa độ Google Maps + ảnh. Ghi <b>kết luận giám sát FSC</b> ở form cuối trang.</td></tr>
             <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3: Khảo sát &amp; tham vấn</td></tr>
             <tr><td><b>📋 Khảo sát &amp; Tham vấn</b></td><td>4 sub-tab: bảng Có/Chưa (nhập mới) + Báo cáo khảo sát (nhập mới, có ảnh) + BB Giám sát khai thác (nhập mới) + Tham vấn bên liên quan (nhập mới)</td><td>"Bảng theo dõi" xem nhanh HĐ nào thiếu loại hồ sơ nào; 3 sub-tab còn lại là nơi gõ/xem NỘI DUNG THẬT của từng loại hồ sơ, kể cả tải ảnh khảo sát.</td></tr>
             <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3–4: Khai thác, cân, nghiệm thu</td></tr>
@@ -1379,7 +1379,6 @@
         document.getElementById('dashCards').innerHTML = `
           <div class="card"><div class="num">${d.tongHD}</div><div class="lbl">Tổng số hợp đồng (theo HD_RUNG)</div></div>
           ${tyLeHtml}
-          <div class="card warn"><div class="num">${d.chenhLechCanhBao}</div><div class="lbl">HĐ chênh lệch DT &gt;10%</div></div>
           <div class="card"><div class="num">${d.dat}</div><div class="lbl">HĐ đã đánh giá ĐẠT</div></div>
           <div class="card warn"><div class="num">${d.khongDat}</div><div class="lbl">HĐ KHÔNG ĐẠT</div></div>
           <div class="card"><div class="num">${d.chuaDanhGia}</div><div class="lbl">HĐ chưa đánh giá FSC</div></div>
@@ -1465,9 +1464,9 @@
       tb.innerHTML = pageRows.map((r) => `<tr>
         <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.MaRung)}</td><td>${fmt(r.ChuRung)}</td>
         <td>${hoSoBadge(r.KetQuaHoSo)}</td><td>${fmt(r.HoSoConThieu)}</td>
-        <td>${fmt(r.ChenhLechDienTichPhanTram)}</td><td>${badge(r.KetLuanGiamSat)}</td>
+        <td>${badge(r.KetLuanGiamSat)}</td>
         <td><button class="btnmini" onclick="xemChiTiet('${r.SoHopDong}')">📎 Chi tiết</button></td>
-      </tr>`).join('') || '<tr><td colspan="8">Không có dòng nào khớp bộ lọc.</td></tr>';
+      </tr>`).join('') || '<tr><td colspan="7">Không có dòng nào khớp bộ lọc.</td></tr>';
       document.getElementById('fHopDongCount').textContent = `${filtered.length} / ${CACHE.hopDong.length} dòng`;
       document.getElementById('fHopDongPageInfo').textContent = `Trang ${pageHopDong} / ${totalPages}`;
     }
