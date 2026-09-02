@@ -158,7 +158,7 @@ function _safe(fn) {
  * Gọi hàm này đầu tiên khi nghi ngờ lỗi quyền truy cập. */
 function checkKetNoi() {
   const targets = [
-    ['HDMB', 'HD_NCC'], ['HDMB', 'BaoCao_KiemTra'], ['HDMB', 'TongHop_HopDong'], ['HDMB', 'HD_RUNG'],
+    ['HDMB', 'HD_NCC'], ['HDMB', 'BaoCao_KiemTra'], ['HDMB', 'HD_RUNG'],
     ['PHIEUCAN', 'PhieuCan_DN'],
     ['HOSOKEO', 'HoSoKeo_DN'], ['HOSOKEO', 'HoSoRung_DN'], ['HOSOKEO', 'ToaDoRung_DN'],
     ['XUATHANG', 'NL_PC_XH'],
@@ -167,6 +167,12 @@ function checkKetNoi() {
   // Ghi chú: DNTT/DN không nằm trong danh sách kiểm tra vì hiện dashboard KHÔNG đọc sheet này
   // (đã thay bằng HD_RUNG + HoSoKeo_DN làm bảng gốc). Nếu sau này cần đối chiếu công nợ từ
   // DNTT_GK_DN, sẽ bổ sung lại đúng tên sheet thật tại thời điểm đó.
+  // HDMB/TongHop_HopDong đã bị XÓA khỏi Google Sheet nguồn (xác nhận 2026) nên cũng bỏ khỏi
+  // danh sách kiểm tra — nếu vẫn để trong targets, checkKetNoi() sẽ báo lỗi ❌ vĩnh viễn dù
+  // đây không phải sự cố cần xử lý. getHopDongList()/_getDashboardDataInner() vẫn gọi
+  // _extReadAll('HDMB','TongHop_HopDong') như cũ — hàm này tự trả về [] khi không thấy sheet
+  // nên không văng lỗi, chỉ khiến cột "Chênh lệch DT (%)" và thẻ "HĐ chênh lệch DT >10%" trên
+  // Dashboard luôn trống/0. Nếu muốn bỏ hẳn 2 chỗ hiển thị đó, cần sửa thêm Index.html.
   const results = targets.map(([ssKey, sheetName]) => {
     try {
       const ss = SpreadsheetApp.openById(SS_IDS[ssKey]);
