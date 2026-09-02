@@ -47,7 +47,7 @@ const OWN_HEADERS = {
   TienDoTrienKhai: ['GiaiDoan', 'MocKeHoach', 'NgayThucTeHoanThanh', 'ChenhLechTuan', 'DanhGia', 'GhiChu'],
   RuiRoTrienKhai: ['MaRuiRo', 'MoTa', 'MucDo', 'GiaiDoanLienQuan', 'BienPhapGiamThieu', 'NguoiPhuTrach', 'HanXuLy', 'TrangThai'],
   KhaoSatThamVan: ['SoHopDong', 'NgayKhaoSat', 'NguoiKhaoSat', 'CoBaoCaoKhaoSat', 'CoBBGiamSatTrongKhaiThac', 'CoBBGiamSatSauKhaiThac', 'ThamVanUBNDXa', 'ThamVanKiemLam', 'ThamVanChuRungLanCan', 'ThamVanNguoiDanDiaPhuong', 'ThamVanCongNhanKhaiThac', 'ThamVanNguoiVanChuyen', 'PhatHienRuiRo', 'GhiChu'],
-  BaoCaoKhaoSat: ['SoHopDong', 'NgayKhaoSat', 'NguoiKhaoSat', 'KhuVucRungTrong', 'DatDai', 'MoiTruong', 'LaoDong', 'CongDong', 'DuongVanChuyen', 'HoatDongVanChuyenGo', 'HoatDongKhaiThac', 'GiaTriBaoTon', 'XuLyThucBi', 'GhiChu'],
+  BaoCaoKhaoSat: ['SoHopDong', 'NgayKhaoSat', 'NguoiKhaoSat', 'DiaChiRungTrong', 'ToaDo', 'PhapLyThuaDat', 'MucDichSuDungDat', 'KhuVucRungTrong', 'DatDai', 'MoiTruong', 'LaoDong', 'CongDong', 'DuongVanChuyen', 'HoatDongVanChuyenGo', 'HoatDongKhaiThac', 'GiaTriBaoTon', 'XuLyThucBi', 'AnhKhaoSat', 'GhiChu'],
   BienBanGiamSatKhaiThac: ['SoHopDong', 'GiaiDoanGiamSat', 'NguoiKiemTra', 'NgayKiemTra', 'HoatDongKhaiThac', 'HoatDongVanChuyen', 'LaoDong', 'MoiTruong', 'GiaTriBaoTon', 'CacHoatDongKhac', 'PhuongAnPhongNgua', 'GhiChu'],
   ThamVanBenLienQuan: ['SoHopDong', 'LoaiBenLienQuan', 'TenNguoiDuocThamVan', 'ChucVu', 'NgayThamVan', 'NoiDungThamVan', 'KetLuan', 'GhiChu'],
   TieuChiThamDinhHopDong: ['SoHopDong', 'NgayThamDinh', 'MucDichSuDungDatHopLe', 'SoDoConHan', 'CCCDConHieuLuc', 'KhongPhaiRungTuNhienSau2020', 'KhongTranhChap', 'KhoiLuongKhongVuotSoDo', 'ThongBaoGiaDayDu', 'KetLuanThamDinh', 'NguoiThamDinh', 'GhiChu'],
@@ -55,6 +55,10 @@ const OWN_HEADERS = {
   TieuHaoCheBien: ['KyTheoDoi', 'SoBKLSXuatCheBien', 'KhoiLuongDauVaoTan', 'DinhMucTieuHaoPhanTram', 'DamThanhPhamTan', 'TieuHaoThucTePhanTram', 'GiaiTrinhChenhLech', 'NguoiGhiSo'],
   SoTheoDoiBaoCaoNhaNuoc: ['LoaiBaoCao', 'Ky', 'HanNop', 'NgayNopThucTe', 'DungHan', 'DauMoiTiepNhan', 'NguoiPhuTrach', 'GhiChu'],
   NghiemThuGiaiDoanTrienKhai: ['GiaiDoan', 'ThoiGianThucHien', 'DauRaKyVong', 'BangChungThucNhan', 'KhoangTrongBangChung', 'KetLuanNghiemThu', 'DieuKienChuyenGiaiDoan', 'NguoiNghiemThu', 'NgayNghiemThu'],
+  KeHoachDanhGiaNoiBo: ['SoKeHoach', 'TuNgay', 'DenNgay', 'MucDichDanhGia', 'TongSoNhaCungCap', 'SoMauLayTheoCongThuc', 'TruongDoan', 'ThanhVienDoan', 'NoiDungDanhGia', 'NgayLap'],
+  PhieuYeuCauKhacPhuc: ['SoPhieu', 'NgayDanhGia', 'NgayPhatHanh', 'KhuVucBoPhan', 'NoiDungKhongPhuHop', 'PhanTichNguyenNhan', 'NguoiPhanTich', 'HanhDongKhacPhuc', 'DuKienNgayKetThuc', 'TrangThai', 'NgayDongThucTe', 'GhiChu'],
+  BienBanXemXetHeThongDDS: ['NgayXemXet', 'DiaDiem', 'ThanhPhanThamDu', 'KetQuaDanhGiaNoiBoNam', 'KetLuanThayDoi', 'NoiDungTruocThayDoi', 'NoiDungSauThayDoi', 'NguoiLap'],
+  PheDuyetNangLucDanhGiaVien: ['HoTen', 'ChucVu', 'TrinhDoChuyenNganh', 'DatYeuCauTrinhDo', 'DatYeuCauKinhNghiem', 'DatYeuCauPhamChat', 'DatYeuCauNangLuc', 'KetLuanPheDuyet', 'NgayPheDuyet', 'NguoiPheDuyet'],
 };
 
 function initOwnSheets() {
@@ -330,14 +334,6 @@ function getHoSoChiTiet(soHopDong) {
   });
 }
 
-/** Chi tiết hồ sơ rừng (pháp lý, tọa độ) cho 1 hợp đồng — tham chiếu khi cần xem sâu Bước 1 */
-function getHoSoRungDetail(soHopDong) {
-  const rung = _extReadAll('HDMB', 'HD_RUNG').find((r) => String(r.SoHopDong) === String(soHopDong));
-  const toaDo = _extReadAll('HOSOKEO', 'ToaDoRung_DN').find((r) => String(r['Số hợp đồng']) === String(soHopDong));
-  const rungKeo = _extReadAll('HOSOKEO', 'HoSoRung_DN').find((r) => String(r['Mã hợp đồng']) === String(soHopDong));
-  return { rung, toaDo, rungKeo };
-}
-
 // ============ API: LÔ HÀNG MUA VÀO / XUẤT BÁN GẦN NHẤT ============
 /** Chuyển Date object thành chuỗi text đơn giản trước khi gửi qua google.script.run —
  * tránh lỗi ngầm khi "đóng gói" payload lớn có nhiều cột kiểu Ngày/Giờ (lỗi Apps Script
@@ -402,7 +398,6 @@ function addGiamSat(obj) {
   obj.MaBaoCao = obj.MaBaoCao || 'GS-' + String(rows.length + 1).padStart(4, '0');
   return _ownAppend('GiamSatDinhKy', obj);
 }
-function getTienDoList() { return _ownReadAll('TienDoTrienKhai'); }
 function updateTienDo(giaiDoan, ngayThucTe, danhGia, ghiChu) {
   const sh = _own('TienDoTrienKhai');
   const values = sh.getDataRange().getValues();
@@ -433,31 +428,36 @@ function addKhaoSat(obj) {
   return _safe(() => _ownAppend('KhaoSatThamVan', obj));
 }
 
-/** Báo cáo khảo sát chi tiết (10 mục nội dung, theo đúng mẫu "Báo cáo kết quả khảo sát" Word) */
+/** Báo cáo khảo sát chi tiết — nhập TRỰC TIẾP trong webapp (không dùng Google Form nữa),
+ * theo đúng 10 mục nội dung của mẫu "Báo cáo kết quả khảo sát" Word, có kèm ảnh khảo sát. */
 function getBaoCaoKhaoSatList() { return _safe(() => _ownReadAll('BaoCaoKhaoSat')); }
 function addBaoCaoKhaoSat(obj) {
   return _safe(() => _ownAppend('BaoCaoKhaoSat', obj));
 }
 
-/** Đọc trực tiếp phản hồi Google Form "Báo cáo khảo sát thực địa" (60 cột, sheet KhaoSat_FSC).
- * KHÔNG có sẵn cột "Số hợp đồng" trong dữ liệu — nếu người dùng bổ sung câu hỏi này vào Form,
- * cột sẽ tự xuất hiện và tự nối được với danh sách hợp đồng (không cần sửa code). */
-function getBaoCaoKhaoSatThucTeList() {
-  return _safe(() => {
-    const rows = _extReadAll('KHAOSAT_FORM', 'KhaoSat_FSC');
-    return rows.map((r) => {
-      const o = {};
-      Object.keys(r).forEach((k) => { o[k] = _safeStr(r[k]); });
-      return o;
-    });
-  });
+/** Tự tạo (1 lần duy nhất) hoặc tái sử dụng thư mục Drive "Anh_Khao_Sat_FSC_HAK" để lưu ảnh khảo sát
+ * tải lên từ webapp — dùng chung thư mục cha với mẫu Word (đã có quyền Drive từ trước). */
+function _getOrCreateAnhKhaoSatFolder() {
+  const props = PropertiesService.getScriptProperties();
+  let folderId = props.getProperty('ANH_KHAO_SAT_FOLDER_ID');
+  if (folderId) {
+    try { return DriveApp.getFolderById(folderId); } catch (e) { /* thư mục cũ bị xóa, tạo lại */ }
+  }
+  const parent = DriveApp.getFolderById(MAU_WORD_FOLDER_ID);
+  const folder = parent.createFolder('Anh_Khao_Sat_FSC_HAK');
+  props.setProperty('ANH_KHAO_SAT_FOLDER_ID', folder.getId());
+  return folder;
 }
-/** Lấy link Google Form gốc (nếu sheet phản hồi còn liên kết với Form) để hiện nút "Mở Form nhập khảo sát" */
-function getKhaoSatFormUrl() {
+/** Nhận ảnh dạng base64 từ trình duyệt (đã resize nhỏ ở client trước khi gửi lên), lưu vào Drive,
+ * trả về link xem trực tiếp. */
+function uploadKhaoSatAnh(base64Data, fileName, mimeType) {
   return _safe(() => {
-    const ss = SpreadsheetApp.openById(SS_IDS.KHAOSAT_FORM);
-    const url = ss.getFormUrl();
-    return url || null;
+    const folder = _getOrCreateAnhKhaoSatFolder();
+    const decoded = Utilities.base64Decode(base64Data);
+    const blob = Utilities.newBlob(decoded, mimeType, fileName);
+    const file = folder.createFile(blob);
+    try { file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch (e) { /* bỏ qua nếu không đủ quyền chia sẻ */ }
+    return { url: file.getUrl(), name: fileName };
   });
 }
 
@@ -517,6 +517,115 @@ function addNghiemThuGiaiDoan(obj) {
   return _safe(() => _ownAppend('NghiemThuGiaiDoanTrienKhai', obj));
 }
 
+// ============ ĐÁNH GIÁ NỘI BỘ HỆ THỐNG THẨM ĐỊNH DDS (theo FSC-STD-40-005 Ver.3.1) ============
+/** Kế hoạch đánh giá nội bộ hằng năm — có công thức lấy mẫu y = 0.8 * sqrt(x) */
+function getKeHoachDanhGiaList() { return _safe(() => _ownReadAll('KeHoachDanhGiaNoiBo')); }
+function addKeHoachDanhGia(obj) {
+  return _safe(() => _ownAppend('KeHoachDanhGiaNoiBo', obj));
+}
+
+/** BM.05: Phiếu yêu cầu hành động khắc phục (CAR) */
+function getPhieuKhacPhucList() { return _safe(() => _ownReadAll('PhieuYeuCauKhacPhuc')); }
+function addPhieuKhacPhuc(obj) {
+  const rows = _ownReadAll('PhieuYeuCauKhacPhuc');
+  obj.SoPhieu = obj.SoPhieu || 'BM05-' + String(rows.length + 1).padStart(4, '0');
+  return _safe(() => _ownAppend('PhieuYeuCauKhacPhuc', obj));
+}
+
+/** BM.07: Biên bản xem xét hệ thống thẩm định DDS (Management Review) */
+function getBienBanXemXetDDSList() { return _safe(() => _ownReadAll('BienBanXemXetHeThongDDS')); }
+function addBienBanXemXetDDS(obj) {
+  return _safe(() => _ownAppend('BienBanXemXetHeThongDDS', obj));
+}
+
+/** BM.08: Phê duyệt năng lực đánh giá viên nội bộ */
+function getPheDuyetDanhGiaVienList() { return _safe(() => _ownReadAll('PheDuyetNangLucDanhGiaVien')); }
+function addPheDuyetDanhGiaVien(obj) {
+  return _safe(() => _ownAppend('PheDuyetNangLucDanhGiaVien', obj));
+}
+
+// ============ BÁO CÁO TỒN KHO & TÌNH TRẠNG KHẢO SÁT RỪNG ============
+function _matchDateRange(dateVal, tuNgay, denNgay) {
+  if (!tuNgay && !denNgay) return true;
+  if (!dateVal) return false;
+  const d = (Object.prototype.toString.call(dateVal) === '[object Date]') ? dateVal : new Date(dateVal);
+  if (isNaN(d.getTime())) return false;
+  if (tuNgay && d < new Date(tuNgay)) return false;
+  if (denNgay && d > new Date(denNgay + 'T23:59:59')) return false;
+  return true;
+}
+/** Tồn kho nguyên liệu = Tổng nhập (HoSoKeo_DN) - Tổng xuất (NL_PC_XH), lọc theo khoảng ngày (tùy chọn).
+ * LƯU Ý: đây là tồn kho TỔNG, chưa lọc riêng theo tiêu chuẩn FSC/CW cụ thể vì cột "Nguồn gốc" trong
+ * dữ liệu nguồn (PS/DT/QT...) chưa được xác nhận có phải mã phân loại chứng chỉ hay là mã khu vực địa lý. */
+function getTonKhoBaoCao(tuNgay, denNgay) {
+  return _safe(() => {
+    const nhapSheet = _ext('HOSOKEO', 'HoSoKeo_DN');
+    const xuatSheet = _ext('XUATHANG', 'NL_PC_XH');
+    const nhapValues = nhapSheet.getDataRange().getValues();
+    const xuatValues = xuatSheet.getDataRange().getValues();
+    const nhapHeaders = nhapValues[0], xuatHeaders = xuatValues[0];
+    const idxNgayNhap = nhapHeaders.indexOf('Ngày nhập');
+    const idxKLNhap = nhapHeaders.indexOf('Khối lượng (Tấn)');
+    const idxNguonGocNhap = nhapHeaders.indexOf('Nguồn gốc');
+    const idxNgayXuat = xuatHeaders.indexOf('Ngày giờ cân 1');
+    const idxKLXuat = xuatHeaders.indexOf('Khối lượng (Tấn)');
+
+    let tongNhap = 0, soLoNhap = 0;
+    const nguonGocSet = {};
+    for (let i = 1; i < nhapValues.length; i++) {
+      const row = nhapValues[i];
+      if (!row[idxKLNhap] && row[idxKLNhap] !== 0) continue;
+      if (!_matchDateRange(row[idxNgayNhap], tuNgay, denNgay)) continue;
+      tongNhap += Number(row[idxKLNhap]) || 0;
+      soLoNhap++;
+      const ng = row[idxNguonGocNhap];
+      if (ng) nguonGocSet[ng] = (nguonGocSet[ng] || 0) + (Number(row[idxKLNhap]) || 0);
+    }
+    let tongXuat = 0, soLoXuat = 0;
+    for (let i = 1; i < xuatValues.length; i++) {
+      const row = xuatValues[i];
+      if (!row[idxKLXuat] && row[idxKLXuat] !== 0) continue;
+      if (!_matchDateRange(row[idxNgayXuat], tuNgay, denNgay)) continue;
+      tongXuat += Number(row[idxKLXuat]) || 0;
+      soLoXuat++;
+    }
+    return {
+      tongNhap: Math.round(tongNhap * 100) / 100,
+      tongXuat: Math.round(tongXuat * 100) / 100,
+      tonKho: Math.round((tongNhap - tongXuat) * 100) / 100,
+      soLoNhap, soLoXuat,
+      theoNguonGoc: Object.keys(nguonGocSet).map((k) => ({ nguonGoc: k, khoiLuong: Math.round(nguonGocSet[k] * 100) / 100 })),
+    };
+  });
+}
+
+/** Tình trạng khảo sát theo hợp đồng (đối chiếu HD_RUNG với sheet theo dõi KhaoSatThamVan) */
+function getTinhTrangKhaoSatRung() {
+  return _safe(() => {
+    const rung = _extReadAll('HDMB', 'HD_RUNG');
+    const khaoSat = _ownReadAll('KhaoSatThamVan');
+    const ksMap = {};
+    khaoSat.forEach((k) => { ksMap[String(k.SoHopDong)] = k; });
+    const seen = {};
+    const result = [];
+    rung.forEach((r) => {
+      const soHD = String(r.SoHopDong);
+      if (seen[soHD]) return;
+      seen[soHD] = true;
+      const k = ksMap[soHD];
+      result.push({
+        SoHopDong: soHD,
+        MaRung: _safeStr(r.MaRung),
+        ChuRung: _safeStr(r.HoVaTenChuRung),
+        DaKhaoSat: k && k.CoBaoCaoKhaoSat === 'Có' ? 'Có' : 'Chưa',
+        NgayKhaoSat: k ? _safeStr(k.NgayKhaoSat) : '',
+        NguoiKhaoSat: k ? _safeStr(k.NguoiKhaoSat) : '',
+      });
+    });
+    return result;
+  });
+}
+
 // ============ API: DASHBOARD TỔNG HỢP ============
 function getDashboardData() {
   return _safe(() => _getDashboardDataInner());
@@ -543,10 +652,16 @@ function _getDashboardDataInner() {
 
   const chenhLechCanhBao = tongHop.filter((r) => Math.abs(Number(r['Chênh lệch (%)']) || 0) > 10).length;
 
-  const dat = danhGia.filter((r) => r.KetLuanGiamSat === 'ĐẠT').length;
-  const datCoDK = danhGia.filter((r) => r.KetLuanGiamSat === 'ĐẠT CÓ ĐIỀU KIỆN').length;
-  const khongDat = danhGia.filter((r) => r.KetLuanGiamSat === 'KHÔNG ĐẠT').length;
-  const chuaDanhGia = tongHD - danhGia.length;
+  // Một hợp đồng có thể được ghi nhận NHIỀU lượt đánh giá theo thời gian (tái đánh giá).
+  // Chỉ lấy KẾT LUẬN GẦN NHẤT của mỗi hợp đồng (giống cách getHopDongList đang làm) để
+  // không đếm 1 hợp đồng vào nhiều nhóm kết luận, và không "giấu" hợp đồng chưa từng đánh giá.
+  const ketLuanMoiNhatMap = {};
+  danhGia.forEach((r) => { ketLuanMoiNhatMap[String(r.MaHopDong)] = r.KetLuanGiamSat; });
+  const ketLuanList = Object.values(ketLuanMoiNhatMap);
+  const dat = ketLuanList.filter((kl) => kl === 'ĐẠT').length;
+  const datCoDK = ketLuanList.filter((kl) => kl === 'ĐẠT CÓ ĐIỀU KIỆN').length;
+  const khongDat = ketLuanList.filter((kl) => kl === 'KHÔNG ĐẠT').length;
+  const chuaDanhGia = tongHD - Object.keys(ketLuanMoiNhatMap).length;
 
   const vungRuiRoDangKe = ruiRoRung.filter((r) => r.RuiRoCNRA === 'Đáng kể').length;
   const soHopDongCoKhaoSat = new Set(khaoSat.map((r) => String(r.SoHopDong))).size;

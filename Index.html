@@ -3,9 +3,12 @@
 <head>
   <base target="_top">
   <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
-    body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; margin: 0; background: #f4f5f7; color: #222; }
+    body { font-family: 'Be Vietnam Pro', -apple-system, "Segoe UI", Arial, sans-serif; margin: 0; background: #f4f5f7; color: #222; }
     header { background: #1F3864; color: #fff; padding: 14px 20px; }
     header h1 { margin: 0; font-size: 18px; }
     nav { display: flex; gap: 4px; background: #2E5395; padding: 0 16px; flex-wrap: wrap; }
@@ -19,7 +22,9 @@
     .card.warn .num { color: #A32D2D; }
     .card.ok .num { color: #27500A; }
     table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); font-size: 12px; }
-    th, td { padding: 7px 9px; border-bottom: 1px solid #eee; text-align: left; white-space: nowrap; }
+    th, td { padding: 7px 9px; border-bottom: 1px solid #eee; text-align: left; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
+    .tablewrap table th, .tablewrap table td { white-space: nowrap; }
+    code { word-break: break-all; white-space: pre-wrap; }
     th { background: #D9E2F3; position: sticky; top: 0; }
     tr:hover { background: #f9fafc; }
     .tablewrap { max-height: 520px; overflow: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
@@ -38,7 +43,7 @@
     form textarea { resize: vertical; }
     form .full { grid-column: 1 / -1; }
     form button { grid-column: 1 / -1; padding: 10px; background: #1F3864; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
-    h2 { font-size: 16px; color: #1F3864; }
+    h2 { font-size: 16px; color: #1F3864; font-weight: 600; }
     .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; }
     .msg.ok { background: #EAF3DE; color: #27500A; }
     .msg.err { background: #FCEBEB; color: #791F1F; }
@@ -70,7 +75,7 @@
     .brand-title { font-weight: bold; font-size: 15px; color: #fff; }
     .brand-sub { font-size: 11px; color: #B7C4AE; margin-top: 2px; }
     .sidenav { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; flex: 1; overflow-y: auto; }
-    .sidenav .tab { display: flex; align-items: center; gap: 10px; text-align: left; background: none; border: none; color: #D7D3C4; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13.5px; width: 100%; }
+    .sidenav .tab { display: flex; align-items: center; gap: 10px; text-align: left; background: none; border: none; color: #D7D3C4; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; width: 100%; text-transform: uppercase; letter-spacing: 0.01em; }
     .sidenav .tab:hover { background: rgba(255,255,255,.06); }
     .sidenav .tab.active { background: #3E5233; color: #fff; font-weight: bold; }
     .sidenav .tab .navbadge { margin-left: auto; background: #C97A3D; color: #fff; font-size: 10px; font-weight: bold; padding: 1px 7px; border-radius: 10px; }
@@ -79,9 +84,9 @@
     .sidebar-tools { padding: 10px 14px 0; border-top: 1px solid rgba(255,255,255,.12); margin-top: 10px; }
     .sidebar-tools button { width: 100%; margin-bottom: 6px; padding: 7px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,.25); background: transparent; color: #D7D3C4; font-size: 11.5px; cursor: pointer; }
     .sidebar-tools button:hover { background: rgba(255,255,255,.08); }
-    .content { flex: 1; padding: 26px 32px; overflow-y: auto; }
+    .content { flex: 1; padding: 26px 32px; overflow-y: auto; overflow-x: hidden; max-width: 100%; box-sizing: border-box; }
     .page-header { margin-bottom: 18px; }
-    .page-header h1 { margin: 0; font-size: 24px; color: #2A2A20; font-family: Georgia, 'Times New Roman', serif; }
+    .page-header h1 { margin: 0; font-size: 24px; color: #2A2A20; font-weight: 700; letter-spacing: 0.01em; text-transform: uppercase; }
     .page-header p { margin: 4px 0 0; color: #7A7563; font-size: 13.5px; }
     @media (max-width: 900px) {
       .app-shell { flex-direction: column; }
@@ -130,6 +135,16 @@
         <button class="tab" data-t="tiendo" data-title="Tiến độ triển khai" data-sub="Theo dõi 5 giai đoạn triển khai KH-FSC-01">📈 Tiến độ triển khai</button>
         <button class="tab" data-t="nghiemthugd" data-title="Nghiệm thu hoàn thành giai đoạn (BM-KH-02)" data-sub="Đối chiếu đầu ra kỳ vọng vs bằng chứng thực nhận">✅ Nghiệm thu giai đoạn</button>
         <button class="tab" data-t="ruirotk" data-title="Rủi ro/vướng mắc triển khai (BM-KH-03)" data-sub="Ghi nhận rủi ro trong quá trình triển khai KH-FSC-01">⚠️ Rủi ro triển khai</button>
+
+        <div class="navgroup">ĐÁNH GIÁ NỘI BỘ HỆ THỐNG DDS (FSC-STD-40-005)</div>
+        <button class="tab" data-t="kehoachdgnb" data-title="Kế hoạch đánh giá nội bộ" data-sub="Kế hoạch đánh giá nội bộ hằng năm — công thức lấy mẫu y = 0.8 × √x">📅 Kế hoạch đánh giá nội bộ</button>
+        <button class="tab" data-t="phieukhacphuc" data-title="Phiếu yêu cầu hành động khắc phục (BM.05)" data-sub="Ghi nhận điểm không phù hợp phát hiện khi đánh giá nội bộ và theo dõi khắc phục">📝 Phiếu yêu cầu khắc phục</button>
+        <button class="tab" data-t="xemxetdds" data-title="Biên bản xem xét hệ thống DDS (BM.07)" data-sub="Xem xét hệ thống thẩm định định kỳ hằng năm">📋 Xem xét hệ thống DDS</button>
+        <button class="tab" data-t="pheduyetdgv" data-title="Phê duyệt năng lực đánh giá viên nội bộ (BM.08)" data-sub="Phê duyệt trình độ, kinh nghiệm, phẩm chất, năng lực của đánh giá viên">👤 Phê duyệt đánh giá viên</button>
+
+        <div class="navgroup">BÁO CÁO TỔNG HỢP</div>
+        <button class="tab" data-t="tonkho" data-title="Báo cáo tồn kho nguyên liệu" data-sub="Tổng nhập − Tổng xuất, lọc theo khoảng ngày">📦 Báo cáo tồn kho</button>
+        <button class="tab" data-t="rungkhaosat" data-title="Rừng đã khảo sát / chưa khảo sát" data-sub="Đối chiếu hợp đồng đã có báo cáo khảo sát, kèm ảnh khảo sát thực địa">🌲 Rừng đã khảo sát</button>
 
         <hr>
         <button class="tab" data-t="huongdan" data-title="Hướng dẫn sử dụng" data-sub="Giải thích từng mục, nguồn dữ liệu và cách dùng hệ thống">❓ Hướng dẫn sử dụng</button>
@@ -360,7 +375,7 @@
           <input id="fKhaoSatSearch" placeholder="🔎 Tìm số hợp đồng..." oninput="renderKhaoSat()">
           <select id="fKhaoSatTrangThai" onchange="renderKhaoSat()">
             <option value="">-- Trạng thái: Tất cả --</option>
-            <option value="du">Đầy đủ (8/8 mục)</option>
+            <option value="du">Đầy đủ (9/9 mục)</option>
             <option value="thieu">Còn thiếu ít nhất 1 mục</option>
           </select>
           <span id="fKhaoSatCount" class="count"></span>
@@ -376,21 +391,55 @@
       </div>
 
       <div id="sub-nhapkhaosat" class="subpanel">
-        <div class="totalbox" style="display:flex; align-items:center; gap:14px;">
-          <div style="flex:1;">📋 Dữ liệu bên dưới lấy trực tiếp từ Google Form đang dùng thật (sheet <code>KhaoSat_FSC</code>) — <b>không cần nhập lại trong webapp</b>. Để thêm 1 khảo sát mới, bấm nút này để mở đúng Form đó:</div>
-          <button class="btnmini" id="btnMoFormKhaoSat" onclick="moFormKhaoSat()" style="background:#1F3864; color:#fff; white-space:nowrap;">📝 Mở Form nhập khảo sát mới</button>
-        </div>
-        <p class="note">⚠ Dữ liệu hiện <b>chưa có cột "Số hợp đồng"</b> nên chưa nối được với danh sách hợp đồng — nếu bổ sung câu hỏi này vào Form, hệ thống sẽ tự nối mà không cần sửa code. Bấm "Chi tiết" ở mỗi dòng để xem đầy đủ toàn bộ ~60 trường đã khảo sát.</p>
-        <div id="mauWordKhaoSat"></div>
+        <p class="note">Nhập trực tiếp trong webapp — không dùng Google Form nữa. Điền theo đúng 10 mục nội dung của mẫu báo cáo khảo sát gốc, có thể tải kèm ảnh khảo sát (ảnh tự resize nhỏ trước khi tải lên).</p>
+        <div id="bcksMsg"></div>
+        <form id="formBaoCaoKhaoSat">
+          <label>Số hợp đồng
+            <select name="SoHopDong" id="selectHopDongBCKS" required><option value="">-- đang tải danh sách --</option></select>
+          </label>
+          <label>Ngày khảo sát <input name="NgayKhaoSat" type="date"></label>
+          <label>Người khảo sát <input name="NguoiKhaoSat" placeholder="VD: Hồ Phước Thảo"></label>
+          <label>Địa chỉ rừng trồng <input name="DiaChiRungTrong"></label>
+          <label>Tọa độ (vĩ độ, kinh độ) <input name="ToaDo" placeholder="15.634409, 107.997439"></label>
+          <label>Pháp lý thửa đất <input name="PhapLyThuaDat" placeholder="Giấy CNQSDĐ / Xác nhận UBND..."></label>
+          <label>Mục đích sử dụng đất <input name="MucDichSuDungDat"></label>
+          <label class="full">1. Khu vực rừng trồng (diện tích, ranh giới/tranh chấp, địa hình, loài cây, độ tuổi, mật độ, cây giống)
+            <textarea name="KhuVucRungTrong" rows="3"></textarea></label>
+          <label class="full">2. Đất đai (thuế phí, nguồn gốc sử dụng, tình trạng/năm chuyển đổi, thời hạn sử dụng đất)
+            <textarea name="DatDai" rows="3"></textarea></label>
+          <label class="full">3. Môi trường (phân bón, thuốc BVTV, rác thải, nguồn nước, xói mòn/sạt lở)
+            <textarea name="MoiTruong" rows="3"></textarea></label>
+          <label class="full">4. Lao động (thành phần LĐ, bảo hộ &amp; an toàn LĐ, HĐLĐ/lương/BHXH, độ tuổi, LĐ trẻ em/cưỡng bức, tập huấn, lán trại)
+            <textarea name="LaoDong" rows="3"></textarea></label>
+          <label class="full">5. Cộng đồng sinh sống trong/gần rừng (dân tộc thiểu số, phong tục, nhu cầu nước/sinh hoạt, thông báo trưởng thôn)
+            <textarea name="CongDong" rows="3"></textarea></label>
+          <label class="full">6. Đường vận chuyển (tình trạng đường, mở mới/sửa chữa, xói mòn, môi trường đất)
+            <textarea name="DuongVanChuyen" rows="2"></textarea></label>
+          <label class="full">7. Hoạt động vận chuyển gỗ (phương tiện, hồ sơ xe vận chuyển)
+            <textarea name="HoatDongVanChuyenGo" rows="2"></textarea></label>
+          <label class="full">8. Hoạt động khai thác (khai báo, hồ sơ, phạm vi, biển báo, nhà thầu phụ, kỹ thuật, máy móc, xói mòn)
+            <textarea name="HoatDongKhaiThac" rows="3"></textarea></label>
+          <label class="full">9. Các giá trị bảo tồn (rừng phòng hộ/tự nhiên/đặc dụng, loài động thực vật, đai xanh/vùng đệm)
+            <textarea name="GiaTriBaoTon" rows="3"></textarea></label>
+          <label class="full">10. Xử lý thực bì (phát thực bì, đốt thực bì)
+            <textarea name="XuLyThucBi" rows="2"></textarea></label>
+          <label class="full">📷 Ảnh khảo sát (có thể chọn nhiều ảnh)
+            <input type="file" id="inputAnhKhaoSat" accept="image/*" multiple>
+          </label>
+          <div id="anhKhaoSatPreview" style="grid-column:1/-1; display:flex; gap:8px; flex-wrap:wrap;"></div>
+          <label class="full">Ghi chú <input name="GhiChu"></label>
+          <button type="submit" id="btnSubmitBCKS">Lưu báo cáo khảo sát</button>
+        </form>
+        <h2>Danh sách báo cáo khảo sát đã nhập</h2>
         <div class="filterbar">
-          <input id="fBCKSSearch" placeholder="🔎 Tìm người khảo sát / địa chỉ rừng / đơn vị khảo sát..." oninput="renderBaoCaoKhaoSat()">
+          <input id="fBCKSSearch" placeholder="🔎 Tìm số HĐ / người khảo sát / địa chỉ rừng..." oninput="renderBaoCaoKhaoSat()">
           <span id="fBCKSCount" class="count"></span>
           <button class="btnmini" onclick="exportCSV('bcksTable','BaoCaoKhaoSat.csv')">⬇ CSV</button>
           <button class="btnmini" onclick="printTable('bcksTable','Báo cáo khảo sát thực địa', document.getElementById('fBCKSCount').textContent)">🖨 In</button>
         </div>
         <div class="tablewrap">
         <table id="bcksTable">
-          <thead><tr><th>Ngày KS</th><th>Người KS</th><th>Địa chỉ rừng trồng</th><th>Pháp lý thửa đất</th><th>Mục đích SDĐ</th><th>Xói mòn/sạt lở</th><th>Giá trị bảo tồn</th><th>Đơn vị KS</th><th></th></tr></thead>
+          <thead><tr><th>Số HĐ</th><th>Ngày KS</th><th>Người KS</th><th>Địa chỉ rừng trồng</th><th>Pháp lý thửa đất</th><th>Ảnh</th><th></th></tr></thead>
           <tbody></tbody>
         </table>
         </div>
@@ -799,6 +848,181 @@
       </div>
     </section>
 
+    <section id="kehoachdgnb">
+      <h2>📅 Kế hoạch đánh giá nội bộ hệ thống thẩm định (theo FSC-STD-40-005 Ver.3.1)</h2>
+      <p class="note">Đánh giá nội bộ thực hiện tối thiểu 1 lần/năm. Công thức lấy mẫu: <b>y = 0.8 × √x</b> (x = tổng số nhà cung cấp nguyên liệu CW trong chu kỳ) — nhập "Tổng số nhà cung cấp", số mẫu sẽ tự tính.</p>
+      <div id="khdgnbMsg"></div>
+      <form id="formKeHoachDGNB">
+        <label>Số kế hoạch <input name="SoKeHoach" placeholder="01/2026-ĐGNB"></label>
+        <label>Mục đích đánh giá <input name="MucDichDanhGia" placeholder="Ngăn ngừa nguyên liệu không đáp ứng yêu cầu vào chuỗi cung ứng"></label>
+        <label>Từ ngày <input name="TuNgay" type="date"></label>
+        <label>Đến ngày <input name="DenNgay" type="date"></label>
+        <label>Tổng số nhà cung cấp (x) <input name="TongSoNhaCungCap" id="inputTongNCC" type="number" oninput="tinhSoMau()"></label>
+        <label>Số mẫu lấy theo công thức (tự tính) <input name="SoMauLayTheoCongThuc" id="inputSoMau" readonly style="background:#f4f5f7;"></label>
+        <label>Trưởng đoàn <input name="TruongDoan"></label>
+        <label class="full">Thành viên đoàn <input name="ThanhVienDoan"></label>
+        <label class="full">Nội dung đánh giá (hạng mục, bộ phận được đánh giá, ngày cụ thể...)
+          <textarea name="NoiDungDanhGia" rows="4"></textarea></label>
+        <label>Ngày lập <input name="NgayLap" type="date"></label>
+        <button type="submit">Lưu kế hoạch</button>
+      </form>
+      <h2>Lịch sử kế hoạch đánh giá</h2>
+      <div class="filterbar">
+        <input id="fKHDGNBSearch" placeholder="🔎 Tìm số kế hoạch / trưởng đoàn..." oninput="renderKeHoachDGNB()">
+        <span id="fKHDGNBCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('khdgnbTable','KeHoachDanhGiaNoiBo.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('khdgnbTable','Kế hoạch đánh giá nội bộ', document.getElementById('fKHDGNBCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="khdgnbTable">
+        <thead><tr><th>Số KH</th><th>Từ ngày</th><th>Đến ngày</th><th>Tổng NCC</th><th>Số mẫu</th><th>Trưởng đoàn</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="phieukhacphuc">
+      <h2>📝 Phiếu yêu cầu hành động khắc phục (BM.05)</h2>
+      <p class="note">Lập khi đánh giá nội bộ phát hiện điểm không phù hợp. Thời hạn khắc phục theo quy định: sớm nhất 3 tháng, trễ nhất 12 tháng.</p>
+      <div id="pkpMsg"></div>
+      <form id="formPhieuKhacPhuc">
+        <label>Ngày đánh giá <input name="NgayDanhGia" type="date"></label>
+        <label>Ngày phát hành phiếu <input name="NgayPhatHanh" type="date"></label>
+        <label class="full">Khu vực/Bộ phận/Chức năng <input name="KhuVucBoPhan"></label>
+        <label class="full">Chi tiết nội dung không phù hợp <textarea name="NoiDungKhongPhuHop" rows="3"></textarea></label>
+        <label class="full">Phân tích nguyên nhân <textarea name="PhanTichNguyenNhan" rows="2"></textarea></label>
+        <label>Người phân tích <input name="NguoiPhanTich"></label>
+        <label class="full">Hành động khắc phục nhằm ngăn ngừa tái diễn <textarea name="HanhDongKhacPhuc" rows="2"></textarea></label>
+        <label>Dự kiến ngày kết thúc <input name="DuKienNgayKetThuc" type="date"></label>
+        <label>Trạng thái <select name="TrangThai"><option>Chưa xử lý</option><option>Đang xử lý</option><option>Đã đóng</option></select></label>
+        <label>Ngày đóng thực tế <input name="NgayDongThucTe" type="date"></label>
+        <label class="full">Ghi chú <input name="GhiChu"></label>
+        <button type="submit">Lưu phiếu khắc phục</button>
+      </form>
+      <h2>Sổ theo dõi hành động khắc phục</h2>
+      <div class="filterbar">
+        <input id="fPKPSearch" placeholder="🔎 Tìm khu vực/bộ phận..." oninput="renderPhieuKhacPhuc()">
+        <select id="fPKPTrangThai" onchange="renderPhieuKhacPhuc()">
+          <option value="">-- Trạng thái: Tất cả --</option><option>Chưa xử lý</option><option>Đang xử lý</option><option>Đã đóng</option>
+        </select>
+        <span id="fPKPCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('pkpTable','PhieuYeuCauKhacPhuc.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('pkpTable','Sổ theo dõi hành động khắc phục', document.getElementById('fPKPCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="pkpTable">
+        <thead><tr><th>Số phiếu</th><th>Ngày ĐG</th><th>Khu vực/BP</th><th>Nội dung KPH</th><th>Dự kiến KT</th><th>Trạng thái</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="xemxetdds">
+      <h2>📋 Biên bản xem xét hệ thống thẩm định DDS (BM.07)</h2>
+      <p class="note">Thực hiện sau khi có kết quả đánh giá nội bộ, tối thiểu 1 lần/năm.</p>
+      <div id="xxddsMsg"></div>
+      <form id="formXemXetDDS">
+        <label>Ngày xem xét <input name="NgayXemXet" type="date"></label>
+        <label>Địa điểm <input name="DiaDiem" placeholder="Văn phòng Công ty"></label>
+        <label class="full">Thành phần tham dự (họ tên — chức vụ) <textarea name="ThanhPhanThamDu" rows="2"></textarea></label>
+        <label class="full">Kết quả đánh giá nội bộ năm (tóm tắt) <textarea name="KetQuaDanhGiaNoiBoNam" rows="2"></textarea></label>
+        <label>Kết luận/quyết định <select name="KetLuanThayDoi"><option>Không có thay đổi</option><option>Có thay đổi/cập nhật DDS</option></select></label>
+        <label class="full">Nội dung trước khi thay đổi <input name="NoiDungTruocThayDoi"></label>
+        <label class="full">Nội dung sau khi thay đổi <input name="NoiDungSauThayDoi"></label>
+        <label>Người lập <input name="NguoiLap"></label>
+        <button type="submit">Lưu biên bản xem xét</button>
+      </form>
+      <h2>Lịch sử xem xét hệ thống DDS</h2>
+      <div class="filterbar">
+        <input id="fXXDDSSearch" placeholder="🔎 Tìm địa điểm / người lập..." oninput="renderXemXetDDS()">
+        <span id="fXXDDSCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('xxddsTable','BienBanXemXetDDS.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('xxddsTable','Biên bản xem xét hệ thống DDS', document.getElementById('fXXDDSCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="xxddsTable">
+        <thead><tr><th>Ngày xem xét</th><th>Địa điểm</th><th>Kết luận</th><th>Người lập</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="pheduyetdgv">
+      <h2>👤 Phê duyệt năng lực đánh giá viên nội bộ (BM.08)</h2>
+      <p class="note">Đánh giá viên phải được phê duyệt đủ 4 nhóm yêu cầu: Trình độ, Kinh nghiệm, Phẩm chất cá nhân, Năng lực — trước khi được giao nhiệm vụ đánh giá nội bộ.</p>
+      <div id="pddgvMsg"></div>
+      <form id="formPheDuyetDGV">
+        <label>Họ và tên <input name="HoTen"></label>
+        <label>Chức vụ <input name="ChucVu"></label>
+        <label class="full">Trình độ học vấn/chuyên ngành <input name="TrinhDoChuyenNganh"></label>
+        <label>Đạt yêu cầu Trình độ? <select name="DatYeuCauTrinhDo"><option>Có</option><option>Không</option></select></label>
+        <label>Đạt yêu cầu Kinh nghiệm? <select name="DatYeuCauKinhNghiem"><option>Có</option><option>Không</option></select></label>
+        <label>Đạt yêu cầu Phẩm chất cá nhân? <select name="DatYeuCauPhamChat"><option>Có</option><option>Không</option></select></label>
+        <label>Đạt yêu cầu Năng lực? <select name="DatYeuCauNangLuc"><option>Có</option><option>Không</option></select></label>
+        <label>Kết luận phê duyệt <select name="KetLuanPheDuyet"><option>Phê duyệt</option><option>Không phê duyệt</option></select></label>
+        <label>Ngày phê duyệt <input name="NgayPheDuyet" type="date"></label>
+        <label>Người phê duyệt <input name="NguoiPheDuyet"></label>
+        <button type="submit">Lưu phê duyệt</button>
+      </form>
+      <h2>Danh sách đánh giá viên đã phê duyệt</h2>
+      <div class="filterbar">
+        <input id="fPDDGVSearch" placeholder="🔎 Tìm họ tên..." oninput="renderPheDuyetDGV()">
+        <span id="fPDDGVCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('pddgvTable','PheDuyetDanhGiaVien.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('pddgvTable','Phê duyệt năng lực đánh giá viên nội bộ', document.getElementById('fPDDGVCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="pddgvTable">
+        <thead><tr><th>Họ tên</th><th>Chức vụ</th><th>Trình độ</th><th>Kinh nghiệm</th><th>Phẩm chất</th><th>Năng lực</th><th>Kết luận</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+    </section>
+
+    <section id="tonkho">
+      <h2>📦 Báo cáo tồn kho nguyên liệu</h2>
+      <p class="note">⚠ Đây là tồn kho <b>TỔNG</b> (Nhập − Xuất) từ HoSoKeo_DN và NL_PC_XH. Chưa lọc riêng theo tiêu chuẩn FSC/CW cụ thể — cột "Nguồn gốc" (PS/DT/QT...) trong dữ liệu nguồn hiện <b>chưa xác nhận</b> có phải mã phân loại chứng chỉ hay chỉ là mã khu vực địa lý. Bảng "Theo nguồn gốc" bên dưới liệt kê để bạn đối chiếu — nếu 1 trong các mã đó chính là mã chuẩn FSC, báo tôi để lọc chính xác.</p>
+      <div class="filterbar">
+        <label class="inline">Từ ngày <input type="date" id="fTonKhoTu"></label>
+        <label class="inline">Đến ngày <input type="date" id="fTonKhoDen"></label>
+        <button class="btnmini" onclick="loadTonKho()" style="background:#1F3864;color:#fff;">🔍 Xem báo cáo</button>
+        <button class="btnmini" onclick="document.getElementById('fTonKhoTu').value='';document.getElementById('fTonKhoDen').value='';loadTonKho();">✕ Bỏ lọc (xem toàn bộ)</button>
+      </div>
+      <div id="tonKhoBody">
+        <p style="color:#888;">Bấm "Xem báo cáo" để tính (quét toàn bộ dữ liệu nhập/xuất, có thể mất vài giây).</p>
+      </div>
+    </section>
+
+    <section id="rungkhaosat">
+      <h2>🌲 Rừng đã khảo sát / chưa khảo sát</h2>
+      <p class="note">Đối chiếu theo hợp đồng (HD_RUNG) với bảng theo dõi "Khảo sát & Tham vấn". Ảnh khảo sát lấy từ các báo cáo khảo sát đã nhập trực tiếp trong webapp (tab "Khảo sát & Tham vấn" → sub-tab "Báo cáo khảo sát"), lưu trên Google Drive.</p>
+      <div id="rungKSSummary" class="cards"><p>⏳ Đang tải...</p></div>
+      <div class="filterbar">
+        <input id="fRungKSSearch" placeholder="🔎 Tìm số HĐ / chủ rừng / mã rừng..." oninput="renderRungKhaoSat()">
+        <select id="fRungKSTrangThai" onchange="renderRungKhaoSat()">
+          <option value="">-- Trạng thái: Tất cả --</option>
+          <option value="Có">Đã khảo sát</option>
+          <option value="Chưa">Chưa khảo sát</option>
+        </select>
+        <span id="fRungKSCount" class="count"></span>
+        <button class="btnmini" onclick="exportCSV('rungKSTable','TinhTrangKhaoSatRung.csv')">⬇ CSV</button>
+        <button class="btnmini" onclick="printTable('rungKSTable','Tình trạng khảo sát rừng', document.getElementById('fRungKSCount').textContent)">🖨 In</button>
+      </div>
+      <div class="tablewrap">
+      <table id="rungKSTable">
+        <thead><tr><th>Số HĐ</th><th>Mã rừng</th><th>Chủ rừng</th><th>Đã khảo sát?</th><th>Ngày khảo sát</th><th>Người khảo sát</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+
+      <h2 style="margin-top:24px;">📷 Ảnh khảo sát thực địa đã nộp</h2>
+      <div class="filterbar">
+        <input id="fAnhKSSearch" placeholder="🔎 Tìm người khảo sát / địa chỉ rừng..." oninput="renderAnhKhaoSat()">
+        <span id="fAnhKSCount" class="count"></span>
+      </div>
+      <div id="anhKhaoSatGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px;"></div>
+    </section>
+
     <section id="huongdan">
       <div style="background:#fff; border-radius:10px; padding:22px 26px; box-shadow:0 1px 3px rgba(0,0,0,.1); font-size:14px; line-height:1.8;">
 
@@ -807,6 +1031,8 @@
 
         <h2>📘 Hệ thống này dùng để làm gì?</h2>
         <p>Đây là công cụ kiểm soát &amp; giám sát toàn bộ chuỗi cung ứng gỗ keo theo <b>Quy trình QT-FSC-01</b> và <b>Kế hoạch triển khai KH-FSC-01</b>. Nguyên tắc cốt lõi: <b>không nhập lại dữ liệu đã có</b> — hệ thống đọc trực tiếp 5 Google Sheet nghiệp vụ đang dùng thật, chỉ tạo mới đúng phần chưa từng có (kết luận giám sát, đánh giá rủi ro, tiến độ triển khai).</p>
+
+        <p>Ngoài quy trình QT-FSC-01 (kiểm soát theo từng lô hàng), hệ thống còn có nhóm <b>"Đánh giá nội bộ hệ thống DDS"</b> — đây là yêu cầu <b>riêng biệt theo tiêu chuẩn FSC-STD-40-005 Ver.3.1</b>, thực hiện định kỳ <b>hằng năm</b> (không phải theo từng lô), do Ban CoC chủ trì, nhằm đánh giá xem toàn bộ hệ thống thẩm định (DDS) có đang được thực thi hiệu quả hay không.</p>
 
         <h2>🗂️ Giải thích từng mục bên trái (theo đúng thứ tự trên sidebar)</h2>
         <table style="width:100%;">
@@ -817,7 +1043,7 @@
             <tr><td><b>🧾 Thẩm định hợp đồng</b></td><td>Nhập mới (BM-FSC-01/02)</td><td>Checklist 8 tiêu chí trước khi ký HĐ (mục đích SDĐ, sổ đỏ, CCCD, rừng tự nhiên 2020, tranh chấp, khối lượng, thông báo giá) — ra kết luận Đồng ý/Yêu cầu bổ sung/Từ chối.</td></tr>
             <tr><td><b>📄 Hợp đồng &amp; hồ sơ rừng</b></td><td>HD_RUNG, BaoCao_KiemTra, TongHop_HopDong</td><td>Xem từng hợp đồng: hồ sơ đủ/thiếu gì, chênh lệch diện tích ký vs GPS, bấm <b>"📎 Chi tiết"</b> xem pháp lý rừng + tọa độ Google Maps + ảnh. Ghi <b>kết luận giám sát FSC</b> ở form cuối trang.</td></tr>
             <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3: Khảo sát &amp; tham vấn</td></tr>
-            <tr><td><b>📋 Khảo sát &amp; Tham vấn</b></td><td>4 sub-tab: bảng Có/Chưa (nhập mới) + Google Form thật (KhaoSat_FSC) + BB Giám sát khai thác (nhập mới) + Tham vấn bên liên quan (nhập mới)</td><td>"Bảng theo dõi" xem nhanh HĐ nào thiếu loại hồ sơ nào; 3 sub-tab còn lại là nơi gõ/xem NỘI DUNG THẬT của từng loại hồ sơ.</td></tr>
+            <tr><td><b>📋 Khảo sát &amp; Tham vấn</b></td><td>4 sub-tab: bảng Có/Chưa (nhập mới) + Báo cáo khảo sát (nhập mới, có ảnh) + BB Giám sát khai thác (nhập mới) + Tham vấn bên liên quan (nhập mới)</td><td>"Bảng theo dõi" xem nhanh HĐ nào thiếu loại hồ sơ nào; 3 sub-tab còn lại là nơi gõ/xem NỘI DUNG THẬT của từng loại hồ sơ, kể cả tải ảnh khảo sát.</td></tr>
             <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3–4: Khai thác, cân, nghiệm thu</td></tr>
             <tr><td><b>📦 Lô hàng mua vào</b></td><td>HoSoKeo_DN</td><td>200 lô nhập gần nhất (phân trang 20/trang), lọc mã HĐ/chủ rừng/ngày, tổng khối lượng &amp; tổng tiền (toàn bộ + theo trang).</td></tr>
             <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 5–6: Vận chuyển &amp; chế biến</td></tr>
@@ -834,6 +1060,11 @@
             <tr><td><b>📈 Tiến độ triển khai</b></td><td>Nhập mới (BM-KH-01)</td><td>Cập nhật tiến độ 5 giai đoạn theo KH-FSC-01, so sánh mốc kế hoạch với ngày thực tế.</td></tr>
             <tr><td><b>✅ Nghiệm thu giai đoạn</b></td><td>Nhập mới (BM-KH-02)</td><td>Đối chiếu đầu ra kỳ vọng từng giai đoạn với bằng chứng thực nhận, ra kết luận Nghiệm thu/Có điều kiện/Chưa.</td></tr>
             <tr><td><b>⚠️ Rủi ro triển khai</b></td><td>Nhập mới (BM-KH-03)</td><td>Ghi nhận rủi ro/vướng mắc phát sinh khi triển khai — mức độ, biện pháp, người phụ trách, hạn xử lý.</td></tr>
+            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">ĐÁNH GIÁ NỘI BỘ HỆ THỐNG DDS (theo FSC-STD-40-005 Ver.3.1, riêng biệt với QT-FSC-01)</td></tr>
+            <tr><td><b>📅 Kế hoạch đánh giá nội bộ</b></td><td>Nhập mới</td><td>Lập kế hoạch đánh giá nội bộ hằng năm (tối thiểu 1 lần/năm) — nhập tổng số nhà cung cấp, hệ thống tự tính số mẫu theo công thức y = 0.8×√x.</td></tr>
+            <tr><td><b>📝 Phiếu yêu cầu khắc phục</b></td><td>Nhập mới (BM.05)</td><td>Ghi nhận điểm không phù hợp phát hiện khi đánh giá nội bộ, phân tích nguyên nhân, hành động khắc phục, theo dõi đến khi đóng (thời hạn 3–12 tháng).</td></tr>
+            <tr><td><b>📋 Xem xét hệ thống DDS</b></td><td>Nhập mới (BM.07)</td><td>Biên bản xem xét hệ thống thẩm định định kỳ hằng năm, sau khi có kết quả đánh giá nội bộ — ghi nhận có/không cần cập nhật DDS.</td></tr>
+            <tr><td><b>👤 Phê duyệt đánh giá viên</b></td><td>Nhập mới (BM.08)</td><td>Phê duyệt đủ 4 nhóm yêu cầu (trình độ, kinh nghiệm, phẩm chất, năng lực) trước khi giao nhiệm vụ đánh giá nội bộ cho 1 người.</td></tr>
           </tbody>
         </table>
 
@@ -848,6 +1079,7 @@
           <li>Trước hạn 15/01 và cuối mỗi quý, vào <b>Báo cáo Nhà nước</b> ghi nhận đã nộp Mẫu 29/Mẫu 14.</li>
           <li>Cuối tuần/tháng, vào <b>Giám sát định kỳ</b> lập báo cáo tổng hợp theo mẫu BM-FSC-10.</li>
           <li>Theo dõi <b>Tiến độ triển khai</b>, cập nhật <b>Nghiệm thu giai đoạn</b> và <b>Rủi ro triển khai</b> để biết đang đúng/chậm so với KH-FSC-01.</li>
+          <li><b>Hằng năm (tối thiểu 1 lần)</b>: lập <b>Kế hoạch đánh giá nội bộ</b> DDS → phát hiện điểm không phù hợp thì lập <b>Phiếu yêu cầu khắc phục</b>, theo dõi đến khi đóng → sau đó lập <b>Biên bản xem xét hệ thống DDS</b>. Trước khi giao nhiệm vụ cho người đánh giá mới, phải có <b>Phê duyệt đánh giá viên</b>.</li>
         </ol>
 
         <h2>⚠️ Những giới hạn cần biết</h2>
@@ -909,7 +1141,7 @@
             <tr><td>BM-FSC-08</td><td>Sổ theo dõi nộp báo cáo định kỳ cơ quan Nhà nước</td><td>Bước 8</td><td>🗓️ Báo cáo Nhà nước</td></tr>
             <tr><td>BM-FSC-09</td><td>Phiếu đánh giá rủi ro CNRA theo vùng cung ứng</td><td>Bước 9</td><td>⚠️ Rủi ro CNRA</td></tr>
             <tr><td>BM-FSC-10</td><td>Báo cáo giám sát định kỳ</td><td>Mục 8.3</td><td>🔍 Giám sát định kỳ</td></tr>
-            <tr><td>—</td><td>Báo cáo khảo sát (~60 trường, Google Form thật)</td><td>Bước 3</td><td>📋 Khảo sát &amp; Tham vấn → sub-tab "Báo cáo khảo sát"</td></tr>
+            <tr><td>—</td><td>Báo cáo khảo sát (10 mục nội dung, có ảnh)</td><td>Bước 3</td><td>📋 Khảo sát &amp; Tham vấn → sub-tab "Báo cáo khảo sát"</td></tr>
             <tr><td>—</td><td>Biên bản giám sát khai thác (trong/sau)</td><td>Bước 3–4</td><td>📋 Khảo sát &amp; Tham vấn → sub-tab "BB Giám sát khai thác"</td></tr>
             <tr><td>—</td><td>Bản ghi tham vấn bên liên quan</td><td>Bước 3</td><td>📋 Khảo sát &amp; Tham vấn → sub-tab "Tham vấn bên liên quan"</td></tr>
             <tr><td>BM-KH-01</td><td>Phiếu theo dõi tiến độ theo giai đoạn</td><td>KH-FSC-01</td><td>📈 Tiến độ triển khai</td></tr>
@@ -935,7 +1167,7 @@
       document.getElementById(subId).classList.add('active');
       if (_subLoaded[subId]) return;
       _subLoaded[subId] = true;
-      if (subId === 'sub-nhapkhaosat') { loadBaoCaoKhaoSat(); renderMauWordQuick('mauWordKhaoSat', 'khảo sát'); }
+      if (subId === 'sub-nhapkhaosat') loadBaoCaoKhaoSat();
       if (subId === 'sub-nhapgiamsatkt') { loadBienBanGiamSat(); renderMauWordQuick('mauWordGiamSatKT', 'giám sát'); }
       if (subId === 'sub-nhapthamvan') { loadThamVan(); renderMauWordQuick('mauWordThamVan', ''); }
     }
@@ -962,6 +1194,12 @@
         if (btn.dataset.t === 'baocaoNN') loadBaoCaoNN();
         if (btn.dataset.t === 'nghiemthugd') loadNghiemThuGD();
         if (btn.dataset.t === 'ruirotk') loadRuiRoTK();
+        if (btn.dataset.t === 'kehoachdgnb') loadKeHoachDGNB();
+        if (btn.dataset.t === 'phieukhacphuc') loadPhieuKhacPhuc();
+        if (btn.dataset.t === 'xemxetdds') loadXemXetDDS();
+        if (btn.dataset.t === 'pheduyetdgv') loadPheDuyetDGV();
+        if (btn.dataset.t === 'tonkho') { /* chỉ tải khi bấm nút Xem báo cáo, tránh quét dữ liệu lớn không cần thiết */ }
+        if (btn.dataset.t === 'rungkhaosat') loadRungKhaoSat();
         if (btn.dataset.t === 'giamsat') loadGiamSat();
       });
     });
@@ -1040,7 +1278,7 @@
       if (rows.length <= 1) { alert('Không có dòng dữ liệu nào để xuất (có thể do bộ lọc đang loại hết).'); return; }
       const csv = rows.map((row) => Array.from(row.querySelectorAll('th,td'))
         .map((cell) => '"' + cell.textContent.replace(/"/g, '""').trim() + '"').join(',')).join('\r\n');
-      const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url; a.download = filename;
@@ -1167,7 +1405,7 @@
     }
 
     // ---- Bộ nhớ tạm dữ liệu gốc (chưa lọc) để bộ lọc chạy phía client, không gọi lại server mỗi lần gõ ----
-    const CACHE = { hopDong: [], loHang: [], xuatHang: [], ruiRo: [], giamSat: [], rungList: [], khaoSat: [], baoCaoKhaoSat: [], bienBanGiamSat: [], thamVan: [], tieuChiThamDinh: [], lenhDieuDong: [], tieuHao: [], donHangXB: [], baoCaoNN: [], nghiemThuGD: [], ruiRoTK: [] };
+    const CACHE = { hopDong: [], loHang: [], xuatHang: [], ruiRo: [], giamSat: [], rungList: [], khaoSat: [], baoCaoKhaoSat: [], bienBanGiamSat: [], thamVan: [], tieuChiThamDinh: [], lenhDieuDong: [], tieuHao: [], donHangXB: [], baoCaoNN: [], nghiemThuGD: [], ruiRoTK: [], keHoachDGNB: [], phieuKhacPhuc: [], xemXetDDS: [], pheDuyetDGV: [], rungKhaoSat: [] };
     const PAGE_SIZE = 20;
     let pageHopDong = 1;
     let pageLoHang = 1;
@@ -1675,6 +1913,14 @@
     });
 
     // ---- In 1 phiếu đơn (định dạng như mẫu Word gốc, có khối ký tên — để in ra ký tay) ----
+    const BCKS_LABELS = {
+      SoHopDong: 'Số hợp đồng', NgayKhaoSat: 'Ngày khảo sát', NguoiKhaoSat: 'Người khảo sát',
+      DiaChiRungTrong: 'Địa chỉ rừng trồng', ToaDo: 'Tọa độ', PhapLyThuaDat: 'Pháp lý thửa đất',
+      MucDichSuDungDat: 'Mục đích sử dụng đất', KhuVucRungTrong: '1. Khu vực rừng trồng', DatDai: '2. Đất đai',
+      MoiTruong: '3. Môi trường', LaoDong: '4. Lao động', CongDong: '5. Cộng đồng', DuongVanChuyen: '6. Đường vận chuyển',
+      HoatDongVanChuyenGo: '7. Hoạt động vận chuyển gỗ', HoatDongKhaiThac: '8. Hoạt động khai thác',
+      GiaTriBaoTon: '9. Các giá trị bảo tồn', XuLyThucBi: '10. Xử lý thực bì', GhiChu: 'Ghi chú',
+    };
     const PHIEU_CONFIGS = {
       tdhd: { title: 'PHIẾU THẨM ĐỊNH CHỦ RỪNG / KIỂM TRA HỒ SƠ (BM-FSC-01/02)', ma: 'BM-FSC-01/02', sig: ['NGƯỜI THẨM ĐỊNH', 'PHÊ DUYỆT (QA/FSC)'],
         labels: { SoHopDong: 'Số hợp đồng', NgayThamDinh: 'Ngày thẩm định', MucDichSuDungDatHopLe: 'Mục đích SDĐ hợp lệ', SoDoConHan: 'Sổ đỏ còn hạn', CCCDConHieuLuc: 'CCCD còn hiệu lực', KhongPhaiRungTuNhienSau2020: 'Không phải rừng TN sau 2020', KhongTranhChap: 'Không tranh chấp', KhoiLuongKhongVuotSoDo: 'Khối lượng ≤ sổ đỏ', ThongBaoGiaDayDu: 'Thông báo giá đầy đủ', KetLuanThamDinh: 'Kết luận thẩm định', NguoiThamDinh: 'Người thẩm định', GhiChu: 'Ghi chú' } },
@@ -1698,6 +1944,16 @@
         labels: { SoHopDong: 'Số hợp đồng', LoaiBenLienQuan: 'Loại bên liên quan', TenNguoiDuocThamVan: 'Tên người được tham vấn', ChucVu: 'Chức vụ', NgayThamVan: 'Ngày tham vấn', NoiDungThamVan: 'Nội dung tham vấn', KetLuan: 'Kết luận', GhiChu: 'Ghi chú' } },
       dg: { title: 'PHIẾU GHI KẾT LUẬN GIÁM SÁT HỢP ĐỒNG', ma: '—', sig: ['NGƯỜI ĐÁNH GIÁ', 'PHÊ DUYỆT (Ban Giám đốc)'],
         labels: { MaHopDong: 'Số hợp đồng', NgayDanhGia: 'Ngày đánh giá', KetLuanGiamSat: 'Kết luận giám sát', PhatHien: 'Phát hiện', HanhDongKhacPhuc: 'Hành động khắc phục', NguoiDanhGia: 'Người đánh giá', GhiChu: 'Ghi chú' } },
+      khdgnb: { title: 'KẾ HOẠCH ĐÁNH GIÁ NỘI BỘ HỆ THỐNG THẨM ĐỊNH DDS', ma: '—', sig: ['TRƯỞNG BAN COC', 'GIÁM ĐỐC'],
+        labels: { SoKeHoach: 'Số kế hoạch', TuNgay: 'Từ ngày', DenNgay: 'Đến ngày', MucDichDanhGia: 'Mục đích đánh giá', TongSoNhaCungCap: 'Tổng số nhà cung cấp (x)', SoMauLayTheoCongThuc: 'Số mẫu (y = 0.8×√x)', TruongDoan: 'Trưởng đoàn', ThanhVienDoan: 'Thành viên đoàn', NoiDungDanhGia: 'Nội dung đánh giá', NgayLap: 'Ngày lập' } },
+      pkp: { title: 'PHIẾU YÊU CẦU HÀNH ĐỘNG KHẮC PHỤC (BM.05)', ma: 'BM.05', sig: ['TRƯỞNG ĐƠN VỊ ĐƯỢC THÔNG BÁO', 'CHUYÊN GIA ĐÁNH GIÁ'],
+        labels: { SoPhieu: 'Phiếu số', NgayDanhGia: 'Ngày đánh giá', NgayPhatHanh: 'Ngày phát hành phiếu', KhuVucBoPhan: 'Khu vực/Bộ phận/Chức năng', NoiDungKhongPhuHop: 'Chi tiết nội dung không phù hợp', PhanTichNguyenNhan: 'Phân tích nguyên nhân', NguoiPhanTich: 'Người phân tích', HanhDongKhacPhuc: 'Hành động khắc phục', DuKienNgayKetThuc: 'Dự kiến ngày kết thúc', TrangThai: 'Trạng thái', NgayDongThucTe: 'Ngày đóng thực tế', GhiChu: 'Ghi chú' } },
+      xxdds: { title: 'BIÊN BẢN XEM XÉT HỆ THỐNG THẨM ĐỊNH DDS (BM.07)', ma: 'BM.07', sig: ['TRƯỞNG BAN COC', 'GIÁM ĐỐC'],
+        labels: { NgayXemXet: 'Ngày xem xét', DiaDiem: 'Địa điểm', ThanhPhanThamDu: 'Thành phần tham dự', KetQuaDanhGiaNoiBoNam: 'Kết quả đánh giá nội bộ năm', KetLuanThayDoi: 'Kết luận/quyết định', NoiDungTruocThayDoi: 'Nội dung trước khi thay đổi', NoiDungSauThayDoi: 'Nội dung sau khi thay đổi', NguoiLap: 'Người lập' } },
+      pddgv: { title: 'PHÊ DUYỆT NĂNG LỰC ĐÁNH GIÁ VIÊN NỘI BỘ (BM.08)', ma: 'BM.08', sig: ['TRƯỞNG BAN COC', 'GIÁM ĐỐC'],
+        labels: { HoTen: 'Họ và tên', ChucVu: 'Chức vụ', TrinhDoChuyenNganh: 'Trình độ học vấn/chuyên ngành', DatYeuCauTrinhDo: 'Đạt yêu cầu Trình độ', DatYeuCauKinhNghiem: 'Đạt yêu cầu Kinh nghiệm', DatYeuCauPhamChat: 'Đạt yêu cầu Phẩm chất cá nhân', DatYeuCauNangLuc: 'Đạt yêu cầu Năng lực', KetLuanPheDuyet: 'Kết luận phê duyệt', NgayPheDuyet: 'Ngày phê duyệt', NguoiPheDuyet: 'Người phê duyệt' } },
+      bcks: { title: 'BÁO CÁO KẾT QUẢ KHẢO SÁT THỰC ĐỊA', ma: '—', sig: ['NGƯỜI KHẢO SÁT', 'XÁC NHẬN (QA/FSC)'],
+        labels: BCKS_LABELS },
     };
     function printSinglePhieu(cfgKey, record) {
       const cfg = PHIEU_CONFIGS[cfgKey];
@@ -1760,6 +2016,223 @@
       });
     }
 
+    // ---- Tự tính số mẫu theo công thức y = 0.8 * sqrt(x) ----
+    function tinhSoMau() {
+      const x = Number(document.getElementById('inputTongNCC').value) || 0;
+      const y = x > 0 ? Math.ceil(0.8 * Math.sqrt(x)) : '';
+      document.getElementById('inputSoMau').value = y;
+    }
+
+    // ---- Kế hoạch đánh giá nội bộ ----
+    function loadKeHoachDGNB() {
+      callServer('getKeHoachDanhGiaList', [], (rows) => {
+        if (!rows) return;
+        CACHE.keHoachDGNB = rows;
+        renderKeHoachDGNB();
+      });
+    }
+    function renderKeHoachDGNB() {
+      const kw = (document.getElementById('fKHDGNBSearch').value || '').toLowerCase();
+      const filtered = CACHE.keHoachDGNB.filter((r) => !kw || [r.SoKeHoach, r.TruongDoan].join(' ').toLowerCase().includes(kw));
+      document.querySelector('#khdgnbTable tbody').innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.SoKeHoach)}</td><td>${fmt(r.TuNgay)}</td><td>${fmt(r.DenNgay)}</td>
+        <td>${fmt(r.TongSoNhaCungCap)}</td><td>${fmt(r.SoMauLayTheoCongThuc)}</td><td>${fmt(r.TruongDoan)}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('khdgnb', window._khdgnbFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="7">Chưa có kế hoạch nào.</td></tr>';
+      document.getElementById('fKHDGNBCount').textContent = `${filtered.length} / ${CACHE.keHoachDGNB.length} dòng`;
+      window._khdgnbFiltered = filtered;
+    }
+    document.getElementById('formKeHoachDGNB').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('khdgnbMsg').innerHTML = '<div class="msg ok">Đã lưu kế hoạch đánh giá.</div>';
+        e.target.reset(); loadKeHoachDGNB();
+      }).withFailureHandler((err) => {
+        document.getElementById('khdgnbMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addKeHoachDanhGia(obj);
+    });
+
+    // ---- Phiếu yêu cầu hành động khắc phục (BM.05) ----
+    function loadPhieuKhacPhuc() {
+      callServer('getPhieuKhacPhucList', [], (rows) => {
+        if (!rows) return;
+        CACHE.phieuKhacPhuc = rows;
+        renderPhieuKhacPhuc();
+      });
+    }
+    function renderPhieuKhacPhuc() {
+      const kw = (document.getElementById('fPKPSearch').value || '').toLowerCase();
+      const tt = document.getElementById('fPKPTrangThai').value;
+      const filtered = CACHE.phieuKhacPhuc.filter((r) => {
+        if (kw && !String(r.KhuVucBoPhan).toLowerCase().includes(kw)) return false;
+        if (tt && r.TrangThai !== tt) return false;
+        return true;
+      });
+      document.querySelector('#pkpTable tbody').innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.SoPhieu)}</td><td>${fmt(r.NgayDanhGia)}</td><td>${fmt(r.KhuVucBoPhan)}</td>
+        <td>${truncateText(r.NoiDungKhongPhuHop, 50)}</td><td>${fmt(r.DuKienNgayKetThuc)}</td>
+        <td>${r.TrangThai === 'Đã đóng' ? '<span class="badge ok2">Đã đóng</span>' : (r.TrangThai === 'Đang xử lý' ? '<span class="badge dieukien">Đang xử lý</span>' : '<span class="badge thieu">Chưa xử lý</span>')}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('pkp', window._pkpFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="7">Chưa có phiếu nào.</td></tr>';
+      document.getElementById('fPKPCount').textContent = `${filtered.length} / ${CACHE.phieuKhacPhuc.length} dòng`;
+      window._pkpFiltered = filtered;
+    }
+    document.getElementById('formPhieuKhacPhuc').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('pkpMsg').innerHTML = '<div class="msg ok">Đã lưu phiếu yêu cầu khắc phục.</div>';
+        e.target.reset(); loadPhieuKhacPhuc();
+      }).withFailureHandler((err) => {
+        document.getElementById('pkpMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addPhieuKhacPhuc(obj);
+    });
+
+    // ---- Biên bản xem xét hệ thống DDS (BM.07) ----
+    function loadXemXetDDS() {
+      callServer('getBienBanXemXetDDSList', [], (rows) => {
+        if (!rows) return;
+        CACHE.xemXetDDS = rows;
+        renderXemXetDDS();
+      });
+    }
+    function renderXemXetDDS() {
+      const kw = (document.getElementById('fXXDDSSearch').value || '').toLowerCase();
+      const filtered = CACHE.xemXetDDS.filter((r) => !kw || [r.DiaDiem, r.NguoiLap].join(' ').toLowerCase().includes(kw));
+      document.querySelector('#xxddsTable tbody').innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.NgayXemXet)}</td><td>${fmt(r.DiaDiem)}</td><td>${fmt(r.KetLuanThayDoi)}</td><td>${fmt(r.NguoiLap)}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('xxdds', window._xxddsFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="5">Chưa có biên bản nào.</td></tr>';
+      document.getElementById('fXXDDSCount').textContent = `${filtered.length} / ${CACHE.xemXetDDS.length} dòng`;
+      window._xxddsFiltered = filtered;
+    }
+    document.getElementById('formXemXetDDS').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('xxddsMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản xem xét.</div>';
+        e.target.reset(); loadXemXetDDS();
+      }).withFailureHandler((err) => {
+        document.getElementById('xxddsMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addBienBanXemXetDDS(obj);
+    });
+
+    // ---- Phê duyệt năng lực đánh giá viên nội bộ (BM.08) ----
+    function loadPheDuyetDGV() {
+      callServer('getPheDuyetDanhGiaVienList', [], (rows) => {
+        if (!rows) return;
+        CACHE.pheDuyetDGV = rows;
+        renderPheDuyetDGV();
+      });
+    }
+    function pdBadge(v) { return v === 'Có' ? '<span class="badge ok2">Có</span>' : '<span class="badge thieu">Không</span>'; }
+    function renderPheDuyetDGV() {
+      const kw = (document.getElementById('fPDDGVSearch').value || '').toLowerCase();
+      const filtered = CACHE.pheDuyetDGV.filter((r) => !kw || String(r.HoTen).toLowerCase().includes(kw));
+      document.querySelector('#pddgvTable tbody').innerHTML = filtered.map((r, idx) => `<tr>
+        <td>${fmt(r.HoTen)}</td><td>${fmt(r.ChucVu)}</td>
+        <td>${pdBadge(r.DatYeuCauTrinhDo)}</td><td>${pdBadge(r.DatYeuCauKinhNghiem)}</td>
+        <td>${pdBadge(r.DatYeuCauPhamChat)}</td><td>${pdBadge(r.DatYeuCauNangLuc)}</td>
+        <td>${r.KetLuanPheDuyet === 'Phê duyệt' ? '<span class="badge ok2">Phê duyệt</span>' : '<span class="badge thieu">Không phê duyệt</span>'}</td>
+        <td><button class="btnmini" onclick="printSinglePhieu('pddgv', window._pddgvFiltered[${idx}])">🖨</button></td>
+      </tr>`).join('') || '<tr><td colspan="8">Chưa có dữ liệu.</td></tr>';
+      document.getElementById('fPDDGVCount').textContent = `${filtered.length} / ${CACHE.pheDuyetDGV.length} dòng`;
+      window._pddgvFiltered = filtered;
+    }
+    document.getElementById('formPheDuyetDGV').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const obj = formToObj(e.target);
+      google.script.run.withSuccessHandler(() => {
+        document.getElementById('pddgvMsg').innerHTML = '<div class="msg ok">Đã lưu phê duyệt đánh giá viên.</div>';
+        e.target.reset(); loadPheDuyetDGV();
+      }).withFailureHandler((err) => {
+        document.getElementById('pddgvMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
+      }).addPheDuyetDanhGiaVien(obj);
+    });
+
+    // ---- Báo cáo tồn kho nguyên liệu ----
+    function loadTonKho() {
+      const tu = document.getElementById('fTonKhoTu').value;
+      const den = document.getElementById('fTonKhoDen').value;
+      document.getElementById('tonKhoBody').innerHTML = '⏳ Đang quét dữ liệu nhập/xuất (có thể mất vài giây)...';
+      callServer('getTonKhoBaoCao', [tu, den], (d) => {
+        if (!d) return;
+        const khoangThoiGian = (tu || den) ? `từ ${tu || '...'} đến ${den || '...'}` : 'toàn bộ thời gian có dữ liệu';
+        let html = `
+          <div class="cards">
+            <div class="card"><div class="num">${fmtNum(d.tongNhap)}</div><div class="lbl">Tổng nhập (Tấn) — ${d.soLoNhap} lô</div></div>
+            <div class="card"><div class="num">${fmtNum(d.tongXuat)}</div><div class="lbl">Tổng xuất (Tấn) — ${d.soLoXuat} lô</div></div>
+            <div class="card ${d.tonKho >= 0 ? 'ok' : 'warn'}"><div class="num">${fmtNum(d.tonKho)}</div><div class="lbl">Tồn kho ước tính (Tấn)</div></div>
+          </div>
+          <p style="color:#666;font-size:12.5px;">Phạm vi: ${khoangThoiGian}. ${d.tonKho < 0 ? '⚠ Số âm nghĩa là xuất nhiều hơn nhập trong khoảng thời gian này — có thể do đang xuất từ tồn kho tích lũy trước đó, không nhất thiết là sai số liệu.' : ''}</p>
+          <h2>Theo mã "Nguồn gốc" (chưa xác nhận có phải mã chuẩn FSC/CW không)</h2>
+          <table style="max-width:400px;"><thead><tr><th>Mã nguồn gốc</th><th>Khối lượng nhập (Tấn)</th></tr></thead><tbody>
+          ${d.theoNguonGoc.map((r) => `<tr><td>${fmt(r.nguonGoc)}</td><td>${fmtNum(r.khoiLuong)}</td></tr>`).join('') || '<tr><td colspan="2">Không có dữ liệu</td></tr>'}
+          </tbody></table>
+        `;
+        document.getElementById('tonKhoBody').innerHTML = html;
+      });
+    }
+
+    // ---- Rừng đã khảo sát / chưa khảo sát ----
+    function loadRungKhaoSat() {
+      callServer('getTinhTrangKhaoSatRung', [], (rows) => {
+        if (!rows) return;
+        CACHE.rungKhaoSat = rows;
+        renderRungKhaoSat();
+      });
+      if (CACHE.baoCaoKhaoSat && CACHE.baoCaoKhaoSat.length) {
+        renderAnhKhaoSat();
+      } else {
+        callServer('getBaoCaoKhaoSatList', [], (rows) => {
+          if (!rows) return;
+          CACHE.baoCaoKhaoSat = rows;
+          renderAnhKhaoSat();
+        });
+      }
+    }
+    function renderRungKhaoSat() {
+      const kw = (document.getElementById('fRungKSSearch').value || '').toLowerCase();
+      const tt = document.getElementById('fRungKSTrangThai').value;
+      const rows = CACHE.rungKhaoSat || [];
+      const filtered = rows.filter((r) => {
+        if (kw && !((r.SoHopDong + r.ChuRung + r.MaRung).toLowerCase().includes(kw))) return false;
+        if (tt && r.DaKhaoSat !== tt) return false;
+        return true;
+      });
+      const daKhaoSat = rows.filter((r) => r.DaKhaoSat === 'Có').length;
+      document.getElementById('rungKSSummary').innerHTML = `
+        <div class="card"><div class="num">${rows.length}</div><div class="lbl">Tổng số hợp đồng/rừng</div></div>
+        <div class="card ok"><div class="num">${daKhaoSat}</div><div class="lbl">Đã khảo sát</div></div>
+        <div class="card warn"><div class="num">${rows.length - daKhaoSat}</div><div class="lbl">Chưa khảo sát</div></div>
+      `;
+      document.querySelector('#rungKSTable tbody').innerHTML = filtered.map((r) => `<tr>
+        <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.MaRung)}</td><td>${fmt(r.ChuRung)}</td>
+        <td>${r.DaKhaoSat === 'Có' ? '<span class="badge ok2">Đã khảo sát</span>' : '<span class="badge thieu">Chưa khảo sát</span>'}</td>
+        <td>${fmt(r.NgayKhaoSat)}</td><td>${fmt(r.NguoiKhaoSat)}</td>
+      </tr>`).join('') || '<tr><td colspan="6">Không có dòng nào khớp bộ lọc.</td></tr>';
+      document.getElementById('fRungKSCount').textContent = `${filtered.length} / ${rows.length} dòng`;
+    }
+    function renderAnhKhaoSat() {
+      const kw = (document.getElementById('fAnhKSSearch').value || '').toLowerCase();
+      const rows = (CACHE.baoCaoKhaoSat || []).filter((r) => {
+        if (!kw) return true;
+        return [r.NguoiKhaoSat, r.DiaChiRungTrong, r.SoHopDong].join(' ').toLowerCase().includes(kw);
+      });
+      const grid = document.getElementById('anhKhaoSatGrid');
+      grid.innerHTML = rows.map((r) => {
+        const anhList = (r.AnhKhaoSat || '').split(',').map((s) => s.trim()).filter(Boolean);
+        return `<div style="background:#fff;border-radius:8px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.1);font-size:12px;">
+          <div style="font-weight:bold;color:#1F3864;">${fmt(r.NgayKhaoSat)} — HĐ ${fmt(r.SoHopDong)}</div>
+          <div>👤 ${fmt(r.NguoiKhaoSat)}</div>
+          <div style="color:#666;margin:4px 0;">${truncateText(r.DiaChiRungTrong, 60)}</div>
+          ${anhList.length ? anhList.map((u) => `<a href="${u}" target="_blank" class="btnmini" style="display:inline-block;margin:2px 4px 0 0;">📷 Ảnh</a>`).join('') : '<span style="color:#A32D2D;">⚠ Chưa có ảnh</span>'}
+        </div>`;
+      }).join('') || '<p style="color:#888;grid-column:1/-1;">Chưa có khảo sát nào.</p>';
+      document.getElementById('fAnhKSCount').textContent = `${rows.length} / ${(CACHE.baoCaoKhaoSat || []).length} khảo sát`;
+    }
+
     function loadGiamSat() {
       callServer('getGiamSatList', [], (rows) => {
         if (!rows) return;
@@ -1802,40 +2275,32 @@
         CACHE.hopDong.map((r) => `<option value="${r.SoHopDong}">${r.SoHopDong} — ${r.ChuRung || ''}</option>`).join('');
     }
 
-    // ---- Báo cáo khảo sát thực địa (đọc trực tiếp Google Form KhaoSat_FSC) ----
-    let khaoSatFormUrl = null;
+    // ---- Báo cáo khảo sát thực địa — nhập trực tiếp trong webapp (không dùng Google Form) ----
     function loadBaoCaoKhaoSat() {
-      callServer('getBaoCaoKhaoSatThucTeList', [], (rows) => {
+      callServer('getBaoCaoKhaoSatList', [], (rows) => {
         if (!rows) return;
         CACHE.baoCaoKhaoSat = rows;
         renderBaoCaoKhaoSat();
       });
-      if (!khaoSatFormUrl) {
-        callServer('getKhaoSatFormUrl', [], (url) => {
-          khaoSatFormUrl = url || '';
-        });
-      }
-    }
-    function moFormKhaoSat() {
-      if (khaoSatFormUrl) { window.open(khaoSatFormUrl, '_blank'); }
-      else { alert('Chưa lấy được link Form (đang tải hoặc sheet không còn liên kết với Form nào). Thử lại sau vài giây.'); }
+      ensureHopDongLoaded(() => fillHopDongSelect('selectHopDongBCKS'));
     }
     function truncateText(t, n) { t = String(t || ''); return t.length > n ? t.slice(0, n) + '…' : t; }
     function renderBaoCaoKhaoSat() {
       const kw = (document.getElementById('fBCKSSearch').value || '').toLowerCase();
       const filtered = (CACHE.baoCaoKhaoSat || []).filter((r) => {
         if (!kw) return true;
-        const hay = [r['Người khảo sát'], r['Địa chỉ rừng trồng'], r['Đơn vị khảo sát']].join(' ').toLowerCase();
-        return hay.includes(kw);
+        return [r.SoHopDong, r.NguoiKhaoSat, r.DiaChiRungTrong].join(' ').toLowerCase().includes(kw);
       });
       const tb = document.querySelector('#bcksTable tbody');
-      tb.innerHTML = filtered.map((r, idx) => `<tr>
-        <td>${fmt(r['Ngày khảo sát'])}</td><td>${fmt(r['Người khảo sát'])}</td>
-        <td>${truncateText(r['Địa chỉ rừng trồng'], 40)}</td><td>${fmt(r['Pháp lý thửa đất'])}</td>
-        <td>${fmt(r['Mục đích sử dụng đất'])}</td><td>${truncateText(r['Xói mòn_sạt lỡ'], 30)}</td>
-        <td>${truncateText(r['Các giá trị bảo tồn '], 40)}</td><td>${fmt(r['Đơn vị khảo sát'])}</td>
-        <td><button class="btnmini" onclick="xemChiTietKhaoSat(${idx})">📎 Chi tiết</button></td>
-      </tr>`).join('') || '<tr><td colspan="9">Chưa có báo cáo khảo sát nào (hoặc chưa tải xong).</td></tr>';
+      tb.innerHTML = filtered.map((r, idx) => {
+        const soAnh = (r.AnhKhaoSat || '').split(',').map((s) => s.trim()).filter(Boolean).length;
+        return `<tr>
+        <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.NgayKhaoSat)}</td><td>${fmt(r.NguoiKhaoSat)}</td>
+        <td>${truncateText(r.DiaChiRungTrong, 40)}</td><td>${fmt(r.PhapLyThuaDat)}</td>
+        <td>${soAnh > 0 ? '📷 ' + soAnh : '<span style="color:#A32D2D;">chưa có</span>'}</td>
+        <td><button class="btnmini" onclick="xemChiTietKhaoSat(${idx})">📎 Chi tiết</button> <button class="btnmini" onclick="printSinglePhieu('bcks', window._bcksFiltered[${idx}])">🖨</button></td>
+      </tr>`;
+      }).join('') || '<tr><td colspan="7">Chưa có báo cáo khảo sát nào.</td></tr>';
       document.getElementById('fBCKSCount').textContent = `${filtered.length} / ${(CACHE.baoCaoKhaoSat || []).length} dòng`;
       window._bcksFiltered = filtered;
     }
@@ -1843,17 +2308,97 @@
       const r = (window._bcksFiltered || [])[idx];
       if (!r) return;
       document.getElementById('ksChiTietModalBackdrop').style.display = 'block';
-      const skip = ['Timestamp', 'Email Address'];
       let html = '<table style="width:100%;"><tbody>';
-      Object.keys(r).forEach((k) => {
-        if (skip.includes(k)) return;
-        let v = r[k];
-        if (k === 'Hình ảnh khảo sát' && v) v = `<a href="${v}" target="_blank">Xem ảnh/link đính kèm</a>`;
-        html += `<tr><td style="font-weight:bold;width:38%;color:#1F3864;">${k}</td><td>${v || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
+      Object.keys(BCKS_LABELS).forEach((k) => {
+        if (k === 'GhiChu') return; // hiện sau cùng
+        html += `<tr><td style="font-weight:bold;width:38%;color:#1F3864;">${BCKS_LABELS[k]}</td><td>${fmt(r[k]) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
       });
+      html += `<tr><td style="font-weight:bold;color:#1F3864;">Ghi chú</td><td>${fmt(r.GhiChu) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
       html += '</tbody></table>';
+      const anhList = (r.AnhKhaoSat || '').split(',').map((s) => s.trim()).filter(Boolean);
+      if (anhList.length) {
+        html += '<h3 style="color:#1F3864;font-size:14px;margin-top:14px;">📷 Ảnh khảo sát (' + anhList.length + ' ảnh)</h3>';
+        html += '<div style="display:flex;gap:8px;flex-wrap:wrap;">' + anhList.map((u) => `<a href="${u}" target="_blank" class="btnmini">Xem ảnh</a>`).join('') + '</div>';
+      } else {
+        html += '<p style="color:#A32D2D;margin-top:10px;">⚠ Chưa có ảnh khảo sát nào cho lượt này.</p>';
+      }
       document.getElementById('ksChiTietModalBody').innerHTML = html;
     }
+
+    // ---- Tải ảnh khảo sát: resize nhỏ ở trình duyệt trước khi gửi lên (tránh lỗi payload quá lớn) ----
+    let anhKhaoSatDaChon = []; // {base64, mimeType, name}
+    function resizeImageFile(file, maxWidth, quality) {
+      maxWidth = maxWidth || 1400; quality = quality || 0.75;
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            let w = img.width, h = img.height;
+            if (w > maxWidth) { h = Math.round(h * (maxWidth / w)); w = maxWidth; }
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            const dataUrl = canvas.toDataURL('image/jpeg', quality);
+            resolve({ base64: dataUrl.split(',')[1], mimeType: 'image/jpeg', name: (file.name || 'anh_khao_sat').replace(/\.[^.]+$/, '') + '.jpg' });
+          };
+          img.onerror = () => reject(new Error('Không đọc được ảnh: ' + file.name));
+          img.src = ev.target.result;
+        };
+        reader.onerror = () => reject(new Error('Lỗi đọc file: ' + file.name));
+        reader.readAsDataURL(file);
+      });
+    }
+    function gsRun(fnName, args) {
+      return new Promise((resolve, reject) => {
+        google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[fnName].apply(null, args || []);
+      });
+    }
+    document.getElementById('inputAnhKhaoSat').addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files || []);
+      const preview = document.getElementById('anhKhaoSatPreview');
+      preview.innerHTML = '⏳ Đang xử lý ' + files.length + ' ảnh...';
+      anhKhaoSatDaChon = [];
+      for (const f of files) {
+        try {
+          const resized = await resizeImageFile(f);
+          anhKhaoSatDaChon.push(resized);
+        } catch (err) { console.log(err); }
+      }
+      preview.innerHTML = anhKhaoSatDaChon.map((a) => `<img src="data:image/jpeg;base64,${a.base64}" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ccc;">`).join('');
+    });
+    document.getElementById('formBaoCaoKhaoSat').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitBCKS');
+      btn.disabled = true;
+      const obj = formToObj(e.target);
+      try {
+        let anhUrls = [];
+        if (anhKhaoSatDaChon.length) {
+          document.getElementById('bcksMsg').innerHTML = `<div class="msg ok">⏳ Đang tải lên ${anhKhaoSatDaChon.length} ảnh...</div>`;
+          for (const a of anhKhaoSatDaChon) {
+            const res = await gsRun('uploadKhaoSatAnh', [a.base64, a.name, a.mimeType]);
+            if (res && res.ok && res.data) anhUrls.push(res.data.url);
+          }
+        }
+        obj.AnhKhaoSat = anhUrls.join(', ');
+        document.getElementById('bcksMsg').innerHTML = '<div class="msg ok">⏳ Đang lưu báo cáo...</div>';
+        const res2 = await gsRun('addBaoCaoKhaoSat', [obj]);
+        if (res2 && res2.ok) {
+          document.getElementById('bcksMsg').innerHTML = `<div class="msg ok">Đã lưu báo cáo khảo sát${anhUrls.length ? ' + ' + anhUrls.length + ' ảnh' : ''}.</div>`;
+          e.target.reset();
+          document.getElementById('anhKhaoSatPreview').innerHTML = '';
+          anhKhaoSatDaChon = [];
+          loadBaoCaoKhaoSat();
+        } else {
+          document.getElementById('bcksMsg').innerHTML = '<div class="msg err">Lỗi: ' + (res2 && res2.error ? res2.error : 'không rõ') + '</div>';
+        }
+      } catch (err) {
+        document.getElementById('bcksMsg').innerHTML = '<div class="msg err">Lỗi: ' + (err && err.message ? err.message : err) + '</div>';
+      } finally {
+        btn.disabled = false;
+      }
+    });
 
     // ---- Biên bản giám sát khai thác ----
     function loadBienBanGiamSat() {
