@@ -1204,6 +1204,17 @@
       });
     });
 
+    /** Nhiều hàm add* server-side trả về {ok:false, error} khi lỗi thay vì throw (xem _safe trong
+     * Code.gs) — withSuccessHandler vẫn được gọi trong trường hợp đó, nên PHẢI kiểm tra res.ok
+     * trước khi báo "Đã lưu thành công", nếu không lỗi sẽ bị nuốt và người dùng tưởng đã lưu. */
+    function checkAddResult(res, msgElId) {
+      if (res && res.ok === false) {
+        document.getElementById(msgElId).innerHTML = '<div class="msg err">Lỗi: ' + res.error + '</div>';
+        return false;
+      }
+      return true;
+    }
+
     function showError(msg) {
       const el = document.getElementById('globalError');
       el.style.display = 'block';
@@ -1710,7 +1721,8 @@
     document.getElementById('formTieuChiThamDinh').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'tdhdMsg')) return;
         document.getElementById('tdhdMsg').innerHTML = '<div class="msg ok">Đã lưu kết quả thẩm định.</div>';
         e.target.reset(); loadTieuChiThamDinh();
       }).withFailureHandler((err) => {
@@ -1741,7 +1753,8 @@
     document.getElementById('formLenhDieuDong').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'ddMsg')) return;
         document.getElementById('ddMsg').innerHTML = '<div class="msg ok">Đã lưu lệnh điều động.</div>';
         e.target.reset(); loadLenhDieuDong();
       }).withFailureHandler((err) => {
@@ -1772,7 +1785,8 @@
     document.getElementById('formTieuHao').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'thMsg')) return;
         document.getElementById('thMsg').innerHTML = '<div class="msg ok">Đã lưu kỳ tiêu hao.</div>';
         e.target.reset(); loadTieuHao();
       }).withFailureHandler((err) => {
@@ -1836,7 +1850,8 @@
     document.getElementById('formBaoCaoNN').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'bcnnMsg')) return;
         document.getElementById('bcnnMsg').innerHTML = '<div class="msg ok">Đã lưu bản ghi báo cáo.</div>';
         e.target.reset(); loadBaoCaoNN();
       }).withFailureHandler((err) => {
@@ -1867,7 +1882,8 @@
     document.getElementById('formNghiemThuGD').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'nttdMsg')) return;
         document.getElementById('nttdMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản nghiệm thu.</div>';
         e.target.reset(); loadNghiemThuGD();
       }).withFailureHandler((err) => {
@@ -1903,7 +1919,8 @@
     document.getElementById('formRuiRoTK').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'rrtkMsg')) return;
         document.getElementById('rrtkMsg').innerHTML = '<div class="msg ok">Đã lưu rủi ro/vướng mắc.</div>';
         e.target.reset(); loadRuiRoTK();
       }).withFailureHandler((err) => {
@@ -2044,7 +2061,8 @@
     document.getElementById('formKeHoachDGNB').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'khdgnbMsg')) return;
         document.getElementById('khdgnbMsg').innerHTML = '<div class="msg ok">Đã lưu kế hoạch đánh giá.</div>';
         e.target.reset(); loadKeHoachDGNB();
       }).withFailureHandler((err) => {
@@ -2080,7 +2098,8 @@
     document.getElementById('formPhieuKhacPhuc').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'pkpMsg')) return;
         document.getElementById('pkpMsg').innerHTML = '<div class="msg ok">Đã lưu phiếu yêu cầu khắc phục.</div>';
         e.target.reset(); loadPhieuKhacPhuc();
       }).withFailureHandler((err) => {
@@ -2109,7 +2128,8 @@
     document.getElementById('formXemXetDDS').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'xxddsMsg')) return;
         document.getElementById('xxddsMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản xem xét.</div>';
         e.target.reset(); loadXemXetDDS();
       }).withFailureHandler((err) => {
@@ -2142,7 +2162,8 @@
     document.getElementById('formPheDuyetDGV').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'pddgvMsg')) return;
         document.getElementById('pddgvMsg').innerHTML = '<div class="msg ok">Đã lưu phê duyệt đánh giá viên.</div>';
         e.target.reset(); loadPheDuyetDGV();
       }).withFailureHandler((err) => {
@@ -2459,7 +2480,8 @@
     document.getElementById('formBienBanGiamSat').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'bbgsMsg')) return;
         document.getElementById('bbgsMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản giám sát.</div>';
         e.target.reset();
         loadBienBanGiamSat();
@@ -2471,7 +2493,8 @@
     document.getElementById('formThamVan').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'tvMsg')) return;
         document.getElementById('tvMsg').innerHTML = '<div class="msg ok">Đã lưu bản ghi tham vấn.</div>';
         e.target.reset();
         loadThamVan();
@@ -2483,7 +2506,8 @@
     document.getElementById('formKhaoSat').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'ksMsg')) return;
         document.getElementById('ksMsg').innerHTML = '<div class="msg ok">Đã lưu tình trạng hồ sơ khảo sát/tham vấn.</div>';
         e.target.reset();
         loadKhaoSat();
@@ -2495,7 +2519,8 @@
     document.getElementById('formDanhGia').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'dgMsg')) return;
         document.getElementById('dgMsg').innerHTML = '<div class="msg ok">Đã lưu kết luận giám sát.</div>';
         e.target.reset();
         loadHopDong();
@@ -2507,7 +2532,8 @@
     document.getElementById('formRuiRo').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'rrMsg')) return;
         document.getElementById('rrMsg').innerHTML = '<div class="msg ok">Đã lưu đánh giá rủi ro.</div>';
         e.target.reset();
         loadRuiRo();
@@ -2519,7 +2545,8 @@
     document.getElementById('formGiamSat').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'gsMsg')) return;
         document.getElementById('gsMsg').innerHTML = '<div class="msg ok">Đã lưu báo cáo giám sát.</div>';
         e.target.reset();
         loadGiamSat();
@@ -2531,7 +2558,8 @@
     document.getElementById('formTienDo').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'tdMsg')) return;
         document.getElementById('tdMsg').innerHTML = '<div class="msg ok">Đã cập nhật tiến độ.</div>';
         loadDashboard();
       }).withFailureHandler((err) => {
