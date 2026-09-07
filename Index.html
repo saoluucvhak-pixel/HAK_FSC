@@ -2006,26 +2006,37 @@
     }
 
     // ---- Thư viện mẫu Word gốc (Google Drive) ----
+    // Cố ý KHÔNG dùng callServer() ở đây: đây là tính năng phụ (link tham khảo), lỗi của nó
+    // (VD: chưa cấp quyền Drive cho script) không nên chiếm dụng banner lỗi toàn trang mỗi khi
+    // mở tab Hướng dẫn hay các sub-tab Khảo sát/Tham vấn — chỉ báo lỗi cục bộ ngay tại chỗ hiện link.
     let mauWordCache = null;
     function loadMauWordLinks(cb) {
-      if (mauWordCache) { cb(mauWordCache); return; }
-      callServer('getMauWordLinks', [], (rows) => {
-        if (!rows) { rows = []; }
-        mauWordCache = rows;
-        cb(rows);
-      });
+      if (mauWordCache) { cb(mauWordCache, null); return; }
+      google.script.run
+        .withSuccessHandler((res) => {
+          if (res && res.ok === false) { cb([], res.error); return; }
+          const rows = (res && res.data) || [];
+          mauWordCache = rows;
+          cb(rows, null);
+        })
+        .withFailureHandler((err) => {
+          cb([], err && err.message ? err.message : String(err));
+        })
+        .getMauWordLinks();
     }
     function renderMauWordFull() {
-      loadMauWordLinks((files) => {
+      loadMauWordLinks((files, err) => {
         const el = document.getElementById('mauWordList');
+        if (err) { el.innerHTML = '<p style="color:#A32D2D;">⚠ Không tải được danh sách mẫu Word: ' + err + '</p>'; return; }
         if (!files.length) { el.innerHTML = '<p style="color:#A32D2D;">Không tìm thấy file nào trong thư mục Drive, hoặc chưa có quyền đọc thư mục.</p>'; return; }
         el.innerHTML = '<ul>' + files.map((f) => `<li><a href="${f.url}" target="_blank">📄 ${f.name}</a></li>`).join('') + '</ul>';
       });
     }
     function renderMauWordQuick(elId, keyword) {
-      loadMauWordLinks((files) => {
+      loadMauWordLinks((files, err) => {
         const el = document.getElementById(elId);
         if (!el) return;
+        if (err) { el.innerHTML = ''; return; }
         const match = files.filter((f) => f.name.toLowerCase().includes(keyword.toLowerCase()));
         if (!match.length) { el.innerHTML = ''; return; }
         el.innerHTML = '<div class="totalbox">📄 Mẫu tham khảo: ' + match.map((f) => `<a href="${f.url}" target="_blank">${f.name}</a>`).join(' &nbsp;|&nbsp; ') + '</div>';
