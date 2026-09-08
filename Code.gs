@@ -85,6 +85,39 @@ function shareSheetsWithEmail(email, targetKeys, role) {
   });
 }
 
+/** Nhãn tiếng Việt cho vai trò/loại quyền trả về từ Drive API v3 (Advanced Drive Service). */
+const DRIVE_ROLE_LABELS = { owner: 'Chủ sở hữu', organizer: 'Người tổ chức', fileOrganizer: 'Người tổ chức file', writer: 'Chỉnh sửa', commenter: 'Bình luận', reader: 'Xem' };
+const DRIVE_TYPE_SUFFIX = { group: ' (nhóm)', domain: ' (cả miền tổ chức)', anyone: ' (bất kỳ ai có link)' };
+
+/** Danh sách người/nhóm đang có quyền truy cập 1 file — dùng Advanced Drive Service (Drive API v3)
+ * vì DriveApp cơ bản không tách được Xem/Bình luận/Chỉnh sửa và không trả về permission id để thu hồi. */
+function getShareAccessList(targetKey) {
+  return _safe(() => {
+    const target = SHARE_TARGETS[targetKey];
+    if (!target) throw new Error('Không rõ file "' + targetKey + '".');
+    const resp = Drive.Permissions.list(target.getId(), { fields: 'permissions(id,emailAddress,role,type,displayName)' });
+    const perms = (resp && resp.permissions) || [];
+    return perms.map((p) => ({
+      id: p.id,
+      email: p.emailAddress || '',
+      displayName: p.displayName || '',
+      role: p.role,
+      roleLabel: (DRIVE_ROLE_LABELS[p.role] || p.role) + (DRIVE_TYPE_SUFFIX[p.type] || ''),
+      isOwner: p.role === 'owner',
+    }));
+  });
+}
+
+/** Thu hồi 1 quyền truy cập cụ thể (theo permission id lấy từ getShareAccessList). */
+function revokeShareAccess(targetKey, permissionId) {
+  return _safe(() => {
+    const target = SHARE_TARGETS[targetKey];
+    if (!target) throw new Error('Không rõ file "' + targetKey + '".');
+    Drive.Permissions.remove(target.getId(), permissionId);
+    return true;
+  });
+}
+
 // ============ SHEET TỰ TẠO TRONG FILE NÀY (dữ liệu MỚI, không trùng nguồn) ============
 const OWN_HEADERS = {
   DanhGiaHopDong: ['MaHopDong', 'NgayDanhGia', 'KetLuanGiamSat', 'PhatHien', 'HanhDongKhacPhuc', 'NguoiDanhGia', 'GhiChu'],
