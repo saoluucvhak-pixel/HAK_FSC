@@ -152,9 +152,39 @@
       <div class="sidebar-tools">
         <button onclick="runCheckKetNoi()">🔍 Kiểm tra kết nối 5 file nguồn</button>
         <button onclick="runPingTest()">🏓 Test kết nối cơ bản</button>
+        <button onclick="openShareModal()">📤 Chia sẻ Google Sheet</button>
         <div id="checkResult" style="font-size:11px; color:#B7C4AE; margin-top:4px;"></div>
       </div>
     </aside>
+
+    <div id="shareModalBackdrop" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:100;" onclick="if(event.target===this) closeShareModal();">
+      <div style="background:#fff; max-width:520px; margin:60px auto; border-radius:10px; padding:20px; max-height:80vh; overflow:auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="margin:0;">📤 Chia sẻ Google Sheet cho email khác</h2>
+          <button class="btnmini" onclick="closeShareModal()">✕ Đóng</button>
+        </div>
+        <p class="note" style="margin-top:10px;">Cấp quyền truy cập trực tiếp trên Google Drive cho các Google Sheet mà hệ thống này đang dùng — người được chia sẻ sẽ mở được file gốc trên Google Sheets (không phải chỉ webapp).</p>
+        <div id="shareMsg"></div>
+        <form id="formShare" onsubmit="return false;">
+          <label style="display:flex; flex-direction:column; font-size:12px; color:#555; gap:4px; margin-bottom:12px;">
+            Email người nhận
+            <input type="email" id="shareEmail" required placeholder="ten@congty.com" style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px;">
+          </label>
+          <div style="font-size:12px; color:#555; margin-bottom:4px;">Chọn file cần chia sẻ</div>
+          <div id="shareTargetList" style="display:flex; flex-direction:column; gap:6px; margin-bottom:12px; font-size:13px;">Đang tải danh sách file...</div>
+          <label style="display:flex; flex-direction:column; font-size:12px; color:#555; gap:4px; margin-bottom:12px;">
+            Quyền truy cập
+            <select id="shareRole" style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px;">
+              <option value="viewer">Chỉ xem</option>
+              <option value="commenter">Xem &amp; bình luận</option>
+              <option value="editor">Chỉnh sửa</option>
+            </select>
+          </label>
+          <button type="button" id="btnSubmitShare" onclick="submitShare()" style="width:100%; padding:10px; background:#1F3864; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:14px;">Chia sẻ</button>
+        </form>
+        <div id="shareResultList" style="margin-top:12px; font-size:13px;"></div>
+      </div>
+    </div>
 
     <main class="content">
       <div class="page-header">
@@ -1280,6 +1310,68 @@
       }).withFailureHandler((err) => {
         document.getElementById('checkResult').textContent = 'Lỗi khi kiểm tra: ' + err.message;
       }).checkKetNoi();
+    }
+
+    // ---- Chia sẻ Google Sheet cho email khác ----
+    let shareTargetsLoaded = false;
+    function openShareModal() {
+      document.getElementById('shareModalBackdrop').style.display = 'block';
+      document.getElementById('shareResultList').innerHTML = '';
+      document.getElementById('shareMsg').innerHTML = '';
+      if (shareTargetsLoaded) return;
+      google.script.run
+        .withSuccessHandler((res) => {
+          const el = document.getElementById('shareTargetList');
+          if (!res || res.ok === false) {
+            el.innerHTML = '<span style="color:#A32D2D;">⚠ Không tải được danh sách file: ' + (res ? res.error : 'lỗi không rõ') + '</span>';
+            return;
+          }
+          shareTargetsLoaded = true;
+          el.innerHTML = res.data.map((t) => `<label style="display:flex; align-items:center; gap:6px; font-weight:normal;">
+            <input type="checkbox" class="shareTargetCheck" value="${t.key}" ${t.key === 'THIS' ? 'checked' : ''}> ${t.label}
+          </label>`).join('');
+        })
+        .withFailureHandler((err) => {
+          document.getElementById('shareTargetList').innerHTML = '<span style="color:#A32D2D;">⚠ Lỗi tải danh sách file: ' + (err && err.message ? err.message : err) + '</span>';
+        })
+        .getShareTargetList();
+    }
+    function closeShareModal() {
+      document.getElementById('shareModalBackdrop').style.display = 'none';
+    }
+    function submitShare() {
+      const email = document.getElementById('shareEmail').value.trim();
+      const role = document.getElementById('shareRole').value;
+      const targetKeys = Array.from(document.querySelectorAll('.shareTargetCheck:checked')).map((cb) => cb.value);
+      const msgEl = document.getElementById('shareMsg');
+      const resultEl = document.getElementById('shareResultList');
+      if (!email) { msgEl.innerHTML = '<div class="msg err">Vui lòng nhập email.</div>'; return; }
+      if (!targetKeys.length) { msgEl.innerHTML = '<div class="msg err">Vui lòng chọn ít nhất 1 file để chia sẻ.</div>'; return; }
+      const btn = document.getElementById('btnSubmitShare');
+      btn.disabled = true;
+      msgEl.innerHTML = '<div class="msg ok">⏳ Đang chia sẻ...</div>';
+      resultEl.innerHTML = '';
+      google.script.run
+        .withSuccessHandler((res) => {
+          btn.disabled = false;
+          if (!res || res.ok === false) {
+            msgEl.innerHTML = '<div class="msg err">Lỗi: ' + (res ? res.error : 'không rõ') + '</div>';
+            return;
+          }
+          const rows = res.data;
+          const soOk = rows.filter((r) => r.ok).length;
+          msgEl.innerHTML = soOk === rows.length
+            ? `<div class="msg ok">Đã chia sẻ thành công ${soOk}/${rows.length} file cho ${email}.</div>`
+            : `<div class="msg err">Chỉ chia sẻ thành công ${soOk}/${rows.length} file — xem chi tiết bên dưới.</div>`;
+          resultEl.innerHTML = rows.map((r) => r.ok
+            ? `<div>✅ ${r.label}</div>`
+            : `<div style="color:#A32D2D;">❌ ${r.label}: ${r.error}</div>`).join('');
+        })
+        .withFailureHandler((err) => {
+          btn.disabled = false;
+          msgEl.innerHTML = '<div class="msg err">Lỗi: ' + (err && err.message ? err.message : err) + '</div>';
+        })
+        .shareSheetsWithEmail(email, targetKeys, role);
     }
 
     // ---- Xuất CSV / In báo cáo (áp dụng đúng dữ liệu đang hiển thị sau khi lọc) ----

@@ -39,6 +39,52 @@ function getMauWordLinks() {
   });
 }
 
+// ============ API: CHIA SẺ GOOGLE SHEET CHO EMAIL KHÁC ============
+/** Danh sách file có thể chia sẻ: file này (chứa dữ liệu giám sát tự tạo) + 5 spreadsheet nguồn.
+ * getId dùng hàm (không phải giá trị tĩnh) vì SpreadsheetApp.getActiveSpreadsheet().getId()
+ * chỉ nên gọi lúc thực thi, tránh lỗi nếu context thay đổi. */
+const SHARE_TARGETS = {
+  THIS: { label: 'File này (dữ liệu giám sát FSC tự tạo)', getId: () => SpreadsheetApp.getActiveSpreadsheet().getId() },
+  HDMB: { label: 'Hợp đồng, hồ sơ rừng, GPS, ảnh (HDMB)', getId: () => SS_IDS.HDMB },
+  PHIEUCAN: { label: 'Phiếu cân nhà máy Đà Nẵng (PHIEUCAN)', getId: () => SS_IDS.PHIEUCAN },
+  DNTT: { label: 'Đề nghị thanh toán, đối soát công nợ (DNTT)', getId: () => SS_IDS.DNTT },
+  HOSOKEO: { label: 'Hồ sơ keo mua vào, hồ sơ rừng (HOSOKEO)', getId: () => SS_IDS.HOSOKEO },
+  XUATHANG: { label: 'Đơn hàng & xuất hàng (XUATHANG)', getId: () => SS_IDS.XUATHANG },
+  KHAOSAT_FORM: { label: 'Form khảo sát thực địa (KHAOSAT_FORM)', getId: () => SS_IDS.KHAOSAT_FORM },
+};
+
+/** Danh sách file để đổ vào checkbox chọn chia sẻ trên webapp. */
+function getShareTargetList() {
+  return _safe(() => Object.keys(SHARE_TARGETS).map((key) => ({ key, label: SHARE_TARGETS[key].label })));
+}
+
+/** Chia sẻ 1 hoặc nhiều Google Sheet cho 1 địa chỉ email, với quyền Xem/Bình luận/Chỉnh sửa.
+ * role: 'viewer' (mặc định) | 'commenter' | 'editor'. Trả về kết quả CHO TỪNG FILE (có thể
+ * file này thành công, file khác lỗi — ví dụ do chưa có quyền Drive với sheet nguồn đó). */
+function shareSheetsWithEmail(email, targetKeys, role) {
+  return _safe(() => {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      throw new Error('Địa chỉ email không hợp lệ: "' + email + '"');
+    }
+    if (!targetKeys || !targetKeys.length) {
+      throw new Error('Chưa chọn file nào để chia sẻ.');
+    }
+    return targetKeys.map((key) => {
+      const target = SHARE_TARGETS[key];
+      if (!target) return { key, label: key, ok: false, error: 'Không rõ mục "' + key + '".' };
+      try {
+        const file = DriveApp.getFileById(target.getId());
+        if (role === 'editor') file.addEditor(email);
+        else if (role === 'commenter') file.addCommenter(email);
+        else file.addViewer(email);
+        return { key, label: target.label, ok: true };
+      } catch (e) {
+        return { key, label: target.label, ok: false, error: e.message };
+      }
+    });
+  });
+}
+
 // ============ SHEET TỰ TẠO TRONG FILE NÀY (dữ liệu MỚI, không trùng nguồn) ============
 const OWN_HEADERS = {
   DanhGiaHopDong: ['MaHopDong', 'NgayDanhGia', 'KetLuanGiamSat', 'PhatHien', 'HanhDongKhacPhuc', 'NguoiDanhGia', 'GhiChu'],
