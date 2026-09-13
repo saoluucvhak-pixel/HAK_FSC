@@ -167,7 +167,8 @@ function initOwnSheets() {
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('Index')
     .setTitle('HAK Group — Kiểm soát FSC')
-    .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
 // ============ TIỆN ÍCH ĐỌC SHEET NGUỒN (bên ngoài, chỉ đọc) ============
