@@ -39,6 +39,85 @@ function getMauWordLinks() {
   });
 }
 
+// ============ API: CHIA SẺ GOOGLE SHEET CHO EMAIL KHÁC ============
+/** Danh sách file có thể chia sẻ: file này (chứa dữ liệu giám sát tự tạo) + 5 spreadsheet nguồn.
+ * getId dùng hàm (không phải giá trị tĩnh) vì SpreadsheetApp.getActiveSpreadsheet().getId()
+ * chỉ nên gọi lúc thực thi, tránh lỗi nếu context thay đổi. */
+const SHARE_TARGETS = {
+  THIS: { label: 'File này (dữ liệu giám sát FSC tự tạo)', getId: () => SpreadsheetApp.getActiveSpreadsheet().getId() },
+  HDMB: { label: 'Hợp đồng, hồ sơ rừng, GPS, ảnh (HDMB)', getId: () => SS_IDS.HDMB },
+  PHIEUCAN: { label: 'Phiếu cân nhà máy Đà Nẵng (PHIEUCAN)', getId: () => SS_IDS.PHIEUCAN },
+  DNTT: { label: 'Đề nghị thanh toán, đối soát công nợ (DNTT)', getId: () => SS_IDS.DNTT },
+  HOSOKEO: { label: 'Hồ sơ keo mua vào, hồ sơ rừng (HOSOKEO)', getId: () => SS_IDS.HOSOKEO },
+  XUATHANG: { label: 'Đơn hàng & xuất hàng (XUATHANG)', getId: () => SS_IDS.XUATHANG },
+  KHAOSAT_FORM: { label: 'Form khảo sát thực địa (KHAOSAT_FORM)', getId: () => SS_IDS.KHAOSAT_FORM },
+};
+
+/** Danh sách file để đổ vào checkbox chọn chia sẻ trên webapp. */
+function getShareTargetList() {
+  return _safe(() => Object.keys(SHARE_TARGETS).map((key) => ({ key, label: SHARE_TARGETS[key].label })));
+}
+
+/** Chia sẻ 1 hoặc nhiều Google Sheet cho 1 địa chỉ email, với quyền Xem/Bình luận/Chỉnh sửa.
+ * role: 'viewer' (mặc định) | 'commenter' | 'editor'. Trả về kết quả CHO TỪNG FILE (có thể
+ * file này thành công, file khác lỗi — ví dụ do chưa có quyền Drive với sheet nguồn đó). */
+function shareSheetsWithEmail(email, targetKeys, role) {
+  return _safe(() => {
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      throw new Error('Địa chỉ email không hợp lệ: "' + email + '"');
+    }
+    if (!targetKeys || !targetKeys.length) {
+      throw new Error('Chưa chọn file nào để chia sẻ.');
+    }
+    return targetKeys.map((key) => {
+      const target = SHARE_TARGETS[key];
+      if (!target) return { key, label: key, ok: false, error: 'Không rõ mục "' + key + '".' };
+      try {
+        const file = DriveApp.getFileById(target.getId());
+        if (role === 'editor') file.addEditor(email);
+        else if (role === 'commenter') file.addCommenter(email);
+        else file.addViewer(email);
+        return { key, label: target.label, ok: true };
+      } catch (e) {
+        return { key, label: target.label, ok: false, error: e.message };
+      }
+    });
+  });
+}
+
+/** Nhãn tiếng Việt cho vai trò/loại quyền trả về từ Drive API v3 (Advanced Drive Service). */
+const DRIVE_ROLE_LABELS = { owner: 'Chủ sở hữu', organizer: 'Người tổ chức', fileOrganizer: 'Người tổ chức file', writer: 'Chỉnh sửa', commenter: 'Bình luận', reader: 'Xem' };
+const DRIVE_TYPE_SUFFIX = { group: ' (nhóm)', domain: ' (cả miền tổ chức)', anyone: ' (bất kỳ ai có link)' };
+
+/** Danh sách người/nhóm đang có quyền truy cập 1 file — dùng Advanced Drive Service (Drive API v3)
+ * vì DriveApp cơ bản không tách được Xem/Bình luận/Chỉnh sửa và không trả về permission id để thu hồi. */
+function getShareAccessList(targetKey) {
+  return _safe(() => {
+    const target = SHARE_TARGETS[targetKey];
+    if (!target) throw new Error('Không rõ file "' + targetKey + '".');
+    const resp = Drive.Permissions.list(target.getId(), { fields: 'permissions(id,emailAddress,role,type,displayName)' });
+    const perms = (resp && resp.permissions) || [];
+    return perms.map((p) => ({
+      id: p.id,
+      email: p.emailAddress || '',
+      displayName: p.displayName || '',
+      role: p.role,
+      roleLabel: (DRIVE_ROLE_LABELS[p.role] || p.role) + (DRIVE_TYPE_SUFFIX[p.type] || ''),
+      isOwner: p.role === 'owner',
+    }));
+  });
+}
+
+/** Thu hồi 1 quyền truy cập cụ thể (theo permission id lấy từ getShareAccessList). */
+function revokeShareAccess(targetKey, permissionId) {
+  return _safe(() => {
+    const target = SHARE_TARGETS[targetKey];
+    if (!target) throw new Error('Không rõ file "' + targetKey + '".');
+    Drive.Permissions.remove(target.getId(), permissionId);
+    return true;
+  });
+}
+
 // ============ SHEET TỰ TẠO TRONG FILE NÀY (dữ liệu MỚI, không trùng nguồn) ============
 const OWN_HEADERS = {
   DanhGiaHopDong: ['MaHopDong', 'NgayDanhGia', 'KetLuanGiamSat', 'PhatHien', 'HanhDongKhacPhuc', 'NguoiDanhGia', 'GhiChu'],
@@ -380,34 +459,44 @@ function getXuatHangGanDay(limit) {
 
 // ============ API: ĐÁNH GIÁ HỢP ĐỒNG / RỦI RO RỪNG (dữ liệu MỚI) ============
 function addDanhGiaHopDong(obj) {
-  obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-  return _ownAppend('DanhGiaHopDong', obj);
+  return _safe(() => {
+    obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+    return _ownAppend('DanhGiaHopDong', obj);
+  });
 }
 function addDanhGiaRuiRoRung(obj) {
-  obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-  return _ownAppend('DanhGiaRuiRoRung', obj);
+  return _safe(() => {
+    obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+    return _ownAppend('DanhGiaRuiRoRung', obj);
+  });
 }
 function getDanhGiaRuiRoRungList() { return _safe(() => _ownReadAll('DanhGiaRuiRoRung')); }
 
 // ============ API: GIÁM SÁT ĐỊNH KỲ / TIẾN ĐỘ / RỦI RO TRIỂN KHAI ============
 function getGiamSatList() { return _safe(() => _ownReadAll('GiamSatDinhKy')); }
 function addGiamSat(obj) {
-  const rows = _ownReadAll('GiamSatDinhKy');
-  obj.MaBaoCao = obj.MaBaoCao || 'GS-' + String(rows.length + 1).padStart(4, '0');
-  return _ownAppend('GiamSatDinhKy', obj);
+  return _safe(() => {
+    const rows = _ownReadAll('GiamSatDinhKy');
+    obj.MaBaoCao = obj.MaBaoCao || 'GS-' + String(rows.length + 1).padStart(4, '0');
+    return _ownAppend('GiamSatDinhKy', obj);
+  });
 }
+/** Trả về {ok:false, error} nếu không tìm thấy đúng giai đoạn trong sheet — trước đây hàm này
+ * trả về false lặng lẽ, khiến client vẫn báo "Đã cập nhật tiến độ" dù chưa cập nhật gì. */
 function updateTienDo(giaiDoan, ngayThucTe, danhGia, ghiChu) {
-  const sh = _own('TienDoTrienKhai');
-  const values = sh.getDataRange().getValues();
-  for (let i = 1; i < values.length; i++) {
-    if (values[i][0] === giaiDoan) {
-      sh.getRange(i + 1, 3).setValue(ngayThucTe);
-      sh.getRange(i + 1, 5).setValue(danhGia);
-      sh.getRange(i + 1, 6).setValue(ghiChu);
-      return true;
+  return _safe(() => {
+    const sh = _own('TienDoTrienKhai');
+    const values = sh.getDataRange().getValues();
+    for (let i = 1; i < values.length; i++) {
+      if (values[i][0] === giaiDoan) {
+        sh.getRange(i + 1, 3).setValue(ngayThucTe);
+        sh.getRange(i + 1, 5).setValue(danhGia);
+        sh.getRange(i + 1, 6).setValue(ghiChu);
+        return true;
+      }
     }
-  }
-  return false;
+    throw new Error('Không tìm thấy giai đoạn "' + giaiDoan + '" trong sheet TienDoTrienKhai.');
+  });
 }
 function getRuiRoTrienKhaiList() { return _safe(() => _ownReadAll('RuiRoTrienKhai')); }
 function addRuiRoTrienKhai(obj) {

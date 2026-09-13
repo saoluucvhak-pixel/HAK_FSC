@@ -152,9 +152,47 @@
       <div class="sidebar-tools">
         <button onclick="runCheckKetNoi()">🔍 Kiểm tra kết nối 5 file nguồn</button>
         <button onclick="runPingTest()">🏓 Test kết nối cơ bản</button>
+        <button onclick="openShareModal()">📤 Chia sẻ Google Sheet</button>
         <div id="checkResult" style="font-size:11px; color:#B7C4AE; margin-top:4px;"></div>
       </div>
     </aside>
+
+    <div id="shareModalBackdrop" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:100;" onclick="if(event.target===this) closeShareModal();">
+      <div style="background:#fff; max-width:520px; margin:60px auto; border-radius:10px; padding:20px; max-height:80vh; overflow:auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="margin:0;">📤 Chia sẻ Google Sheet cho email khác</h2>
+          <button class="btnmini" onclick="closeShareModal()">✕ Đóng</button>
+        </div>
+        <p class="note" style="margin-top:10px;">Cấp quyền truy cập trực tiếp trên Google Drive cho các Google Sheet mà hệ thống này đang dùng — người được chia sẻ sẽ mở được file gốc trên Google Sheets (không phải chỉ webapp).</p>
+        <div id="shareMsg"></div>
+        <form id="formShare" onsubmit="return false;">
+          <label style="display:flex; flex-direction:column; font-size:12px; color:#555; gap:4px; margin-bottom:12px;">
+            Email người nhận
+            <input type="email" id="shareEmail" required placeholder="ten@congty.com" style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px;">
+          </label>
+          <div style="font-size:12px; color:#555; margin-bottom:4px;">Chọn file cần chia sẻ</div>
+          <div id="shareTargetList" style="display:flex; flex-direction:column; gap:6px; margin-bottom:12px; font-size:13px;">Đang tải danh sách file...</div>
+          <label style="display:flex; flex-direction:column; font-size:12px; color:#555; gap:4px; margin-bottom:12px;">
+            Quyền truy cập
+            <select id="shareRole" style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px;">
+              <option value="viewer">Chỉ xem</option>
+              <option value="commenter">Xem &amp; bình luận</option>
+              <option value="editor">Chỉnh sửa</option>
+            </select>
+          </label>
+          <button type="button" id="btnSubmitShare" onclick="submitShare()" style="width:100%; padding:10px; background:#1F3864; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:14px;">Chia sẻ</button>
+        </form>
+        <div id="shareResultList" style="margin-top:12px; font-size:13px;"></div>
+
+        <hr style="margin:18px 0; border:none; border-top:1px solid #eee;">
+        <div style="font-weight:bold; font-size:13px; color:#1F3864; margin-bottom:8px;">👥 Xem / thu hồi quyền đã cấp</div>
+        <div style="display:flex; gap:8px; margin-bottom:10px;">
+          <select id="shareViewFileSelect" style="flex:1; padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px;"></select>
+          <button class="btnmini" onclick="loadShareAccessList()">🔄 Tải danh sách</button>
+        </div>
+        <div id="shareAccessList" style="font-size:13px;"></div>
+      </div>
+    </div>
 
     <main class="content">
       <div class="page-header">
@@ -1204,6 +1242,17 @@
       });
     });
 
+    /** Nhiều hàm add* server-side trả về {ok:false, error} khi lỗi thay vì throw (xem _safe trong
+     * Code.gs) — withSuccessHandler vẫn được gọi trong trường hợp đó, nên PHẢI kiểm tra res.ok
+     * trước khi báo "Đã lưu thành công", nếu không lỗi sẽ bị nuốt và người dùng tưởng đã lưu. */
+    function checkAddResult(res, msgElId) {
+      if (res && res.ok === false) {
+        document.getElementById(msgElId).innerHTML = '<div class="msg err">Lỗi: ' + res.error + '</div>';
+        return false;
+      }
+      return true;
+    }
+
     function showError(msg) {
       const el = document.getElementById('globalError');
       el.style.display = 'block';
@@ -1269,6 +1318,108 @@
       }).withFailureHandler((err) => {
         document.getElementById('checkResult').textContent = 'Lỗi khi kiểm tra: ' + err.message;
       }).checkKetNoi();
+    }
+
+    // ---- Chia sẻ Google Sheet cho email khác ----
+    let shareTargetsCache = [];
+    function openShareModal() {
+      document.getElementById('shareModalBackdrop').style.display = 'block';
+      document.getElementById('shareResultList').innerHTML = '';
+      document.getElementById('shareMsg').innerHTML = '';
+      document.getElementById('shareAccessList').innerHTML = '';
+      if (shareTargetsCache.length) return;
+      google.script.run
+        .withSuccessHandler((res) => {
+          if (!res || res.ok === false) {
+            const errMsg = '⚠ Không tải được danh sách file: ' + (res ? res.error : 'lỗi không rõ');
+            document.getElementById('shareTargetList').innerHTML = '<span style="color:#A32D2D;">' + errMsg + '</span>';
+            return;
+          }
+          shareTargetsCache = res.data;
+          document.getElementById('shareTargetList').innerHTML = shareTargetsCache.map((t) => `<label style="display:flex; align-items:center; gap:6px; font-weight:normal;">
+            <input type="checkbox" class="shareTargetCheck" value="${t.key}" ${t.key === 'THIS' ? 'checked' : ''}> ${t.label}
+          </label>`).join('');
+          document.getElementById('shareViewFileSelect').innerHTML = shareTargetsCache.map((t) => `<option value="${t.key}">${t.label}</option>`).join('');
+        })
+        .withFailureHandler((err) => {
+          document.getElementById('shareTargetList').innerHTML = '<span style="color:#A32D2D;">⚠ Lỗi tải danh sách file: ' + (err && err.message ? err.message : err) + '</span>';
+        })
+        .getShareTargetList();
+    }
+    function closeShareModal() {
+      document.getElementById('shareModalBackdrop').style.display = 'none';
+    }
+    function loadShareAccessList() {
+      const key = document.getElementById('shareViewFileSelect').value;
+      const el = document.getElementById('shareAccessList');
+      if (!key) { el.innerHTML = ''; return; }
+      el.innerHTML = '⏳ Đang tải danh sách quyền...';
+      google.script.run
+        .withSuccessHandler((res) => {
+          if (!res || res.ok === false) {
+            el.innerHTML = '<span style="color:#A32D2D;">⚠ ' + (res ? res.error : 'Lỗi không rõ') + '</span>';
+            return;
+          }
+          const rows = res.data;
+          if (!rows.length) { el.innerHTML = '<span style="color:#888;">Chưa có ai được cấp quyền riêng (ngoài chủ sở hữu).</span>'; return; }
+          el.innerHTML = '<table style="width:100%; border-collapse:collapse;"><thead><tr>' +
+            '<th style="text-align:left;padding:4px;">Người / loại</th><th style="text-align:left;padding:4px;">Quyền</th><th></th></tr></thead><tbody>' +
+            rows.map((r) => `<tr>
+              <td style="padding:4px;border-bottom:1px solid #eee;">${fmt(r.email || r.displayName) || '(không rõ)'}</td>
+              <td style="padding:4px;border-bottom:1px solid #eee;">${fmt(r.roleLabel)}</td>
+              <td style="padding:4px;border-bottom:1px solid #eee;">${r.isOwner ? '' : `<button class="btnmini" onclick="revokeAccess('${key}','${r.id}')">🗑 Thu hồi</button>`}</td>
+            </tr>`).join('') + '</tbody></table>';
+        })
+        .withFailureHandler((err) => {
+          el.innerHTML = '<span style="color:#A32D2D;">⚠ ' + (err && err.message ? err.message : err) + '</span>';
+        })
+        .getShareAccessList(key);
+    }
+    function revokeAccess(targetKey, permissionId) {
+      if (!confirm('Thu hồi quyền truy cập này?')) return;
+      google.script.run
+        .withSuccessHandler((res) => {
+          if (!res || res.ok === false) { alert('Lỗi: ' + (res ? res.error : 'không rõ')); return; }
+          loadShareAccessList();
+        })
+        .withFailureHandler((err) => {
+          alert('Lỗi: ' + (err && err.message ? err.message : err));
+        })
+        .revokeShareAccess(targetKey, permissionId);
+    }
+    function submitShare() {
+      const email = document.getElementById('shareEmail').value.trim();
+      const role = document.getElementById('shareRole').value;
+      const targetKeys = Array.from(document.querySelectorAll('.shareTargetCheck:checked')).map((cb) => cb.value);
+      const msgEl = document.getElementById('shareMsg');
+      const resultEl = document.getElementById('shareResultList');
+      if (!email) { msgEl.innerHTML = '<div class="msg err">Vui lòng nhập email.</div>'; return; }
+      if (!targetKeys.length) { msgEl.innerHTML = '<div class="msg err">Vui lòng chọn ít nhất 1 file để chia sẻ.</div>'; return; }
+      const btn = document.getElementById('btnSubmitShare');
+      btn.disabled = true;
+      msgEl.innerHTML = '<div class="msg ok">⏳ Đang chia sẻ...</div>';
+      resultEl.innerHTML = '';
+      google.script.run
+        .withSuccessHandler((res) => {
+          btn.disabled = false;
+          if (!res || res.ok === false) {
+            msgEl.innerHTML = '<div class="msg err">Lỗi: ' + (res ? res.error : 'không rõ') + '</div>';
+            return;
+          }
+          const rows = res.data;
+          const soOk = rows.filter((r) => r.ok).length;
+          msgEl.innerHTML = soOk === rows.length
+            ? `<div class="msg ok">Đã chia sẻ thành công ${soOk}/${rows.length} file cho ${email}.</div>`
+            : `<div class="msg err">Chỉ chia sẻ thành công ${soOk}/${rows.length} file — xem chi tiết bên dưới.</div>`;
+          resultEl.innerHTML = rows.map((r) => r.ok
+            ? `<div>✅ ${r.label}</div>`
+            : `<div style="color:#A32D2D;">❌ ${r.label}: ${r.error}</div>`).join('');
+        })
+        .withFailureHandler((err) => {
+          btn.disabled = false;
+          msgEl.innerHTML = '<div class="msg err">Lỗi: ' + (err && err.message ? err.message : err) + '</div>';
+        })
+        .shareSheetsWithEmail(email, targetKeys, role);
     }
 
     // ---- Xuất CSV / In báo cáo (áp dụng đúng dữ liệu đang hiển thị sau khi lọc) ----
@@ -1710,7 +1861,8 @@
     document.getElementById('formTieuChiThamDinh').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'tdhdMsg')) return;
         document.getElementById('tdhdMsg').innerHTML = '<div class="msg ok">Đã lưu kết quả thẩm định.</div>';
         e.target.reset(); loadTieuChiThamDinh();
       }).withFailureHandler((err) => {
@@ -1741,7 +1893,8 @@
     document.getElementById('formLenhDieuDong').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'ddMsg')) return;
         document.getElementById('ddMsg').innerHTML = '<div class="msg ok">Đã lưu lệnh điều động.</div>';
         e.target.reset(); loadLenhDieuDong();
       }).withFailureHandler((err) => {
@@ -1772,7 +1925,8 @@
     document.getElementById('formTieuHao').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'thMsg')) return;
         document.getElementById('thMsg').innerHTML = '<div class="msg ok">Đã lưu kỳ tiêu hao.</div>';
         e.target.reset(); loadTieuHao();
       }).withFailureHandler((err) => {
@@ -1836,7 +1990,8 @@
     document.getElementById('formBaoCaoNN').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'bcnnMsg')) return;
         document.getElementById('bcnnMsg').innerHTML = '<div class="msg ok">Đã lưu bản ghi báo cáo.</div>';
         e.target.reset(); loadBaoCaoNN();
       }).withFailureHandler((err) => {
@@ -1867,7 +2022,8 @@
     document.getElementById('formNghiemThuGD').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'nttdMsg')) return;
         document.getElementById('nttdMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản nghiệm thu.</div>';
         e.target.reset(); loadNghiemThuGD();
       }).withFailureHandler((err) => {
@@ -1903,7 +2059,8 @@
     document.getElementById('formRuiRoTK').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'rrtkMsg')) return;
         document.getElementById('rrtkMsg').innerHTML = '<div class="msg ok">Đã lưu rủi ro/vướng mắc.</div>';
         e.target.reset(); loadRuiRoTK();
       }).withFailureHandler((err) => {
@@ -1989,26 +2146,37 @@
     }
 
     // ---- Thư viện mẫu Word gốc (Google Drive) ----
+    // Cố ý KHÔNG dùng callServer() ở đây: đây là tính năng phụ (link tham khảo), lỗi của nó
+    // (VD: chưa cấp quyền Drive cho script) không nên chiếm dụng banner lỗi toàn trang mỗi khi
+    // mở tab Hướng dẫn hay các sub-tab Khảo sát/Tham vấn — chỉ báo lỗi cục bộ ngay tại chỗ hiện link.
     let mauWordCache = null;
     function loadMauWordLinks(cb) {
-      if (mauWordCache) { cb(mauWordCache); return; }
-      callServer('getMauWordLinks', [], (rows) => {
-        if (!rows) { rows = []; }
-        mauWordCache = rows;
-        cb(rows);
-      });
+      if (mauWordCache) { cb(mauWordCache, null); return; }
+      google.script.run
+        .withSuccessHandler((res) => {
+          if (res && res.ok === false) { cb([], res.error); return; }
+          const rows = (res && res.data) || [];
+          mauWordCache = rows;
+          cb(rows, null);
+        })
+        .withFailureHandler((err) => {
+          cb([], err && err.message ? err.message : String(err));
+        })
+        .getMauWordLinks();
     }
     function renderMauWordFull() {
-      loadMauWordLinks((files) => {
+      loadMauWordLinks((files, err) => {
         const el = document.getElementById('mauWordList');
+        if (err) { el.innerHTML = '<p style="color:#A32D2D;">⚠ Không tải được danh sách mẫu Word: ' + err + '</p>'; return; }
         if (!files.length) { el.innerHTML = '<p style="color:#A32D2D;">Không tìm thấy file nào trong thư mục Drive, hoặc chưa có quyền đọc thư mục.</p>'; return; }
         el.innerHTML = '<ul>' + files.map((f) => `<li><a href="${f.url}" target="_blank">📄 ${f.name}</a></li>`).join('') + '</ul>';
       });
     }
     function renderMauWordQuick(elId, keyword) {
-      loadMauWordLinks((files) => {
+      loadMauWordLinks((files, err) => {
         const el = document.getElementById(elId);
         if (!el) return;
+        if (err) { el.innerHTML = ''; return; }
         const match = files.filter((f) => f.name.toLowerCase().includes(keyword.toLowerCase()));
         if (!match.length) { el.innerHTML = ''; return; }
         el.innerHTML = '<div class="totalbox">📄 Mẫu tham khảo: ' + match.map((f) => `<a href="${f.url}" target="_blank">${f.name}</a>`).join(' &nbsp;|&nbsp; ') + '</div>';
@@ -2044,7 +2212,8 @@
     document.getElementById('formKeHoachDGNB').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'khdgnbMsg')) return;
         document.getElementById('khdgnbMsg').innerHTML = '<div class="msg ok">Đã lưu kế hoạch đánh giá.</div>';
         e.target.reset(); loadKeHoachDGNB();
       }).withFailureHandler((err) => {
@@ -2080,7 +2249,8 @@
     document.getElementById('formPhieuKhacPhuc').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'pkpMsg')) return;
         document.getElementById('pkpMsg').innerHTML = '<div class="msg ok">Đã lưu phiếu yêu cầu khắc phục.</div>';
         e.target.reset(); loadPhieuKhacPhuc();
       }).withFailureHandler((err) => {
@@ -2109,7 +2279,8 @@
     document.getElementById('formXemXetDDS').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'xxddsMsg')) return;
         document.getElementById('xxddsMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản xem xét.</div>';
         e.target.reset(); loadXemXetDDS();
       }).withFailureHandler((err) => {
@@ -2142,7 +2313,8 @@
     document.getElementById('formPheDuyetDGV').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'pddgvMsg')) return;
         document.getElementById('pddgvMsg').innerHTML = '<div class="msg ok">Đã lưu phê duyệt đánh giá viên.</div>';
         e.target.reset(); loadPheDuyetDGV();
       }).withFailureHandler((err) => {
@@ -2459,7 +2631,8 @@
     document.getElementById('formBienBanGiamSat').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'bbgsMsg')) return;
         document.getElementById('bbgsMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản giám sát.</div>';
         e.target.reset();
         loadBienBanGiamSat();
@@ -2471,7 +2644,8 @@
     document.getElementById('formThamVan').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'tvMsg')) return;
         document.getElementById('tvMsg').innerHTML = '<div class="msg ok">Đã lưu bản ghi tham vấn.</div>';
         e.target.reset();
         loadThamVan();
@@ -2483,7 +2657,8 @@
     document.getElementById('formKhaoSat').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'ksMsg')) return;
         document.getElementById('ksMsg').innerHTML = '<div class="msg ok">Đã lưu tình trạng hồ sơ khảo sát/tham vấn.</div>';
         e.target.reset();
         loadKhaoSat();
@@ -2495,7 +2670,8 @@
     document.getElementById('formDanhGia').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'dgMsg')) return;
         document.getElementById('dgMsg').innerHTML = '<div class="msg ok">Đã lưu kết luận giám sát.</div>';
         e.target.reset();
         loadHopDong();
@@ -2507,7 +2683,8 @@
     document.getElementById('formRuiRo').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'rrMsg')) return;
         document.getElementById('rrMsg').innerHTML = '<div class="msg ok">Đã lưu đánh giá rủi ro.</div>';
         e.target.reset();
         loadRuiRo();
@@ -2519,7 +2696,8 @@
     document.getElementById('formGiamSat').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'gsMsg')) return;
         document.getElementById('gsMsg').innerHTML = '<div class="msg ok">Đã lưu báo cáo giám sát.</div>';
         e.target.reset();
         loadGiamSat();
@@ -2531,7 +2709,8 @@
     document.getElementById('formTienDo').addEventListener('submit', (e) => {
       e.preventDefault();
       const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler(() => {
+      google.script.run.withSuccessHandler((res) => {
+        if (!checkAddResult(res, 'tdMsg')) return;
         document.getElementById('tdMsg').innerHTML = '<div class="msg ok">Đã cập nhật tiến độ.</div>';
         loadDashboard();
       }).withFailureHandler((err) => {
