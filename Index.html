@@ -8,82 +8,82 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
-    body { font-family: 'Be Vietnam Pro', -apple-system, "Segoe UI", Arial, sans-serif; margin: 0; background: #f4f5f7; color: #222; }
-    header { background: #1F3864; color: #fff; padding: 14px 20px; }
+    body { font-family: 'Be Vietnam Pro', -apple-system, "Segoe UI", Arial, sans-serif; margin: 0; background: #f3f4f6; color: #222; }
+    header { background: #1f2937; color: #fff; padding: 14px 20px; }
     header h1 { margin: 0; font-size: 18px; }
-    nav { display: flex; gap: 4px; background: #2E5395; padding: 0 16px; flex-wrap: wrap; }
-    nav button { background: none; border: none; color: #e6ecfa; padding: 10px 14px; cursor: pointer; font-size: 14px; }
-    nav button.active { background: #f4f5f7; color: #1F3864; font-weight: bold; border-radius: 6px 6px 0 0; }
+    nav { display: flex; gap: 4px; background: #1f2937; padding: 0 16px; flex-wrap: wrap; }
+    nav button { background: none; border: none; color: #cbd5e1; padding: 10px 14px; cursor: pointer; font-size: 14px; }
+    nav button.active { background: #f3f4f6; color: #2563eb; font-weight: bold; border-radius: 6px 6px 0 0; }
     main { padding: 20px; max-width: 1200px; margin: 0 auto; }
     .cards { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
     .card { background: #fff; border-radius: 8px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.1); min-width: 140px; flex: 1; }
-    .card .num { font-size: 26px; font-weight: bold; color: #1F3864; }
+    .card .num { font-size: 26px; font-weight: bold; color: #2563eb; }
     .card .lbl { font-size: 12px; color: #666; margin-top: 2px; }
-    .card.warn .num { color: #A32D2D; }
-    .card.ok .num { color: #27500A; }
+    .card.warn .num { color: #dc2626; }
+    .card.ok .num { color: #16a34a; }
     table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); font-size: 12px; }
-    th, td { padding: 7px 9px; border-bottom: 1px solid #eee; text-align: left; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
+    th, td { padding: 7px 9px; border-bottom: 1px solid #e5e7eb; text-align: left; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
     .tablewrap table th, .tablewrap table td { white-space: nowrap; }
     code { word-break: break-all; white-space: pre-wrap; }
     th { background: #D9E2F3; position: sticky; top: 0; }
     tr:hover { background: #f9fafc; }
     .tablewrap { max-height: 520px; overflow: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
     .badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; white-space: nowrap; }
-    .badge.dat { background: #EAF3DE; color: #27500A; }
-    .badge.dieukien { background: #FAEEDA; color: #854F0B; }
-    .badge.khongdat { background: #FCEBEB; color: #791F1F; }
+    .badge.dat { background: #EAF3DE; color: #16a34a; }
+    .badge.dieukien { background: #FAEEDA; color: #b45309; }
+    .badge.khongdat { background: #FCEBEB; color: #dc2626; }
     .badge.chua { background: #eee; color: #666; }
-    .badge.ok2 { background: #EAF3DE; color: #27500A; }
-    .badge.thieu { background: #FCEBEB; color: #791F1F; }
+    .badge.ok2 { background: #EAF3DE; color: #16a34a; }
+    .badge.thieu { background: #FCEBEB; color: #dc2626; }
     section { display: none; }
     section.active { display: block; }
     form { background: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
     form label { display: flex; flex-direction: column; font-size: 12px; color: #555; gap: 4px; }
-    form input, form select, form textarea { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; font-family: inherit; }
+    form input, form select, form textarea { padding: 6px 8px; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 13px; font-family: inherit; }
     form textarea { resize: vertical; }
     form .full { grid-column: 1 / -1; }
-    form button { grid-column: 1 / -1; padding: 10px; background: #1F3864; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
-    h2 { font-size: 16px; color: #1F3864; font-weight: 600; }
+    form button { grid-column: 1 / -1; padding: 10px; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+    h2 { font-size: 16px; color: #2563eb; font-weight: 600; }
     .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; }
-    .msg.ok { background: #EAF3DE; color: #27500A; }
-    .msg.err { background: #FCEBEB; color: #791F1F; }
+    .msg.ok { background: #EAF3DE; color: #16a34a; }
+    .msg.err { background: #FCEBEB; color: #dc2626; }
     .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .toolbar button { padding: 6px 12px; border: 1px solid #1F3864; background: #fff; color: #1F3864; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .toolbar button { padding: 6px 12px; border: 1px solid #2563eb; background: #fff; color: #2563eb; border-radius: 6px; cursor: pointer; font-size: 12px; }
     .note { font-size: 12px; color: #777; margin-bottom: 10px; }
     .filterbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-    .filterbar input[type="text"], .filterbar input:not([type]), .filterbar input[type="date"], .filterbar select { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+    .filterbar input[type="text"], .filterbar input:not([type]), .filterbar input[type="date"], .filterbar select { padding: 6px 8px; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 13px; }
     .filterbar input[placeholder] { flex: 1; min-width: 200px; }
     .filterbar label.inline { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #555; }
     .filterbar .count { font-size: 12px; color: #666; margin-left: auto; white-space: nowrap; }
-    .btnmini { padding: 6px 10px; border: 1px solid #1F3864; background: #fff; color: #1F3864; border-radius: 6px; cursor: pointer; font-size: 12px; white-space: nowrap; }
-    .btnmini:hover { background: #1F3864; color: #fff; }
+    .btnmini { padding: 6px 10px; border: 1px solid #2563eb; background: #fff; color: #2563eb; border-radius: 6px; cursor: pointer; font-size: 12px; white-space: nowrap; }
+    .btnmini:hover { background: #2563eb; color: #fff; }
     .pagebar { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 10px; font-size: 12px; color: #555; }
-    .totalbox { background: #EAF0FB; border: 1px solid #C7D6F0; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; font-size: 13px; color: #1F3864; }
-    .subnav { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 2px solid #E5E1D2; flex-wrap: wrap; }
+    .totalbox { background: #EAF0FB; border: 1px solid #C7D6F0; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; font-size: 13px; color: #2563eb; }
+    .subnav { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 2px solid #e5e7eb; flex-wrap: wrap; }
     .subnav .subtab { padding: 8px 14px; background: none; border: none; border-bottom: 3px solid transparent; color: #7A7563; font-size: 13px; cursor: pointer; font-weight: 500; }
-    .subnav .subtab:hover { color: #1F3864; }
-    .subnav .subtab.active { color: #1F3864; border-bottom-color: #C97A3D; font-weight: bold; }
+    .subnav .subtab:hover { color: #2563eb; }
+    .subnav .subtab.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: bold; }
     .subpanel { display: none; }
     .subpanel.active { display: block; }
 
     /* ===== Layout dạng sidebar ===== */
-    body { background: #F5F1E8; }
+    body { background: #f3f4f6; }
     .app-shell { display: flex; min-height: 100vh; align-items: stretch; }
-    .sidebar { width: 260px; flex-shrink: 0; background: #22301F; color: #E7E3D4; display: flex; flex-direction: column; padding: 18px 0; }
+    .sidebar { width: 260px; flex-shrink: 0; background: #1f2937; color: #cbd5e1; display: flex; flex-direction: column; padding: 18px 0; }
     .brand { display: flex; align-items: center; gap: 12px; padding: 0 18px 18px; border-bottom: 1px solid rgba(255,255,255,.12); margin-bottom: 12px; }
     .brand .logo { width: 40px; height: 40px; border-radius: 8px; background: #C97A3D; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #fff; flex-shrink: 0; }
     .brand-title { font-weight: bold; font-size: 15px; color: #fff; }
-    .brand-sub { font-size: 11px; color: #B7C4AE; margin-top: 2px; }
+    .brand-sub { font-size: 11px; color: #8b98ab; margin-top: 2px; }
     .sidenav { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; flex: 1; overflow-y: auto; }
-    .sidenav .tab { display: flex; align-items: center; gap: 10px; text-align: left; background: none; border: none; color: #D7D3C4; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; width: 100%; text-transform: uppercase; letter-spacing: 0.01em; }
-    .sidenav .tab:hover { background: rgba(255,255,255,.06); }
-    .sidenav .tab.active { background: #3E5233; color: #fff; font-weight: bold; }
+    .sidenav .tab { display: flex; align-items: center; gap: 10px; text-align: left; background: none; border: none; color: #cbd5e1; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; width: 100%; text-transform: uppercase; letter-spacing: 0.01em; }
+    .sidenav .tab:hover { background: #2d3a4d; }
+    .sidenav .tab.active { background: #2563eb; color: #fff; font-weight: bold; }
     .sidenav .tab .navbadge { margin-left: auto; background: #C97A3D; color: #fff; font-size: 10px; font-weight: bold; padding: 1px 7px; border-radius: 10px; }
     .sidenav hr { border: none; border-top: 1px solid rgba(255,255,255,.12); margin: 10px 4px; width: calc(100% - 8px); }
-    .navgroup { font-size: 10px; letter-spacing: .04em; color: #8A9782; text-transform: uppercase; padding: 12px 12px 4px; font-weight: bold; }
+    .navgroup { font-size: 10px; letter-spacing: .04em; color: #8b98ab; text-transform: uppercase; padding: 12px 12px 4px; font-weight: bold; }
     .sidebar-tools { padding: 10px 14px 0; border-top: 1px solid rgba(255,255,255,.12); margin-top: 10px; }
-    .sidebar-tools button { width: 100%; margin-bottom: 6px; padding: 7px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,.25); background: transparent; color: #D7D3C4; font-size: 11.5px; cursor: pointer; }
-    .sidebar-tools button:hover { background: rgba(255,255,255,.08); }
+    .sidebar-tools button { width: 100%; margin-bottom: 6px; padding: 7px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,.25); background: transparent; color: #cbd5e1; font-size: 11.5px; cursor: pointer; }
+    .sidebar-tools button:hover { background: #2d3a4d; }
     .content { flex: 1; padding: 26px 32px; overflow-y: auto; overflow-x: hidden; max-width: 100%; box-sizing: border-box; }
     .page-header { margin-bottom: 18px; }
     .page-header h1 { margin: 0; font-size: 24px; color: #2A2A20; font-weight: 700; letter-spacing: 0.01em; text-transform: uppercase; }
@@ -153,7 +153,7 @@
         <button onclick="runCheckKetNoi()">🔍 Kiểm tra kết nối 5 file nguồn</button>
         <button onclick="runPingTest()">🏓 Test kết nối cơ bản</button>
         <button onclick="openShareModal()">📤 Chia sẻ Google Sheet</button>
-        <div id="checkResult" style="font-size:11px; color:#B7C4AE; margin-top:4px;"></div>
+        <div id="checkResult" style="font-size:11px; color:#8b98ab; margin-top:4px;"></div>
       </div>
     </aside>
 
@@ -168,26 +168,26 @@
         <form id="formShare" onsubmit="return false;">
           <label style="display:flex; flex-direction:column; font-size:12px; color:#555; gap:4px; margin-bottom:12px;">
             Email người nhận
-            <input type="email" id="shareEmail" required placeholder="ten@congty.com" style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px;">
+            <input type="email" id="shareEmail" required placeholder="ten@congty.com" style="padding:6px 8px; border:1px solid #e5e7eb; border-radius:4px; font-size:13px;">
           </label>
           <div style="font-size:12px; color:#555; margin-bottom:4px;">Chọn file cần chia sẻ</div>
           <div id="shareTargetList" style="display:flex; flex-direction:column; gap:6px; margin-bottom:12px; font-size:13px;">Đang tải danh sách file...</div>
           <label style="display:flex; flex-direction:column; font-size:12px; color:#555; gap:4px; margin-bottom:12px;">
             Quyền truy cập
-            <select id="shareRole" style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px;">
+            <select id="shareRole" style="padding:6px 8px; border:1px solid #e5e7eb; border-radius:4px; font-size:13px;">
               <option value="viewer">Chỉ xem</option>
               <option value="commenter">Xem &amp; bình luận</option>
               <option value="editor">Chỉnh sửa</option>
             </select>
           </label>
-          <button type="button" id="btnSubmitShare" onclick="submitShare()" style="width:100%; padding:10px; background:#1F3864; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:14px;">Chia sẻ</button>
+          <button type="button" id="btnSubmitShare" onclick="submitShare()" style="width:100%; padding:10px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:14px;">Chia sẻ</button>
         </form>
         <div id="shareResultList" style="margin-top:12px; font-size:13px;"></div>
 
-        <hr style="margin:18px 0; border:none; border-top:1px solid #eee;">
-        <div style="font-weight:bold; font-size:13px; color:#1F3864; margin-bottom:8px;">👥 Xem / thu hồi quyền đã cấp</div>
+        <hr style="margin:18px 0; border:none; border-top:1px solid #e5e7eb;">
+        <div style="font-weight:bold; font-size:13px; color:#2563eb; margin-bottom:8px;">👥 Xem / thu hồi quyền đã cấp</div>
         <div style="display:flex; gap:8px; margin-bottom:10px;">
-          <select id="shareViewFileSelect" style="flex:1; padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px;"></select>
+          <select id="shareViewFileSelect" style="flex:1; padding:6px 8px; border:1px solid #e5e7eb; border-radius:4px; font-size:13px;"></select>
           <button class="btnmini" onclick="loadShareAccessList()">🔄 Tải danh sách</button>
         </div>
         <div id="shareAccessList" style="font-size:13px;"></div>
@@ -199,7 +199,7 @@
         <h1 id="pageTitle">Dashboard</h1>
         <p id="pageSubtitle">Tổng quan tình trạng hồ sơ, hợp đồng và tiến độ triển khai FSC</p>
       </div>
-      <div id="globalError" style="display:none; background:#FCEBEB; color:#791F1F; padding:12px 20px; font-size:13px; white-space:pre-wrap; border-radius:8px; margin-bottom:14px;"></div>
+      <div id="globalError" style="display:none; background:#FCEBEB; color:#dc2626; padding:12px 20px; font-size:13px; white-space:pre-wrap; border-radius:8px; margin-bottom:14px;"></div>
 
 
     <section id="dashboard" class="active">
@@ -348,7 +348,7 @@
           <select name="MaRung" id="selectRungRuiRo" required onchange="onChonRung()"><option value="">-- đang tải danh sách rừng --</option></select>
         </label>
         <label>Số hợp đồng (tự điền theo rừng đã chọn)
-          <input name="SoHopDong" id="inputSoHDRuiRo" readonly style="background:#f4f5f7;">
+          <input name="SoHopDong" id="inputSoHDRuiRo" readonly style="background:#f3f4f6;">
         </label>
         <label>Rủi ro CNRA
           <select name="RuiRoCNRA"><option>Không đáng kể</option><option>Đáng kể</option></select>
@@ -896,7 +896,7 @@
         <label>Từ ngày <input name="TuNgay" type="date"></label>
         <label>Đến ngày <input name="DenNgay" type="date"></label>
         <label>Tổng số nhà cung cấp (x) <input name="TongSoNhaCungCap" id="inputTongNCC" type="number" oninput="tinhSoMau()"></label>
-        <label>Số mẫu lấy theo công thức (tự tính) <input name="SoMauLayTheoCongThuc" id="inputSoMau" readonly style="background:#f4f5f7;"></label>
+        <label>Số mẫu lấy theo công thức (tự tính) <input name="SoMauLayTheoCongThuc" id="inputSoMau" readonly style="background:#f3f4f6;"></label>
         <label>Trưởng đoàn <input name="TruongDoan"></label>
         <label class="full">Thành viên đoàn <input name="ThanhVienDoan"></label>
         <label class="full">Nội dung đánh giá (hạng mục, bộ phận được đánh giá, ngày cụ thể...)
@@ -1023,7 +1023,7 @@
       <div class="filterbar">
         <label class="inline">Từ ngày <input type="date" id="fTonKhoTu"></label>
         <label class="inline">Đến ngày <input type="date" id="fTonKhoDen"></label>
-        <button class="btnmini" onclick="loadTonKho()" style="background:#1F3864;color:#fff;">🔍 Xem báo cáo</button>
+        <button class="btnmini" onclick="loadTonKho()" style="background:#2563eb;color:#fff;">🔍 Xem báo cáo</button>
         <button class="btnmini" onclick="document.getElementById('fTonKhoTu').value='';document.getElementById('fTonKhoDen').value='';loadTonKho();">✕ Bỏ lọc (xem toàn bộ)</button>
       </div>
       <div id="tonKhoBody">
@@ -1135,7 +1135,7 @@
         <h2>🔧 Khi cần sửa/mở rộng hệ thống</h2>
         <p>Toàn bộ hệ thống chỉ gồm 2 file: <code>Code.gs</code> (backend, đọc/ghi Google Sheets) và <code>Index.html</code> (giao diện). Sửa xong dán đè lại đúng 2 file này vào Apps Script rồi <b>Deploy → Manage deployments → New version → Deploy</b> để cập nhật link chính thức.</p>
 
-        <hr style="margin:24px 0; border:none; border-top:1px solid #eee;">
+        <hr style="margin:24px 0; border:none; border-top:1px solid #e5e7eb;">
 
         <h2>📖 TOÀN VĂN QUY TRÌNH QT-FSC-01 (tóm tắt để tra cứu nhanh)</h2>
         <p><b>Mục tiêu:</b> kiểm soát, giám sát nguồn gốc gỗ nguyên liệu rừng trồng theo tiêu chuẩn FSC, đúng Luật Lâm nghiệp, Thông tư 26/2025/TT-BNNMT và pháp luật thuế/kế toán hiện hành.</p>
@@ -1257,7 +1257,7 @@
       const el = document.getElementById('globalError');
       el.style.display = 'block';
       el.style.background = '#FCEBEB';
-      el.style.color = '#791F1F';
+      el.style.color = '#dc2626';
       el.textContent = '❌ Lỗi: ' + msg;
     }
     function clearError() {
@@ -1312,7 +1312,7 @@
         const el = document.getElementById('globalError');
         el.style.display = 'block';
         el.style.background = coLoi ? '#FCEBEB' : '#EAF3DE';
-        el.style.color = coLoi ? '#791F1F' : '#27500A';
+        el.style.color = coLoi ? '#dc2626' : '#16a34a';
         el.textContent = (coLoi ? '' : '✅ Tất cả kết nối ổn định:\n') + lines.join('\n');
         document.getElementById('checkResult').textContent = 'Xem kết quả ở khung phía trên.';
       }).withFailureHandler((err) => {
@@ -1332,7 +1332,7 @@
         .withSuccessHandler((res) => {
           if (!res || res.ok === false) {
             const errMsg = '⚠ Không tải được danh sách file: ' + (res ? res.error : 'lỗi không rõ');
-            document.getElementById('shareTargetList').innerHTML = '<span style="color:#A32D2D;">' + errMsg + '</span>';
+            document.getElementById('shareTargetList').innerHTML = '<span style="color:#dc2626;">' + errMsg + '</span>';
             return;
           }
           shareTargetsCache = res.data;
@@ -1342,7 +1342,7 @@
           document.getElementById('shareViewFileSelect').innerHTML = shareTargetsCache.map((t) => `<option value="${t.key}">${t.label}</option>`).join('');
         })
         .withFailureHandler((err) => {
-          document.getElementById('shareTargetList').innerHTML = '<span style="color:#A32D2D;">⚠ Lỗi tải danh sách file: ' + (err && err.message ? err.message : err) + '</span>';
+          document.getElementById('shareTargetList').innerHTML = '<span style="color:#dc2626;">⚠ Lỗi tải danh sách file: ' + (err && err.message ? err.message : err) + '</span>';
         })
         .getShareTargetList();
     }
@@ -1357,7 +1357,7 @@
       google.script.run
         .withSuccessHandler((res) => {
           if (!res || res.ok === false) {
-            el.innerHTML = '<span style="color:#A32D2D;">⚠ ' + (res ? res.error : 'Lỗi không rõ') + '</span>';
+            el.innerHTML = '<span style="color:#dc2626;">⚠ ' + (res ? res.error : 'Lỗi không rõ') + '</span>';
             return;
           }
           const rows = res.data;
@@ -1365,13 +1365,13 @@
           el.innerHTML = '<table style="width:100%; border-collapse:collapse;"><thead><tr>' +
             '<th style="text-align:left;padding:4px;">Người / loại</th><th style="text-align:left;padding:4px;">Quyền</th><th></th></tr></thead><tbody>' +
             rows.map((r) => `<tr>
-              <td style="padding:4px;border-bottom:1px solid #eee;">${fmt(r.email || r.displayName) || '(không rõ)'}</td>
-              <td style="padding:4px;border-bottom:1px solid #eee;">${fmt(r.roleLabel)}</td>
-              <td style="padding:4px;border-bottom:1px solid #eee;">${r.isOwner ? '' : `<button class="btnmini" onclick="revokeAccess('${key}','${r.id}')">🗑 Thu hồi</button>`}</td>
+              <td style="padding:4px;border-bottom:1px solid #e5e7eb;">${fmt(r.email || r.displayName) || '(không rõ)'}</td>
+              <td style="padding:4px;border-bottom:1px solid #e5e7eb;">${fmt(r.roleLabel)}</td>
+              <td style="padding:4px;border-bottom:1px solid #e5e7eb;">${r.isOwner ? '' : `<button class="btnmini" onclick="revokeAccess('${key}','${r.id}')">🗑 Thu hồi</button>`}</td>
             </tr>`).join('') + '</tbody></table>';
         })
         .withFailureHandler((err) => {
-          el.innerHTML = '<span style="color:#A32D2D;">⚠ ' + (err && err.message ? err.message : err) + '</span>';
+          el.innerHTML = '<span style="color:#dc2626;">⚠ ' + (err && err.message ? err.message : err) + '</span>';
         })
         .getShareAccessList(key);
     }
@@ -1413,7 +1413,7 @@
             : `<div class="msg err">Chỉ chia sẻ thành công ${soOk}/${rows.length} file — xem chi tiết bên dưới.</div>`;
           resultEl.innerHTML = rows.map((r) => r.ok
             ? `<div>✅ ${r.label}</div>`
-            : `<div style="color:#A32D2D;">❌ ${r.label}: ${r.error}</div>`).join('');
+            : `<div style="color:#dc2626;">❌ ${r.label}: ${r.error}</div>`).join('');
         })
         .withFailureHandler((err) => {
           btn.disabled = false;
@@ -1443,7 +1443,7 @@
       const w = window.open('', '_blank');
       w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>
         body{font-family:Arial,sans-serif;padding:24px;color:#222;}
-        h1{font-size:16px;color:#1F3864;margin-bottom:4px;}
+        h1{font-size:16px;color:#2563eb;margin-bottom:4px;}
         .meta{font-size:11px;color:#666;margin-bottom:16px;}
         table{width:100%;border-collapse:collapse;font-size:11px;}
         th,td{border:1px solid #999;padding:5px 7px;text-align:left;}
@@ -1466,11 +1466,11 @@
         if (!d) return;
         let html = `<p><b>Số hợp đồng:</b> ${soHopDong} &nbsp; <span style="color:#666;">(${d.rungList.length} lô rừng thuộc hợp đồng này)</span></p>`;
         if (!d.rungList.length) {
-          html += `<p style="color:#A32D2D;">⚠ Không tìm thấy dòng nào trong HD_RUNG cho hợp đồng này.</p>`;
+          html += `<p style="color:#dc2626;">⚠ Không tìm thấy dòng nào trong HD_RUNG cho hợp đồng này.</p>`;
         }
         d.rungList.forEach((rung, idx) => {
-          html += `<div style="border:1px solid #ddd; border-radius:8px; padding:12px; margin-bottom:12px;">
-            <h3 style="color:#1F3864;font-size:14px;margin-top:0;">🌲 Lô rừng ${idx + 1} — Mã: ${fmt(rung.MaRung)}</h3>
+          html += `<div style="border:1px solid #e5e7eb; border-radius:8px; padding:12px; margin-bottom:12px;">
+            <h3 style="color:#2563eb;font-size:14px;margin-top:0;">🌲 Lô rừng ${idx + 1} — Mã: ${fmt(rung.MaRung)}</h3>
             <p><b>Chủ rừng:</b> ${fmt(rung.HoVaTenChuRung)} &nbsp; <b>CCCD:</b> ${fmt(rung.SoCCCD)}</p>
             <p><b>Thường trú:</b> ${fmt(rung.ThuongTru)}</p>
             <p><b>Địa chỉ rừng trồng:</b> ${fmt(rung.DiaChiRungTrong)} &nbsp; <b>Diện tích:</b> ${fmtNum(rung.DienTich_m2)} m²</p>
@@ -1480,19 +1480,19 @@
             const mapUrl = `https://www.google.com/maps?q=${rung.Gps.Lat},${rung.Gps.Lng}`;
             html += `<p><b>📍 Tọa độ:</b> ${fmt(rung.Gps.Lat)}, ${fmt(rung.Gps.Lng)} — <a href="${mapUrl}" target="_blank">Mở Google Maps</a></p>`;
           } else {
-            html += `<p style="color:#A32D2D;">⚠ Chưa có tọa độ GPS cho lô rừng này.</p>`;
+            html += `<p style="color:#dc2626;">⚠ Chưa có tọa độ GPS cho lô rừng này.</p>`;
           }
           if (rung.SoAnh > 0) {
             html += `<p><b>📷 Ảnh đính kèm (${rung.SoAnh} ảnh):</b></p><ul style="margin:4px 0;">` +
               rung.AnhFiles.map((f) => `<li><code>${f}</code></li>`).join('') + `</ul>
               <p style="color:#888;font-size:12px;">Đây là đường dẫn nội bộ trong Drive gắn với Google Form — mở trực tiếp trong sheet HD_Picture (hoặc thư mục Drive tương ứng) để xem ảnh thật.</p>`;
           } else {
-            html += `<p style="color:#A32D2D;">⚠ Chưa có ảnh nào cho lô rừng này trong HD_Picture.</p>`;
+            html += `<p style="color:#dc2626;">⚠ Chưa có ảnh nào cho lô rừng này trong HD_Picture.</p>`;
           }
           html += `</div>`;
         });
         if (d.stk) {
-          html += `<h3 style="color:#1F3864;font-size:14px;">💳 Thanh toán / Ủy quyền (HD_STK)</h3>
+          html += `<h3 style="color:#2563eb;font-size:14px;">💳 Thanh toán / Ủy quyền (HD_STK)</h3>
             <p><b>Người được ủy quyền:</b> ${fmt(d.stk.NguoiUyQuyen)}</p>
             <p><b>Số TK nhận tiền:</b> ${fmt(d.stk.SoTKNhanTien)} — ${fmt(d.stk.NganHang)}</p>
             <p><b>Có ủy quyền thanh toán:</b> ${fmt(d.stk.UyQuyenThanhToan)}</p>`;
@@ -2167,8 +2167,8 @@
     function renderMauWordFull() {
       loadMauWordLinks((files, err) => {
         const el = document.getElementById('mauWordList');
-        if (err) { el.innerHTML = '<p style="color:#A32D2D;">⚠ Không tải được danh sách mẫu Word: ' + err + '</p>'; return; }
-        if (!files.length) { el.innerHTML = '<p style="color:#A32D2D;">Không tìm thấy file nào trong thư mục Drive, hoặc chưa có quyền đọc thư mục.</p>'; return; }
+        if (err) { el.innerHTML = '<p style="color:#dc2626;">⚠ Không tải được danh sách mẫu Word: ' + err + '</p>'; return; }
+        if (!files.length) { el.innerHTML = '<p style="color:#dc2626;">Không tìm thấy file nào trong thư mục Drive, hoặc chưa có quyền đọc thư mục.</p>'; return; }
         el.innerHTML = '<ul>' + files.map((f) => `<li><a href="${f.url}" target="_blank">📄 ${f.name}</a></li>`).join('') + '</ul>';
       });
     }
@@ -2395,10 +2395,10 @@
       grid.innerHTML = rows.map((r) => {
         const anhList = (r.AnhKhaoSat || '').split(',').map((s) => s.trim()).filter(Boolean);
         return `<div style="background:#fff;border-radius:8px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.1);font-size:12px;">
-          <div style="font-weight:bold;color:#1F3864;">${fmt(r.NgayKhaoSat)} — HĐ ${fmt(r.SoHopDong)}</div>
+          <div style="font-weight:bold;color:#2563eb;">${fmt(r.NgayKhaoSat)} — HĐ ${fmt(r.SoHopDong)}</div>
           <div>👤 ${fmt(r.NguoiKhaoSat)}</div>
           <div style="color:#666;margin:4px 0;">${truncateText(r.DiaChiRungTrong, 60)}</div>
-          ${anhList.length ? anhList.map((u) => `<a href="${u}" target="_blank" class="btnmini" style="display:inline-block;margin:2px 4px 0 0;">📷 Ảnh</a>`).join('') : '<span style="color:#A32D2D;">⚠ Chưa có ảnh</span>'}
+          ${anhList.length ? anhList.map((u) => `<a href="${u}" target="_blank" class="btnmini" style="display:inline-block;margin:2px 4px 0 0;">📷 Ảnh</a>`).join('') : '<span style="color:#dc2626;">⚠ Chưa có ảnh</span>'}
         </div>`;
       }).join('') || '<p style="color:#888;grid-column:1/-1;">Chưa có khảo sát nào.</p>';
       document.getElementById('fAnhKSCount').textContent = `${rows.length} / ${(CACHE.baoCaoKhaoSat || []).length} khảo sát`;
@@ -2468,7 +2468,7 @@
         return `<tr>
         <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.NgayKhaoSat)}</td><td>${fmt(r.NguoiKhaoSat)}</td>
         <td>${truncateText(r.DiaChiRungTrong, 40)}</td><td>${fmt(r.PhapLyThuaDat)}</td>
-        <td>${soAnh > 0 ? '📷 ' + soAnh : '<span style="color:#A32D2D;">chưa có</span>'}</td>
+        <td>${soAnh > 0 ? '📷 ' + soAnh : '<span style="color:#dc2626;">chưa có</span>'}</td>
         <td><button class="btnmini" onclick="xemChiTietKhaoSat(${idx})">📎 Chi tiết</button> <button class="btnmini" onclick="printSinglePhieu('bcks', window._bcksFiltered[${idx}])">🖨</button></td>
       </tr>`;
       }).join('') || '<tr><td colspan="7">Chưa có báo cáo khảo sát nào.</td></tr>';
@@ -2482,16 +2482,16 @@
       let html = '<table style="width:100%;"><tbody>';
       Object.keys(BCKS_LABELS).forEach((k) => {
         if (k === 'GhiChu') return; // hiện sau cùng
-        html += `<tr><td style="font-weight:bold;width:38%;color:#1F3864;">${BCKS_LABELS[k]}</td><td>${fmt(r[k]) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
+        html += `<tr><td style="font-weight:bold;width:38%;color:#2563eb;">${BCKS_LABELS[k]}</td><td>${fmt(r[k]) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
       });
-      html += `<tr><td style="font-weight:bold;color:#1F3864;">Ghi chú</td><td>${fmt(r.GhiChu) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
+      html += `<tr><td style="font-weight:bold;color:#2563eb;">Ghi chú</td><td>${fmt(r.GhiChu) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
       html += '</tbody></table>';
       const anhList = (r.AnhKhaoSat || '').split(',').map((s) => s.trim()).filter(Boolean);
       if (anhList.length) {
-        html += '<h3 style="color:#1F3864;font-size:14px;margin-top:14px;">📷 Ảnh khảo sát (' + anhList.length + ' ảnh)</h3>';
+        html += '<h3 style="color:#2563eb;font-size:14px;margin-top:14px;">📷 Ảnh khảo sát (' + anhList.length + ' ảnh)</h3>';
         html += '<div style="display:flex;gap:8px;flex-wrap:wrap;">' + anhList.map((u) => `<a href="${u}" target="_blank" class="btnmini">Xem ảnh</a>`).join('') + '</div>';
       } else {
-        html += '<p style="color:#A32D2D;margin-top:10px;">⚠ Chưa có ảnh khảo sát nào cho lượt này.</p>';
+        html += '<p style="color:#dc2626;margin-top:10px;">⚠ Chưa có ảnh khảo sát nào cho lượt này.</p>';
       }
       document.getElementById('ksChiTietModalBody').innerHTML = html;
     }
@@ -2536,7 +2536,7 @@
           anhKhaoSatDaChon.push(resized);
         } catch (err) { console.log(err); }
       }
-      preview.innerHTML = anhKhaoSatDaChon.map((a) => `<img src="data:image/jpeg;base64,${a.base64}" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #ccc;">`).join('');
+      preview.innerHTML = anhKhaoSatDaChon.map((a) => `<img src="data:image/jpeg;base64,${a.base64}" style="width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #e5e7eb;">`).join('');
     });
     document.getElementById('formBaoCaoKhaoSat').addEventListener('submit', async (e) => {
       e.preventDefault();
