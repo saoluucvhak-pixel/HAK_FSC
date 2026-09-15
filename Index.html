@@ -25,16 +25,16 @@
     th, td { padding: 7px 9px; border-bottom: 1px solid #e5e7eb; text-align: left; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
     .tablewrap table th, .tablewrap table td { white-space: nowrap; }
     code { word-break: break-all; white-space: pre-wrap; }
-    th { background: #D9E2F3; position: sticky; top: 0; }
+    th { background: #dbeafe; position: sticky; top: 0; }
     tr:hover { background: #f9fafc; }
     .tablewrap { max-height: 520px; overflow: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
     .badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; white-space: nowrap; }
-    .badge.dat { background: #EAF3DE; color: #16a34a; }
-    .badge.dieukien { background: #FAEEDA; color: #b45309; }
-    .badge.khongdat { background: #FCEBEB; color: #dc2626; }
+    .badge.dat { background: #dcfce7; color: #16a34a; }
+    .badge.dieukien { background: #fef3c7; color: #b45309; }
+    .badge.khongdat { background: #fee2e2; color: #dc2626; }
     .badge.chua { background: #eee; color: #666; }
-    .badge.ok2 { background: #EAF3DE; color: #16a34a; }
-    .badge.thieu { background: #FCEBEB; color: #dc2626; }
+    .badge.ok2 { background: #dcfce7; color: #16a34a; }
+    .badge.thieu { background: #fee2e2; color: #dc2626; }
     section { display: none; }
     section.active { display: block; }
     form { background: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
@@ -45,8 +45,8 @@
     form button { grid-column: 1 / -1; padding: 10px; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
     h2 { font-size: 16px; color: #2563eb; font-weight: 600; }
     .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; }
-    .msg.ok { background: #EAF3DE; color: #16a34a; }
-    .msg.err { background: #FCEBEB; color: #dc2626; }
+    .msg.ok { background: #dcfce7; color: #16a34a; }
+    .msg.err { background: #fee2e2; color: #dc2626; }
     .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .toolbar button { padding: 6px 12px; border: 1px solid #2563eb; background: #fff; color: #2563eb; border-radius: 6px; cursor: pointer; font-size: 12px; }
     .note { font-size: 12px; color: #777; margin-bottom: 10px; }
@@ -58,7 +58,7 @@
     .btnmini { padding: 6px 10px; border: 1px solid #2563eb; background: #fff; color: #2563eb; border-radius: 6px; cursor: pointer; font-size: 12px; white-space: nowrap; }
     .btnmini:hover { background: #2563eb; color: #fff; }
     .pagebar { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 10px; font-size: 12px; color: #555; }
-    .totalbox { background: #EAF0FB; border: 1px solid #C7D6F0; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; font-size: 13px; color: #2563eb; }
+    .totalbox { background: #dbeafe; border: 1px solid #93c5fd; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; font-size: 13px; color: #2563eb; }
     .subnav { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 2px solid #e5e7eb; flex-wrap: wrap; }
     .subnav .subtab { padding: 8px 14px; background: none; border: none; border-bottom: 3px solid transparent; color: #7A7563; font-size: 13px; cursor: pointer; font-weight: 500; }
     .subnav .subtab:hover { color: #2563eb; }
@@ -199,7 +199,7 @@
         <h1 id="pageTitle">Dashboard</h1>
         <p id="pageSubtitle">Tổng quan tình trạng hồ sơ, hợp đồng và tiến độ triển khai FSC</p>
       </div>
-      <div id="globalError" style="display:none; background:#FCEBEB; color:#dc2626; padding:12px 20px; font-size:13px; white-space:pre-wrap; border-radius:8px; margin-bottom:14px;"></div>
+      <div id="globalError" style="display:none; background:#fee2e2; color:#dc2626; padding:12px 20px; font-size:13px; white-space:pre-wrap; border-radius:8px; margin-bottom:14px;"></div>
 
 
     <section id="dashboard" class="active">
@@ -1077,28 +1077,28 @@
           <thead><tr><th>Mục</th><th>Nguồn dữ liệu</th><th>Dùng để làm gì</th></tr></thead>
           <tbody>
             <tr><td><b>🏠 Dashboard</b></td><td>Tổng hợp từ tất cả sheet</td><td>Nhìn nhanh: bao nhiêu hợp đồng, tỷ lệ hồ sơ đầy đủ, số HĐ chưa đánh giá FSC, rừng rủi ro cao, HĐ chưa theo dõi khảo sát, tiến độ triển khai theo giai đoạn.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 1–2: Thẩm định &amp; ký hợp đồng</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 1–2: Thẩm định &amp; ký hợp đồng</td></tr>
             <tr><td><b>🧾 Thẩm định hợp đồng</b></td><td>Nhập mới (BM-FSC-01/02)</td><td>Checklist 8 tiêu chí trước khi ký HĐ (mục đích SDĐ, sổ đỏ, CCCD, rừng tự nhiên 2020, tranh chấp, khối lượng, thông báo giá) — ra kết luận Đồng ý/Yêu cầu bổ sung/Từ chối.</td></tr>
             <tr><td><b>📄 Hợp đồng &amp; hồ sơ rừng</b></td><td>HD_RUNG, BaoCao_KiemTra</td><td>Xem từng hợp đồng: hồ sơ đủ/thiếu gì, bấm <b>"📎 Chi tiết"</b> xem pháp lý rừng + tọa độ Google Maps + ảnh. Ghi <b>kết luận giám sát FSC</b> ở form cuối trang.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3: Khảo sát &amp; tham vấn</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 3: Khảo sát &amp; tham vấn</td></tr>
             <tr><td><b>📋 Khảo sát &amp; Tham vấn</b></td><td>4 sub-tab: bảng Có/Chưa (nhập mới) + Báo cáo khảo sát (nhập mới, có ảnh) + BB Giám sát khai thác (nhập mới) + Tham vấn bên liên quan (nhập mới)</td><td>"Bảng theo dõi" xem nhanh HĐ nào thiếu loại hồ sơ nào; 3 sub-tab còn lại là nơi gõ/xem NỘI DUNG THẬT của từng loại hồ sơ, kể cả tải ảnh khảo sát.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3–4: Khai thác, cân, nghiệm thu</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 3–4: Khai thác, cân, nghiệm thu</td></tr>
             <tr><td><b>📦 Lô hàng mua vào</b></td><td>HoSoKeo_DN</td><td>200 lô nhập gần nhất (phân trang 20/trang), lọc mã HĐ/chủ rừng/ngày, tổng khối lượng &amp; tổng tiền (toàn bộ + theo trang).</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 5–6: Vận chuyển &amp; chế biến</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 5–6: Vận chuyển &amp; chế biến</td></tr>
             <tr><td><b>🚛 Lệnh điều động vận chuyển</b></td><td>Nhập mới (BM-FSC-05)</td><td>Lệnh điều động vận chuyển nội bộ — điểm đi/đến, biển số, số phiếu cân, ngày lập phiếu xuất kho.</td></tr>
             <tr><td><b>🏭 Tiêu hao chế biến</b></td><td>Nhập mới (BM-FSC-06)</td><td>Theo dõi định mức tiêu hao chế biến dăm gỗ theo từng kỳ, so sánh định mức công bố vs thực tế.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 7–8: Xuất bán &amp; báo cáo Nhà nước</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 7–8: Xuất bán &amp; báo cáo Nhà nước</td></tr>
             <tr><td><b>🚚 Xuất hàng</b></td><td>NL_PC_XH</td><td>200 lô xuất gần nhất (phân trang), lọc theo số TKHQ/ngày, tổng khối lượng (chưa có cột tiền trong sheet nguồn).</td></tr>
             <tr><td><b>📤 Đơn hàng xuất bán</b></td><td>NL_DH_XB</td><td>Đơn hàng khách mua — bổ sung thông tin còn thiếu ở BM-FSC-07 (giá USD, khách hàng, khối lượng theo đơn).</td></tr>
             <tr><td><b>🗓️ Báo cáo Nhà nước</b></td><td>Nhập mới (BM-FSC-08)</td><td>Theo dõi hạn nộp/ngày nộp thực tế Mẫu số 29 (năm) và Mẫu số 14 (quý) cho cơ quan Kiểm lâm.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 9 &amp; MỤC 8.3: Giám sát rủi ro</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 9 &amp; MỤC 8.3: Giám sát rủi ro</td></tr>
             <tr><td><b>⚠️ Rủi ro CNRA</b></td><td>Nhập mới (BM-FSC-09, chọn rừng từ dropdown)</td><td>Đánh giá rủi ro theo Bộ CNRA Việt Nam cho từng lô rừng — Không đáng kể/Đáng kể, kèm biện pháp giảm thiểu (RMM).</td></tr>
             <tr><td><b>🔍 Giám sát định kỳ</b></td><td>Nhập mới (BM-FSC-10)</td><td>Báo cáo giám sát — đối chiếu đủ 5 mục tiêu giám sát của QT-FSC-01, ra kết luận ĐẠT/ĐẠT CÓ ĐIỀU KIỆN/KHÔNG ĐẠT.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">KH-FSC-01: Triển khai</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">KH-FSC-01: Triển khai</td></tr>
             <tr><td><b>📈 Tiến độ triển khai</b></td><td>Nhập mới (BM-KH-01)</td><td>Cập nhật tiến độ 5 giai đoạn theo KH-FSC-01, so sánh mốc kế hoạch với ngày thực tế.</td></tr>
             <tr><td><b>✅ Nghiệm thu giai đoạn</b></td><td>Nhập mới (BM-KH-02)</td><td>Đối chiếu đầu ra kỳ vọng từng giai đoạn với bằng chứng thực nhận, ra kết luận Nghiệm thu/Có điều kiện/Chưa.</td></tr>
             <tr><td><b>⚠️ Rủi ro triển khai</b></td><td>Nhập mới (BM-KH-03)</td><td>Ghi nhận rủi ro/vướng mắc phát sinh khi triển khai — mức độ, biện pháp, người phụ trách, hạn xử lý.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">ĐÁNH GIÁ NỘI BỘ HỆ THỐNG DDS (theo FSC-STD-40-005 Ver.3.1, riêng biệt với QT-FSC-01)</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">ĐÁNH GIÁ NỘI BỘ HỆ THỐNG DDS (theo FSC-STD-40-005 Ver.3.1, riêng biệt với QT-FSC-01)</td></tr>
             <tr><td><b>📅 Kế hoạch đánh giá nội bộ</b></td><td>Nhập mới</td><td>Lập kế hoạch đánh giá nội bộ hằng năm (tối thiểu 1 lần/năm) — nhập tổng số nhà cung cấp, hệ thống tự tính số mẫu theo công thức y = 0.8×√x.</td></tr>
             <tr><td><b>📝 Phiếu yêu cầu khắc phục</b></td><td>Nhập mới (BM.05)</td><td>Ghi nhận điểm không phù hợp phát hiện khi đánh giá nội bộ, phân tích nguyên nhân, hành động khắc phục, theo dõi đến khi đóng (thời hạn 3–12 tháng).</td></tr>
             <tr><td><b>📋 Xem xét hệ thống DDS</b></td><td>Nhập mới (BM.07)</td><td>Biên bản xem xét hệ thống thẩm định định kỳ hằng năm, sau khi có kết quả đánh giá nội bộ — ghi nhận có/không cần cập nhật DDS.</td></tr>
@@ -1256,7 +1256,7 @@
     function showError(msg) {
       const el = document.getElementById('globalError');
       el.style.display = 'block';
-      el.style.background = '#FCEBEB';
+      el.style.background = '#fee2e2';
       el.style.color = '#dc2626';
       el.textContent = '❌ Lỗi: ' + msg;
     }
@@ -1311,7 +1311,7 @@
         const coLoi = lines.some((l) => l.startsWith('❌'));
         const el = document.getElementById('globalError');
         el.style.display = 'block';
-        el.style.background = coLoi ? '#FCEBEB' : '#EAF3DE';
+        el.style.background = coLoi ? '#fee2e2' : '#dcfce7';
         el.style.color = coLoi ? '#dc2626' : '#16a34a';
         el.textContent = (coLoi ? '' : '✅ Tất cả kết nối ổn định:\n') + lines.join('\n');
         document.getElementById('checkResult').textContent = 'Xem kết quả ở khung phía trên.';
@@ -1447,7 +1447,7 @@
         .meta{font-size:11px;color:#666;margin-bottom:16px;}
         table{width:100%;border-collapse:collapse;font-size:11px;}
         th,td{border:1px solid #999;padding:5px 7px;text-align:left;}
-        th{background:#D9E2F3;}
+        th{background:#dbeafe;}
         @media print { body{padding:0;} }
       </style></head><body>
         <h1>HAK GROUP — ${title}</h1>
@@ -1668,7 +1668,7 @@
       const trangKL = sumField(pageRows, 'KhoiLuongTan');
       const trangTT = sumField(pageRows, 'ThanhToan');
       document.getElementById('loHangFoot').innerHTML =
-        `<tr style="font-weight:bold;background:#EAF0FB;"><td colspan="6">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangKL)} tấn</td><td></td><td>${fmtNum(trangTT)} đồng</td></tr>`;
+        `<tr style="font-weight:bold;background:#dbeafe;"><td colspan="6">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangKL)} tấn</td><td></td><td>${fmtNum(trangTT)} đồng</td></tr>`;
 
       document.getElementById('fLoHangCount').textContent = `${filtered.length} / ${CACHE.loHang.length} dòng (200 gần nhất)`;
       document.getElementById('fLoHangPageInfo').textContent = `Trang ${pageLoHang} / ${totalPages}`;
@@ -1725,7 +1725,7 @@
       const trangTan = sumField(pageRows, 'KhoiLuongTan');
       const trangM3 = sumField(pageRows, 'KhoiLuongM3');
       document.getElementById('xuatHangFoot').innerHTML =
-        `<tr style="font-weight:bold;background:#EAF0FB;"><td colspan="3">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangTan)} tấn</td><td>${fmtNum(trangM3)} m³</td><td colspan="3"></td></tr>`;
+        `<tr style="font-weight:bold;background:#dbeafe;"><td colspan="3">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangTan)} tấn</td><td>${fmtNum(trangM3)} m³</td><td colspan="3"></td></tr>`;
 
       document.getElementById('fXuatHangCount').textContent = `${filtered.length} / ${CACHE.xuatHang.length} dòng (200 gần nhất)`;
       document.getElementById('fXuatHangPageInfo').textContent = `Trang ${pageXuatHang} / ${totalPages}`;
