@@ -216,7 +216,17 @@ function _extReadLastN(ssKey, sheetName, n) {
 
 // ============ TIỆN ÍCH SHEET RIÊNG (đọc/ghi) ============
 function _own(name) { return SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name); }
-function _ownReadAll(name) { return _toObjRows(_own(name).getDataRange().getValues()); }
+/** Sheets tự đổi chuỗi ngày đã lưu ("2026-10-03") thành Date; google.script.run không truyền
+ * được Date nên client nhận null cho cả danh sách — đổi Date về chuỗi trước khi trả. */
+function _ownReadAll(name) {
+  const values = _own(name).getDataRange().getValues().map((row) => row.map(_dateCellToStr));
+  return _toObjRows(values);
+}
+function _dateCellToStr(v) {
+  if (Object.prototype.toString.call(v) !== '[object Date]') return v;
+  const tz = Session.getScriptTimeZone();
+  return Utilities.formatDate(v, tz, Utilities.formatDate(v, tz, 'HH:mm') === '00:00' ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm');
+}
 function _ownAppend(name, obj) {
   const sh = _own(name);
   const headers = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
