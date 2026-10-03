@@ -126,7 +126,18 @@ function _extReadLastN(ssKey, sheetName, n) {
   for (let i = colA.length - 1; i >= 0; i--) {
     if (colA[i][0] !== '' && colA[i][0] !== null) { trueLastRow = i + 2; break; }
   }
-  if (trueLastRow <= 1) return []; // cột A trống hết — không có dữ liệu thật
+  // Phòng trường hợp cột A (STT) bị bỏ trống ở (các) dòng cuối dù vẫn có dữ liệu thật ở cột khác
+  // (vd: người nhập liệu quên điền STT cho dòng mới nhất) — kiểm tra thêm phần "đuôi" sau
+  // trueLastRow bằng toàn bộ chiều rộng sheet. Vùng này luôn nhỏ (tối đa lastRow-trueLastRow dòng)
+  // nên không ảnh hưởng đến mục tiêu tối ưu ban đầu.
+  if (trueLastRow < lastRow) {
+    const tailStart = trueLastRow + 1;
+    const tailValues = sh.getRange(tailStart, 1, lastRow - tailStart + 1, lastCol).getValues();
+    for (let i = tailValues.length - 1; i >= 0; i--) {
+      if (tailValues[i].some((c) => c !== '' && c !== null)) { trueLastRow = tailStart + i; break; }
+    }
+  }
+  if (trueLastRow <= 1) return []; // không có dữ liệu thật
 
   // Bước 2: chỉ đọc đúng N dòng cuối (vùng nhỏ, nhanh) + dòng header
   const headers = sh.getRange(1, 1, 1, lastCol).getValues()[0];
@@ -138,11 +149,32 @@ function _extReadLastN(ssKey, sheetName, n) {
 // ============ TIỆN ÍCH SHEET RIÊNG (đọc/ghi) ============
 function _own(name) { return SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name); }
 function _ownReadAll(name) { return _toObjRows(_own(name).getDataRange().getValues()); }
+/** Chặn formula injection: nếu giá trị người dùng nhập bắt đầu bằng =, +, -, @ thì Google Sheets
+ * có thể hiểu nhầm thành công thức khi ghi qua API — thêm dấu nháy đơn phía trước để ép kiểu text,
+ * giống hành vi khi gõ tay trực tiếp trong Sheets. */
+function _sanitizeFormulaValue(v) {
+  if (typeof v === 'string' && /^[=+\-@]/.test(v)) return "'" + v;
+  return v;
+}
 function _ownAppend(name, obj) {
   const sh = _own(name);
   const headers = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
-  sh.appendRow(headers.map((h) => (obj[h] !== undefined ? obj[h] : '')));
+  sh.appendRow(headers.map((h) => _sanitizeFormulaValue(obj[h] !== undefined ? obj[h] : '')));
   return true;
+}
+/** Báo lỗi rõ ràng ngay từ server nếu thiếu khóa nghiệp vụ (vd: SoHopDong, MaHopDong) — các khóa
+ * này được dùng để ghép dữ liệu ở getHopDongList/getDashboardData/getTinhTrangKhaoSatRung..., nếu
+ * để trống sẽ khiến bản ghi "mồ côi", không ghép được vào đúng hợp đồng/lô rừng (mất traceability). */
+function _requireFields(obj, fields) {
+  const missing = fields.filter((f) => obj[f] === undefined || obj[f] === null || String(obj[f]).trim() === '');
+  if (missing.length) throw new Error('Thiếu trường bắt buộc: ' + missing.join(', '));
+}
+/** Khóa tạm thời khi đọc-rồi-ghi (đặc biệt là sinh mã tự tăng) để tránh 2 người dùng cùng lúc
+ * tạo ra 2 bản ghi trùng mã (vd: 2 người cùng bấm lưu cùng lúc đều nhận MaBaoCao = GS-0005). */
+function _withLock(fn) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try { return fn(); } finally { lock.releaseLock(); }
 }
 
 // ============ BỌC LỖI: mọi hàm gọi từ client đi qua đây để lỗi hiện rõ thay vì im lặng ============
@@ -381,12 +413,14 @@ function getXuatHangGanDay(limit) {
 // ============ API: ĐÁNH GIÁ HỢP ĐỒNG / RỦI RO RỪNG (dữ liệu MỚI) ============
 function addDanhGiaHopDong(obj) {
   return _safe(() => {
+    _requireFields(obj, ['MaHopDong']);
     obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
     return _ownAppend('DanhGiaHopDong', obj);
   });
 }
 function addDanhGiaRuiRoRung(obj) {
   return _safe(() => {
+    _requireFields(obj, ['MaRung', 'SoHopDong']);
     obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
     return _ownAppend('DanhGiaRuiRoRung', obj);
   });
@@ -396,11 +430,11 @@ function getDanhGiaRuiRoRungList() { return _safe(() => _ownReadAll('DanhGiaRuiR
 // ============ API: GIÁM SÁT ĐỊNH KỲ / TIẾN ĐỘ / RỦI RO TRIỂN KHAI ============
 function getGiamSatList() { return _safe(() => _ownReadAll('GiamSatDinhKy')); }
 function addGiamSat(obj) {
-  return _safe(() => {
+  return _safe(() => _withLock(() => {
     const rows = _ownReadAll('GiamSatDinhKy');
     obj.MaBaoCao = obj.MaBaoCao || 'GS-' + String(rows.length + 1).padStart(4, '0');
     return _ownAppend('GiamSatDinhKy', obj);
-  });
+  }));
 }
 function updateTienDo(giaiDoan, ngayThucTe, danhGia, ghiChu) {
   return _safe(() => {
@@ -419,9 +453,11 @@ function updateTienDo(giaiDoan, ngayThucTe, danhGia, ghiChu) {
 }
 function getRuiRoTrienKhaiList() { return _safe(() => _ownReadAll('RuiRoTrienKhai')); }
 function addRuiRoTrienKhai(obj) {
-  const rows = _ownReadAll('RuiRoTrienKhai');
-  obj.MaRuiRo = obj.MaRuiRo || 'RR-' + String(rows.length + 1).padStart(4, '0');
-  return _safe(() => _ownAppend('RuiRoTrienKhai', obj));
+  return _safe(() => _withLock(() => {
+    const rows = _ownReadAll('RuiRoTrienKhai');
+    obj.MaRuiRo = obj.MaRuiRo || 'RR-' + String(rows.length + 1).padStart(4, '0');
+    return _ownAppend('RuiRoTrienKhai', obj);
+  }));
 }
 
 // ============ API: KHẢO SÁT & THAM VẤN CÁC BÊN LIÊN QUAN (Bước 2, QT-FSC-01) ============
@@ -431,14 +467,14 @@ function addRuiRoTrienKhai(obj) {
  * cách người dùng tự đánh dấu Có/Chưa cho từng loại hồ sơ theo từng hợp đồng. */
 function getKhaoSatList() { return _safe(() => _ownReadAll('KhaoSatThamVan')); }
 function addKhaoSat(obj) {
-  return _safe(() => _ownAppend('KhaoSatThamVan', obj));
+  return _safe(() => { _requireFields(obj, ['SoHopDong']); return _ownAppend('KhaoSatThamVan', obj); });
 }
 
 /** Báo cáo khảo sát chi tiết — nhập TRỰC TIẾP trong webapp (không dùng Google Form nữa),
  * theo đúng 10 mục nội dung của mẫu "Báo cáo kết quả khảo sát" Word, có kèm ảnh khảo sát. */
 function getBaoCaoKhaoSatList() { return _safe(() => _ownReadAll('BaoCaoKhaoSat')); }
 function addBaoCaoKhaoSat(obj) {
-  return _safe(() => _ownAppend('BaoCaoKhaoSat', obj));
+  return _safe(() => { _requireFields(obj, ['SoHopDong']); return _ownAppend('BaoCaoKhaoSat', obj); });
 }
 
 /** Tự tạo (1 lần duy nhất) hoặc tái sử dụng thư mục Drive "Anh_Khao_Sat_FSC_HAK" để lưu ảnh khảo sát
@@ -470,27 +506,29 @@ function uploadKhaoSatAnh(base64Data, fileName, mimeType) {
 /** Biên bản giám sát khai thác (trong/sau khai thác), theo đúng mẫu Word tương ứng */
 function getBienBanGiamSatList() { return _safe(() => _ownReadAll('BienBanGiamSatKhaiThac')); }
 function addBienBanGiamSat(obj) {
-  return _safe(() => _ownAppend('BienBanGiamSatKhaiThac', obj));
+  return _safe(() => { _requireFields(obj, ['SoHopDong']); return _ownAppend('BienBanGiamSatKhaiThac', obj); });
 }
 
 /** Tham vấn từng bên liên quan (UBND xã, Kiểm lâm, chủ rừng lân cận, người dân, công nhân, người vận chuyển...) */
 function getThamVanList() { return _safe(() => _ownReadAll('ThamVanBenLienQuan')); }
 function addThamVan(obj) {
-  return _safe(() => _ownAppend('ThamVanBenLienQuan', obj));
+  return _safe(() => { _requireFields(obj, ['SoHopDong']); return _ownAppend('ThamVanBenLienQuan', obj); });
 }
 
 /** BM-FSC-01/02: Checklist tiêu chí thẩm định chủ rừng + kiểm tra trước ký hợp đồng */
 function getTieuChiThamDinhList() { return _safe(() => _ownReadAll('TieuChiThamDinhHopDong')); }
 function addTieuChiThamDinh(obj) {
-  return _safe(() => _ownAppend('TieuChiThamDinhHopDong', obj));
+  return _safe(() => { _requireFields(obj, ['SoHopDong']); return _ownAppend('TieuChiThamDinhHopDong', obj); });
 }
 
 /** BM-FSC-05: Lệnh điều động vận chuyển nội bộ */
 function getLenhDieuDongList() { return _safe(() => _ownReadAll('LenhDieuDongVanChuyen')); }
 function addLenhDieuDong(obj) {
-  const rows = _ownReadAll('LenhDieuDongVanChuyen');
-  obj.SoLenh = obj.SoLenh || 'LDD-' + String(rows.length + 1).padStart(4, '0');
-  return _safe(() => _ownAppend('LenhDieuDongVanChuyen', obj));
+  return _safe(() => _withLock(() => {
+    const rows = _ownReadAll('LenhDieuDongVanChuyen');
+    obj.SoLenh = obj.SoLenh || 'LDD-' + String(rows.length + 1).padStart(4, '0');
+    return _ownAppend('LenhDieuDongVanChuyen', obj);
+  }));
 }
 
 /** BM-FSC-06: Phiếu theo dõi định mức tiêu hao chế biến */
@@ -533,9 +571,11 @@ function addKeHoachDanhGia(obj) {
 /** BM.05: Phiếu yêu cầu hành động khắc phục (CAR) */
 function getPhieuKhacPhucList() { return _safe(() => _ownReadAll('PhieuYeuCauKhacPhuc')); }
 function addPhieuKhacPhuc(obj) {
-  const rows = _ownReadAll('PhieuYeuCauKhacPhuc');
-  obj.SoPhieu = obj.SoPhieu || 'BM05-' + String(rows.length + 1).padStart(4, '0');
-  return _safe(() => _ownAppend('PhieuYeuCauKhacPhuc', obj));
+  return _safe(() => _withLock(() => {
+    const rows = _ownReadAll('PhieuYeuCauKhacPhuc');
+    obj.SoPhieu = obj.SoPhieu || 'BM05-' + String(rows.length + 1).padStart(4, '0');
+    return _ownAppend('PhieuYeuCauKhacPhuc', obj);
+  }));
 }
 
 /** BM.07: Biên bản xem xét hệ thống thẩm định DDS (Management Review) */
