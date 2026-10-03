@@ -177,6 +177,25 @@ function _withLock(fn) {
   try { return fn(); } finally { lock.releaseLock(); }
 }
 
+// ============ CACHE: giảm số lần đọc chéo 5 spreadsheet ngoài (chậm) khi nhiều người cùng mở app ============
+// TTL ngắn (60s) để giảm tải khi nhiều người cùng tải Dashboard/danh sách trong cùng 1 phút, nhưng
+// dữ liệu vẫn gần như tức thời. Các thao tác ghi của CHÍNH webapp này sẽ tự xóa cache liên quan
+// ngay sau khi lưu thành công (xem _cacheClear ở các hàm addDanhGiaHopDong/addKhaoSat/...).
+const CACHE_TTL_SEC = 60;
+function _cacheGet(key) {
+  try {
+    const raw = CacheService.getScriptCache().get(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+function _cachePut(key, value) {
+  try { CacheService.getScriptCache().put(key, JSON.stringify(value), CACHE_TTL_SEC); }
+  catch (e) { /* payload vượt giới hạn 100KB của CacheService hoặc lỗi khác — bỏ qua cache, không ảnh hưởng tính đúng đắn */ }
+}
+function _cacheClear(keys) {
+  try { CacheService.getScriptCache().removeAll(keys); } catch (e) { /* bỏ qua */ }
+}
+
 // ============ BỌC LỖI: mọi hàm gọi từ client đi qua đây để lỗi hiện rõ thay vì im lặng ============
 function _safe(fn) {
   try {
@@ -267,12 +286,16 @@ function debugGoiNhuWebapp() {
 /** Danh sách rừng (không gộp trùng — mỗi lô rừng riêng) để đổ vào dropdown chọn khi đánh giá CNRA */
 function getRungList() {
   return _safe(() => {
+    const cached = _cacheGet('rungList');
+    if (cached) return cached;
     const rung = _extReadAll('HDMB', 'HD_RUNG');
-    return rung.map((r) => ({
+    const result = rung.map((r) => ({
       MaRung: _safeStr(r.MaRung),
       SoHopDong: _safeStr(r.SoHopDong),
       ChuRung: _safeStr(r.HoVaTenChuRung),
     })).filter((r) => r.MaRung || r.SoHopDong);
+    _cachePut('rungList', result);
+    return result;
   });
 }
 
@@ -284,6 +307,8 @@ function getRungList() {
  */
 function getHopDongList() {
   return _safe(() => {
+    const cached = _cacheGet('hopDongList');
+    if (cached) return cached;
     const rung = _extReadAll('HDMB', 'HD_RUNG');                 // SoHopDong, HoVaTenChuRung, ... — bảng gốc, luôn có dữ liệu
     const kiemTra = _extReadAll('HDMB', 'BaoCao_KiemTra');       // Số HĐ, Kết quả, Hồ sơ còn thiếu, Cảnh báo — có thể rỗng nếu chưa chạy
     const danhGia = _ownReadAll('DanhGiaHopDong');                // MaHopDong, KetLuanGiamSat, ...
@@ -313,6 +338,7 @@ function getHopDongList() {
         NgayDanhGia: dg.NgayDanhGia || '',
       });
     });
+    _cachePut('hopDongList', result);
     return result;
   });
 }
@@ -415,14 +441,18 @@ function addDanhGiaHopDong(obj) {
   return _safe(() => {
     _requireFields(obj, ['MaHopDong']);
     obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-    return _ownAppend('DanhGiaHopDong', obj);
+    const r = _ownAppend('DanhGiaHopDong', obj);
+    _cacheClear(['dashboardData', 'hopDongList']);
+    return r;
   });
 }
 function addDanhGiaRuiRoRung(obj) {
   return _safe(() => {
     _requireFields(obj, ['MaRung', 'SoHopDong']);
     obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-    return _ownAppend('DanhGiaRuiRoRung', obj);
+    const r = _ownAppend('DanhGiaRuiRoRung', obj);
+    _cacheClear(['dashboardData']);
+    return r;
   });
 }
 function getDanhGiaRuiRoRungList() { return _safe(() => _ownReadAll('DanhGiaRuiRoRung')); }
@@ -445,6 +475,7 @@ function updateTienDo(giaiDoan, ngayThucTe, danhGia, ghiChu) {
         sh.getRange(i + 1, 3).setValue(ngayThucTe);
         sh.getRange(i + 1, 5).setValue(danhGia);
         sh.getRange(i + 1, 6).setValue(ghiChu);
+        _cacheClear(['dashboardData']);
         return true;
       }
     }
@@ -467,7 +498,12 @@ function addRuiRoTrienKhai(obj) {
  * cách người dùng tự đánh dấu Có/Chưa cho từng loại hồ sơ theo từng hợp đồng. */
 function getKhaoSatList() { return _safe(() => _ownReadAll('KhaoSatThamVan')); }
 function addKhaoSat(obj) {
-  return _safe(() => { _requireFields(obj, ['SoHopDong']); return _ownAppend('KhaoSatThamVan', obj); });
+  return _safe(() => {
+    _requireFields(obj, ['SoHopDong']);
+    const r = _ownAppend('KhaoSatThamVan', obj);
+    _cacheClear(['dashboardData', 'tinhTrangKhaoSat']);
+    return r;
+  });
 }
 
 /** Báo cáo khảo sát chi tiết — nhập TRỰC TIẾP trong webapp (không dùng Google Form nữa),
@@ -518,7 +554,12 @@ function addThamVan(obj) {
 /** BM-FSC-01/02: Checklist tiêu chí thẩm định chủ rừng + kiểm tra trước ký hợp đồng */
 function getTieuChiThamDinhList() { return _safe(() => _ownReadAll('TieuChiThamDinhHopDong')); }
 function addTieuChiThamDinh(obj) {
-  return _safe(() => { _requireFields(obj, ['SoHopDong']); return _ownAppend('TieuChiThamDinhHopDong', obj); });
+  return _safe(() => {
+    _requireFields(obj, ['SoHopDong']);
+    const r = _ownAppend('TieuChiThamDinhHopDong', obj);
+    _cacheClear(['dashboardData']);
+    return r;
+  });
 }
 
 /** BM-FSC-05: Lệnh điều động vận chuyển nội bộ */
@@ -605,6 +646,9 @@ function _matchDateRange(dateVal, tuNgay, denNgay) {
  * dữ liệu nguồn (PS/DT/QT...) chưa được xác nhận có phải mã phân loại chứng chỉ hay là mã khu vực địa lý. */
 function getTonKhoBaoCao(tuNgay, denNgay) {
   return _safe(() => {
+    const cacheKey = 'tonKho_' + (tuNgay || '') + '_' + (denNgay || '');
+    const cached = _cacheGet(cacheKey);
+    if (cached) return cached;
     const nhapSheet = _ext('HOSOKEO', 'HoSoKeo_DN');
     const xuatSheet = _ext('XUATHANG', 'NL_PC_XH');
     const nhapValues = nhapSheet.getDataRange().getValues();
@@ -635,19 +679,23 @@ function getTonKhoBaoCao(tuNgay, denNgay) {
       tongXuat += Number(row[idxKLXuat]) || 0;
       soLoXuat++;
     }
-    return {
+    const result = {
       tongNhap: Math.round(tongNhap * 100) / 100,
       tongXuat: Math.round(tongXuat * 100) / 100,
       tonKho: Math.round((tongNhap - tongXuat) * 100) / 100,
       soLoNhap, soLoXuat,
       theoNguonGoc: Object.keys(nguonGocSet).map((k) => ({ nguonGoc: k, khoiLuong: Math.round(nguonGocSet[k] * 100) / 100 })),
     };
+    _cachePut(cacheKey, result);
+    return result;
   });
 }
 
 /** Tình trạng khảo sát theo hợp đồng (đối chiếu HD_RUNG với sheet theo dõi KhaoSatThamVan) */
 function getTinhTrangKhaoSatRung() {
   return _safe(() => {
+    const cached = _cacheGet('tinhTrangKhaoSat');
+    if (cached) return cached;
     const rung = _extReadAll('HDMB', 'HD_RUNG');
     const khaoSat = _ownReadAll('KhaoSatThamVan');
     const ksMap = {};
@@ -668,13 +716,20 @@ function getTinhTrangKhaoSatRung() {
         NguoiKhaoSat: k ? _safeStr(k.NguoiKhaoSat) : '',
       });
     });
+    _cachePut('tinhTrangKhaoSat', result);
     return result;
   });
 }
 
 // ============ API: DASHBOARD TỔNG HỢP ============
 function getDashboardData() {
-  return _safe(() => _getDashboardDataInner());
+  return _safe(() => {
+    const cached = _cacheGet('dashboardData');
+    if (cached) return cached;
+    const data = _getDashboardDataInner();
+    _cachePut('dashboardData', data);
+    return data;
+  });
 }
 function _getDashboardDataInner() {
   const rung = _extReadAll('HDMB', 'HD_RUNG');
