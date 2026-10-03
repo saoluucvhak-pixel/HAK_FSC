@@ -380,34 +380,42 @@ function getXuatHangGanDay(limit) {
 
 // ============ API: ĐÁNH GIÁ HỢP ĐỒNG / RỦI RO RỪNG (dữ liệu MỚI) ============
 function addDanhGiaHopDong(obj) {
-  obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-  return _ownAppend('DanhGiaHopDong', obj);
+  return _safe(() => {
+    obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+    return _ownAppend('DanhGiaHopDong', obj);
+  });
 }
 function addDanhGiaRuiRoRung(obj) {
-  obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-  return _ownAppend('DanhGiaRuiRoRung', obj);
+  return _safe(() => {
+    obj.NgayDanhGia = obj.NgayDanhGia || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+    return _ownAppend('DanhGiaRuiRoRung', obj);
+  });
 }
 function getDanhGiaRuiRoRungList() { return _safe(() => _ownReadAll('DanhGiaRuiRoRung')); }
 
 // ============ API: GIÁM SÁT ĐỊNH KỲ / TIẾN ĐỘ / RỦI RO TRIỂN KHAI ============
 function getGiamSatList() { return _safe(() => _ownReadAll('GiamSatDinhKy')); }
 function addGiamSat(obj) {
-  const rows = _ownReadAll('GiamSatDinhKy');
-  obj.MaBaoCao = obj.MaBaoCao || 'GS-' + String(rows.length + 1).padStart(4, '0');
-  return _ownAppend('GiamSatDinhKy', obj);
+  return _safe(() => {
+    const rows = _ownReadAll('GiamSatDinhKy');
+    obj.MaBaoCao = obj.MaBaoCao || 'GS-' + String(rows.length + 1).padStart(4, '0');
+    return _ownAppend('GiamSatDinhKy', obj);
+  });
 }
 function updateTienDo(giaiDoan, ngayThucTe, danhGia, ghiChu) {
-  const sh = _own('TienDoTrienKhai');
-  const values = sh.getDataRange().getValues();
-  for (let i = 1; i < values.length; i++) {
-    if (values[i][0] === giaiDoan) {
-      sh.getRange(i + 1, 3).setValue(ngayThucTe);
-      sh.getRange(i + 1, 5).setValue(danhGia);
-      sh.getRange(i + 1, 6).setValue(ghiChu);
-      return true;
+  return _safe(() => {
+    const sh = _own('TienDoTrienKhai');
+    const values = sh.getDataRange().getValues();
+    for (let i = 1; i < values.length; i++) {
+      if (values[i][0] === giaiDoan) {
+        sh.getRange(i + 1, 3).setValue(ngayThucTe);
+        sh.getRange(i + 1, 5).setValue(danhGia);
+        sh.getRange(i + 1, 6).setValue(ghiChu);
+        return true;
+      }
     }
-  }
-  return false;
+    throw new Error('Không tìm thấy giai đoạn "' + giaiDoan + '" trong sheet TienDoTrienKhai.');
+  });
 }
 function getRuiRoTrienKhaiList() { return _safe(() => _ownReadAll('RuiRoTrienKhai')); }
 function addRuiRoTrienKhai(obj) {
