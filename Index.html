@@ -1481,7 +1481,7 @@
         const sel = document.getElementById('selectHopDong');
         if (sel) {
           sel.innerHTML = '<option value="">-- chọn hợp đồng --</option>' +
-            rows.map((r) => `<option value="${r.SoHopDong}">${r.SoHopDong} — ${r.ChuRung || ''}</option>`).join('');
+            rows.map((r) => `<option value="${escapeHtml(r.SoHopDong)}">${escapeHtml(r.SoHopDong)} — ${escapeHtml(r.ChuRung)}</option>`).join('');
         }
         renderHopDong();
       });
@@ -1583,7 +1583,7 @@
         pageXuatHang = 1;
         const tkhqSet = [...new Set(rows.map((r) => r.SoTKHQ).filter(Boolean))].sort();
         document.getElementById('fXuatHangTKHQ').innerHTML = '<option value="">-- Số TKHQ: Tất cả --</option>' +
-          tkhqSet.map((v) => `<option value="${v}">${v}</option>`).join('');
+          tkhqSet.map((v) => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
         renderXuatHang();
       });
     }
@@ -1642,14 +1642,14 @@
           CACHE.rungList = rows;
           const sel = document.getElementById('selectRungRuiRo');
           sel.innerHTML = '<option value="">-- chọn rừng --</option>' +
-            rows.map((r, i) => `<option value="${r.MaRung}" data-sohd="${r.SoHopDong}" data-idx="${i}">${r.MaRung || '(không có mã)'} — HĐ ${r.SoHopDong} — ${r.ChuRung}</option>`).join('');
+            rows.map((r, i) => `<option value="${escapeHtml(r.MaRung)}" data-sohd="${escapeHtml(r.SoHopDong)}" data-idx="${i}">${escapeHtml(r.MaRung || '(không có mã)')} — HĐ ${escapeHtml(r.SoHopDong)} — ${escapeHtml(r.ChuRung)}</option>`).join('');
           // Đổ dữ liệu vào 2 dropdown lọc (loại trùng)
           const hopDongSet = [...new Set(rows.map((r) => r.SoHopDong).filter(Boolean))];
           const rungSet = [...new Set(rows.map((r) => r.MaRung).filter(Boolean))];
           document.getElementById('fRuiRoHopDong').innerHTML = '<option value="">-- Lọc theo hợp đồng: Tất cả --</option>' +
-            hopDongSet.map((v) => `<option value="${v}">${v}</option>`).join('');
+            hopDongSet.map((v) => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
           document.getElementById('fRuiRoRung').innerHTML = '<option value="">-- Lọc theo rừng: Tất cả --</option>' +
-            rungSet.map((v) => `<option value="${v}">${v}</option>`).join('');
+            rungSet.map((v) => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
         });
       }
     }
@@ -1701,7 +1701,7 @@
     function fillSelectHopDongKhaoSat() {
       const sel = document.getElementById('selectHopDongKhaoSat');
       sel.innerHTML = '<option value="">-- chọn hợp đồng --</option>' +
-        CACHE.hopDong.map((r) => `<option value="${r.SoHopDong}">${r.SoHopDong} — ${r.ChuRung || ''}</option>`).join('');
+        CACHE.hopDong.map((r) => `<option value="${escapeHtml(r.SoHopDong)}">${escapeHtml(r.SoHopDong)} — ${escapeHtml(r.ChuRung)}</option>`).join('');
     }
     const KS_FIELDS = ['CoBaoCaoKhaoSat', 'CoBBGiamSatTrongKhaiThac', 'CoBBGiamSatSauKhaiThac', 'ThamVanUBNDXa', 'ThamVanKiemLam', 'ThamVanChuRungLanCan', 'ThamVanNguoiDanDiaPhuong', 'ThamVanCongNhanKhaiThac', 'ThamVanNguoiVanChuyen'];
     function ksBadge(v) {
@@ -2230,7 +2230,7 @@
       const sel = document.getElementById(selectId);
       if (!sel) return;
       sel.innerHTML = '<option value="">-- chọn hợp đồng --</option>' +
-        CACHE.hopDong.map((r) => `<option value="${r.SoHopDong}">${r.SoHopDong} — ${r.ChuRung || ''}</option>`).join('');
+        CACHE.hopDong.map((r) => `<option value="${escapeHtml(r.SoHopDong)}">${escapeHtml(r.SoHopDong)} — ${escapeHtml(r.ChuRung)}</option>`).join('');
     }
 
     // ---- Báo cáo khảo sát thực địa — nhập trực tiếp trong webapp (không dùng Google Form) ----
