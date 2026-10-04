@@ -153,7 +153,9 @@ function _ownReadAll(name) { return _toObjRows(_own(name).getDataRange().getValu
  * có thể hiểu nhầm thành công thức khi ghi qua API — thêm dấu nháy đơn phía trước để ép kiểu text,
  * giống hành vi khi gõ tay trực tiếp trong Sheets. */
 function _sanitizeFormulaValue(v) {
-  if (typeof v === 'string' && /^[=+\-@]/.test(v)) return "'" + v;
+  if (typeof v !== 'string') return v;
+  if (/^-\d+(\.\d+)?$/.test(v)) return v; // số âm thuần túy (vd -1.5) không phải công thức — giữ kiểu số để SUM vẫn tính
+  if (/^[=+\-@]/.test(v)) return "'" + v;
   return v;
 }
 function _ownAppend(name, obj) {

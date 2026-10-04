@@ -143,6 +143,19 @@ section('7) PHASE 2 — H5: chặn formula injection khi ghi vào Sheet');
   check('Giá trị đã được thêm dấu nháy đơn để ép kiểu text, không còn bắt đầu bằng "="', typeof last[idx] === 'string' && last[idx][0] === "'" , JSON.stringify(last[idx]));
 }
 
+section('7b) H5: số âm vẫn lưu dạng số, các dạng công thức bắt đầu bằng +/- vẫn bị chặn');
+{
+  const r = mod.addTieuHaoCheBien({ KyTheoDoi: 'T9', KhoiLuongDauVaoTan: '-1.5', DinhMucTieuHaoPhanTram: '-2', GiaiTrinhChenhLech: '-1+cmd|x', NguoiGhiSo: '+SUM(A1)' });
+  check('addTieuHaoCheBien lưu thành công', r && r.ok === true, JSON.stringify(r));
+  const rows = mod._own('TieuHaoCheBien').getDataRange().getValues();
+  const h = rows[0], last = rows[rows.length - 1];
+  const v = (k) => last[h.indexOf(k)];
+  check('Số âm "-1.5" giữ nguyên (không thêm dấu nháy)', v('KhoiLuongDauVaoTan') === '-1.5', JSON.stringify(v('KhoiLuongDauVaoTan')));
+  check('Số âm nguyên "-2" giữ nguyên', v('DinhMucTieuHaoPhanTram') === '-2', JSON.stringify(v('DinhMucTieuHaoPhanTram')));
+  check('"-1+cmd|x" (không phải số thuần) vẫn bị ép thành text', v('GiaiTrinhChenhLech') === "'-1+cmd|x", JSON.stringify(v('GiaiTrinhChenhLech')));
+  check('"+SUM(A1)" vẫn bị ép thành text', v('NguoiGhiSo') === "'+SUM(A1)", JSON.stringify(v('NguoiGhiSo')));
+}
+
 section('8) PHASE 2 — H2: các hàm sinh mã tự động vẫn hoạt động đúng sau khi thêm LockService');
 {
   const r1 = mod.addRuiRoTrienKhai({ MoTa: 'Rủi ro test' });
