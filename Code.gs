@@ -86,9 +86,12 @@ function initOwnSheets() {
 }
 
 function doGet() {
+  // ALLOWALL: bắt buộc để MAIN_HAK (Portal) nhúng app này vào iframe (mục "Đánh giá FSC"), giống các app HAK khác.
+  // Apps Script không cho giới hạn riêng 1 trang được nhúng, nên cần giới hạn "Who has access" khi Deploy.
   return HtmlService.createHtmlOutputFromFile('Index')
     .setTitle('HAK Group — Kiểm soát FSC')
-    .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
 // ============ TIỆN ÍCH ĐỌC SHEET NGUỒN (bên ngoài, chỉ đọc) ============

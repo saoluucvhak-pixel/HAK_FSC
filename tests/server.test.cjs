@@ -66,6 +66,12 @@ section('1) initOwnSheets / checkKetNoi');
   check('checkKetNoi báo tất cả ' + chk1.external.length + ' sheet nguồn ok=true (không còn TongHop_HopDong)', chk1.external.every((r) => r.ok === true), JSON.stringify(chk1.external.filter((r) => !r.ok)));
 }
 
+section('1b) doGet cho phép MAIN_HAK (Portal) nhúng app vào iframe');
+{
+  const out = mod.doGet();
+  check('doGet đặt XFrameOptionsMode = ALLOWALL', out.xFrameOptionsMode === 'ALLOWALL', out.xFrameOptionsMode);
+}
+
 section('2) getHopDongList — ghép & khử trùng + KHÔNG còn field ChenhLech');
 {
   const r = mod.getHopDongList();

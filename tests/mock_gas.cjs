@@ -119,7 +119,13 @@ function buildMockEnv() {
   };
 
   global.HtmlService = {
-    createHtmlOutputFromFile: () => ({ setTitle() { return this; }, addMetaTag() { return this; } }),
+    XFrameOptionsMode: { ALLOWALL: 'ALLOWALL', DEFAULT: 'DEFAULT' },
+    createHtmlOutputFromFile: () => ({
+      xFrameOptionsMode: 'DEFAULT',
+      setTitle() { return this; },
+      addMetaTag() { return this; },
+      setXFrameOptionsMode(m) { this.xFrameOptionsMode = m; return this; },
+    }),
   };
 
   global.Logger = { log: () => {} };
