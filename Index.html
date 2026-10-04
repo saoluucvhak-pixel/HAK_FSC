@@ -7,91 +7,114 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    /* Giao diện đồng bộ MAIN_HAK (Portal) và các app con HAK: menu tối #1f2937, xanh #2563eb,
+       vàng #b45309, nền #f3f4f6, viền #e5e7eb, font Be Vietnam Pro. */
+    :root {
+      --hak-sidebar-bg: #1f2937;
+      --hak-sidebar-text: #cbd5e1;
+      --hak-sidebar-dim: #8b98ab;
+      --hak-blue: #2563eb;
+      --hak-blue-dark: #1d4ed8;
+      --hak-gold: #b45309;
+      --hak-page-bg: #f3f4f6;
+      --hak-card-bg: #ffffff;
+      --hak-border: #e5e7eb;
+      --hak-input-border: #d1d5db;
+      --hak-text: #1f2937;
+      --hak-text-muted: #6b7280;
+      --hak-danger: #dc2626;
+    }
     * { box-sizing: border-box; }
-    body { font-family: 'Be Vietnam Pro', -apple-system, "Segoe UI", Arial, sans-serif; margin: 0; background: #f4f5f7; color: #222; }
-    header { background: #1F3864; color: #fff; padding: 14px 20px; }
+    body { font-family: 'Be Vietnam Pro', -apple-system, "Segoe UI", Roboto, Arial, sans-serif; margin: 0; background: var(--hak-page-bg); color: var(--hak-text); }
+    input, select, textarea, button { font-family: inherit; }
+    header { background: var(--hak-sidebar-bg); color: #fff; padding: 14px 20px; }
     header h1 { margin: 0; font-size: 18px; }
-    nav { display: flex; gap: 4px; background: #2E5395; padding: 0 16px; flex-wrap: wrap; }
-    nav button { background: none; border: none; color: #e6ecfa; padding: 10px 14px; cursor: pointer; font-size: 14px; }
-    nav button.active { background: #f4f5f7; color: #1F3864; font-weight: bold; border-radius: 6px 6px 0 0; }
+    nav { display: flex; gap: 4px; background: var(--hak-sidebar-bg); padding: 0 16px; flex-wrap: wrap; }
+    nav button { background: none; border: none; color: var(--hak-sidebar-text); padding: 10px 14px; cursor: pointer; font-size: 14px; }
+    nav button.active { background: var(--hak-page-bg); color: var(--hak-text); font-weight: 600; border-radius: 6px 6px 0 0; }
     main { padding: 20px; max-width: 1200px; margin: 0 auto; }
     .cards { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
-    .card { background: #fff; border-radius: 8px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.1); min-width: 140px; flex: 1; }
-    .card .num { font-size: 26px; font-weight: bold; color: #1F3864; }
-    .card .lbl { font-size: 12px; color: #666; margin-top: 2px; }
-    .card.warn .num { color: #A32D2D; }
-    .card.ok .num { color: #27500A; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); font-size: 12px; }
-    th, td { padding: 7px 9px; border-bottom: 1px solid #eee; text-align: left; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
+    .card { background: var(--hak-card-bg); border: 1px solid var(--hak-border); border-radius: 14px; padding: 18px 20px; min-width: 140px; flex: 1; }
+    .card .num { font-size: 28px; font-weight: 700; letter-spacing: -.02em; color: var(--hak-text); }
+    .card .lbl { font-size: 13px; font-weight: 500; color: var(--hak-text-muted); margin-top: 2px; }
+    .card.warn .num { color: var(--hak-danger); }
+    .card.ok .num { color: #15803d; }
+    table { width: 100%; border-collapse: collapse; background: var(--hak-card-bg); border-radius: 14px; overflow: hidden; border: 1px solid var(--hak-border); font-size: 13px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #eef0f3; text-align: left; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
     .tablewrap table th, .tablewrap table td { white-space: nowrap; }
     code { word-break: break-all; white-space: pre-wrap; }
-    th { background: #D9E2F3; position: sticky; top: 0; }
-    tr:hover { background: #f9fafc; }
-    .tablewrap { max-height: 520px; overflow: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-    .badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; white-space: nowrap; }
-    .badge.dat { background: #EAF3DE; color: #27500A; }
-    .badge.dieukien { background: #FAEEDA; color: #854F0B; }
-    .badge.khongdat { background: #FCEBEB; color: #791F1F; }
-    .badge.chua { background: #eee; color: #666; }
-    .badge.ok2 { background: #EAF3DE; color: #27500A; }
-    .badge.thieu { background: #FCEBEB; color: #791F1F; }
+    th { background: var(--hak-sidebar-bg); color: #fff; font-size: 12px; font-weight: 600; position: sticky; top: 0; }
+    tr:hover td { background: #f9fafb; }
+    .tablewrap { max-height: 520px; overflow: auto; border-radius: 14px; border: 1px solid var(--hak-border); }
+    .tablewrap table { border: none; border-radius: 0; }
+    .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .badge.dat, .badge.ok2 { background: #dcfce7; color: #166534; }
+    .badge.dieukien { background: #fef3c7; color: #92400e; }
+    .badge.khongdat, .badge.thieu { background: #fee2e2; color: #991b1b; }
+    .badge.chua { background: var(--hak-page-bg); color: var(--hak-text-muted); }
     section { display: none; }
     section.active { display: block; }
-    form { background: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-    form label { display: flex; flex-direction: column; font-size: 12px; color: #555; gap: 4px; }
-    form input, form select, form textarea { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; font-family: inherit; }
+    form { background: var(--hak-card-bg); padding: 20px 22px; border: 1px solid var(--hak-border); border-radius: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; margin-bottom: 20px; }
+    form label { display: flex; flex-direction: column; font-size: 12.5px; font-weight: 600; color: #374151; gap: 6px; }
+    form input, form select, form textarea { padding: 9px 12px; border: 1px solid var(--hak-input-border); border-radius: 9px; font-size: 14px; font-weight: 400; min-height: 40px; background-color: var(--hak-card-bg); color: var(--hak-text); }
+    form input[type="checkbox"], form input[type="radio"], form input[type="file"] { min-height: 0; padding: 0; border: none; }
+    form input:focus, form select:focus, form textarea:focus { border-color: var(--hak-blue); box-shadow: 0 0 0 3px rgba(37,99,235,.15); outline: none; }
     form textarea { resize: vertical; }
     form .full { grid-column: 1 / -1; }
-    form button { grid-column: 1 / -1; padding: 10px; background: #1F3864; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
-    h2 { font-size: 16px; color: #1F3864; font-weight: 600; }
-    .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; }
-    .msg.ok { background: #EAF3DE; color: #27500A; }
-    .msg.err { background: #FCEBEB; color: #791F1F; }
+    form button { grid-column: 1 / -1; padding: 11px 16px; background: var(--hak-blue); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background-color .15s; }
+    form button:hover:not(:disabled) { background: var(--hak-blue-dark); }
+    form button:disabled { opacity: .6; cursor: wait; }
+    h2 { font-size: 16px; color: var(--hak-text); font-weight: 700; }
+    .msg { padding: 12px 14px; border-radius: 10px; margin-bottom: 10px; font-size: 13px; }
+    .msg.ok { background: #dcfce7; color: #166534; }
+    .msg.err { background: #fee2e2; color: #991b1b; }
     .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .toolbar button { padding: 6px 12px; border: 1px solid #1F3864; background: #fff; color: #1F3864; border-radius: 6px; cursor: pointer; font-size: 12px; }
-    .note { font-size: 12px; color: #777; margin-bottom: 10px; }
-    .filterbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-    .filterbar input[type="text"], .filterbar input:not([type]), .filterbar input[type="date"], .filterbar select { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+    .toolbar button { padding: 7px 12px; border: 1px solid var(--hak-input-border); background: var(--hak-card-bg); color: var(--hak-text); border-radius: 8px; cursor: pointer; font-size: 12.5px; font-weight: 500; }
+    .toolbar button:hover { background: var(--hak-blue); border-color: var(--hak-blue); color: #fff; }
+    .note { font-size: 12.5px; line-height: 1.5; color: var(--hak-text-muted); margin-bottom: 10px; }
+    .filterbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; background: var(--hak-card-bg); padding: 10px 12px; border: 1px solid var(--hak-border); border-radius: 12px; }
+    .filterbar input[type="text"], .filterbar input:not([type]), .filterbar input[type="date"], .filterbar select { padding: 7px 10px; border: 1px solid var(--hak-input-border); border-radius: 8px; font-size: 13px; }
+    .filterbar input:focus, .filterbar select:focus { border-color: var(--hak-blue); box-shadow: 0 0 0 3px rgba(37,99,235,.15); outline: none; }
     .filterbar input[placeholder] { flex: 1; min-width: 200px; }
-    .filterbar label.inline { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #555; }
-    .filterbar .count { font-size: 12px; color: #666; margin-left: auto; white-space: nowrap; }
-    .btnmini { padding: 6px 10px; border: 1px solid #1F3864; background: #fff; color: #1F3864; border-radius: 6px; cursor: pointer; font-size: 12px; white-space: nowrap; }
-    .btnmini:hover { background: #1F3864; color: #fff; }
-    .pagebar { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 10px; font-size: 12px; color: #555; }
-    .totalbox { background: #EAF0FB; border: 1px solid #C7D6F0; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; font-size: 13px; color: #1F3864; }
-    .subnav { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 2px solid #E5E1D2; flex-wrap: wrap; }
-    .subnav .subtab { padding: 8px 14px; background: none; border: none; border-bottom: 3px solid transparent; color: #7A7563; font-size: 13px; cursor: pointer; font-weight: 500; }
-    .subnav .subtab:hover { color: #1F3864; }
-    .subnav .subtab.active { color: #1F3864; border-bottom-color: #C97A3D; font-weight: bold; }
+    .filterbar label.inline { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--hak-text-muted); }
+    .filterbar .count { font-size: 12px; color: var(--hak-text-muted); margin-left: auto; white-space: nowrap; }
+    .btnmini { padding: 6px 10px; border: 1px solid var(--hak-input-border); background: var(--hak-card-bg); color: var(--hak-text); border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; white-space: nowrap; }
+    .btnmini:hover { background: var(--hak-blue); border-color: var(--hak-blue); color: #fff; }
+    .pagebar { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 10px; font-size: 12px; color: var(--hak-text-muted); }
+    .totalbox { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; font-size: 13px; color: #1e40af; }
+    .subnav { display: flex; gap: 20px; margin-bottom: 16px; border-bottom: 1px solid var(--hak-border); flex-wrap: wrap; }
+    .subnav .subtab { padding: 12px 2px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--hak-text-muted); font-size: 14px; cursor: pointer; font-weight: 500; }
+    .subnav .subtab:hover { color: var(--hak-text); }
+    .subnav .subtab.active { color: var(--hak-blue); border-bottom-color: var(--hak-blue); font-weight: 600; }
     .subpanel { display: none; }
     .subpanel.active { display: block; }
 
     /* ===== Layout dạng sidebar ===== */
-    body { background: #F5F1E8; }
     .app-shell { display: flex; min-height: 100vh; align-items: stretch; }
-    .sidebar { width: 260px; flex-shrink: 0; background: #22301F; color: #E7E3D4; display: flex; flex-direction: column; padding: 18px 0; }
-    .brand { display: flex; align-items: center; gap: 12px; padding: 0 18px 18px; border-bottom: 1px solid rgba(255,255,255,.12); margin-bottom: 12px; }
-    .brand .logo { width: 40px; height: 40px; border-radius: 8px; background: #C97A3D; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #fff; flex-shrink: 0; }
-    .brand-title { font-weight: bold; font-size: 15px; color: #fff; }
-    .brand-sub { font-size: 11px; color: #B7C4AE; margin-top: 2px; }
-    .sidenav { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; flex: 1; overflow-y: auto; }
-    .sidenav .tab { display: flex; align-items: center; gap: 10px; text-align: left; background: none; border: none; color: #D7D3C4; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; width: 100%; text-transform: uppercase; letter-spacing: 0.01em; }
-    .sidenav .tab:hover { background: rgba(255,255,255,.06); }
-    .sidenav .tab.active { background: #3E5233; color: #fff; font-weight: bold; }
-    .sidenav .tab .navbadge { margin-left: auto; background: #C97A3D; color: #fff; font-size: 10px; font-weight: bold; padding: 1px 7px; border-radius: 10px; }
-    .sidenav hr { border: none; border-top: 1px solid rgba(255,255,255,.12); margin: 10px 4px; width: calc(100% - 8px); }
-    .navgroup { font-size: 10px; letter-spacing: .04em; color: #8A9782; text-transform: uppercase; padding: 12px 12px 4px; font-weight: bold; }
-    .sidebar-tools { padding: 10px 14px 0; border-top: 1px solid rgba(255,255,255,.12); margin-top: 10px; }
-    .sidebar-tools button { width: 100%; margin-bottom: 6px; padding: 7px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,.25); background: transparent; color: #D7D3C4; font-size: 11.5px; cursor: pointer; }
-    .sidebar-tools button:hover { background: rgba(255,255,255,.08); }
-    .content { flex: 1; padding: 26px 32px; overflow-y: auto; overflow-x: hidden; max-width: 100%; box-sizing: border-box; }
-    .page-header { margin-bottom: 18px; }
-    .page-header h1 { margin: 0; font-size: 24px; color: #2A2A20; font-weight: 700; letter-spacing: 0.01em; text-transform: uppercase; }
-    .page-header p { margin: 4px 0 0; color: #7A7563; font-size: 13.5px; }
+    .sidebar { width: 250px; flex-shrink: 0; background: var(--hak-sidebar-bg); color: var(--hak-sidebar-text); display: flex; flex-direction: column; padding: 20px 0; }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 0 18px 18px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 12px; }
+    .brand .logo { width: 38px; height: 38px; border-radius: 10px; background: var(--hak-blue); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; color: #fff; flex-shrink: 0; }
+    .brand-title { font-weight: 700; font-size: 15px; color: #fff; }
+    .brand-sub { font-size: 11.5px; color: var(--hak-sidebar-dim); margin-top: 2px; }
+    .sidenav { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; flex: 1; overflow-y: auto; }
+    .sidenav .tab { display: flex; align-items: center; gap: 10px; text-align: left; background: none; border: none; border-left: 3px solid transparent; color: var(--hak-sidebar-text); min-height: 38px; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 13.5px; font-weight: 500; width: 100%; }
+    .sidenav .tab:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .sidenav .tab.active { background: var(--hak-blue); color: #fff; border-left-color: var(--hak-gold); font-weight: 600; }
+    .sidenav .tab .navbadge { margin-left: auto; background: var(--hak-gold); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px; }
+    .sidenav hr { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 10px 4px; width: calc(100% - 8px); }
+    .navgroup { font-size: 10px; letter-spacing: .06em; color: var(--hak-sidebar-dim); text-transform: uppercase; padding: 14px 10px 6px; font-weight: 600; }
+    .sidebar-tools { padding: 10px 14px 0; border-top: 1px solid rgba(255,255,255,.08); margin-top: 10px; }
+    .sidebar-tools button { width: 100%; margin-bottom: 6px; padding: 7px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,.2); background: transparent; color: var(--hak-sidebar-text); font-size: 11.5px; cursor: pointer; }
+    .sidebar-tools button:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .content { flex: 1; padding: 28px 32px; overflow-y: auto; overflow-x: hidden; max-width: 100%; box-sizing: border-box; }
+    .page-header { margin-bottom: 20px; }
+    .page-header h1 { margin: 0; font-size: 24px; color: var(--hak-text); font-weight: 700; letter-spacing: -.01em; }
+    .page-header p { margin: 6px 0 0; color: var(--hak-text-muted); font-size: 14px; }
     @media (max-width: 900px) {
       .app-shell { flex-direction: column; }
       .sidebar { width: 100%; }
       .content { padding: 16px; }
+      form { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -985,7 +1008,7 @@
       <div class="filterbar">
         <label class="inline">Từ ngày <input type="date" id="fTonKhoTu"></label>
         <label class="inline">Đến ngày <input type="date" id="fTonKhoDen"></label>
-        <button class="btnmini" onclick="loadTonKho()" style="background:#1F3864;color:#fff;">🔍 Xem báo cáo</button>
+        <button class="btnmini" onclick="loadTonKho()" style="background:#2563eb;border-color:#2563eb;color:#fff;">🔍 Xem báo cáo</button>
         <button class="btnmini" onclick="document.getElementById('fTonKhoTu').value='';document.getElementById('fTonKhoDen').value='';loadTonKho();">✕ Bỏ lọc (xem toàn bộ)</button>
       </div>
       <div id="tonKhoBody">
@@ -1039,28 +1062,28 @@
           <thead><tr><th>Mục</th><th>Nguồn dữ liệu</th><th>Dùng để làm gì</th></tr></thead>
           <tbody>
             <tr><td><b>🏠 Dashboard</b></td><td>Tổng hợp từ tất cả sheet</td><td>Nhìn nhanh: bao nhiêu hợp đồng, tỷ lệ hồ sơ đầy đủ, số HĐ chưa đánh giá FSC, rừng rủi ro cao, HĐ chưa theo dõi khảo sát, tiến độ triển khai theo giai đoạn.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 1–2: Thẩm định &amp; ký hợp đồng</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 1–2: Thẩm định &amp; ký hợp đồng</td></tr>
             <tr><td><b>🧾 Thẩm định hợp đồng</b></td><td>Nhập mới (BM-FSC-01/02)</td><td>Checklist 8 tiêu chí trước khi ký HĐ (mục đích SDĐ, sổ đỏ, CCCD, rừng tự nhiên 2020, tranh chấp, khối lượng, thông báo giá) — ra kết luận Đồng ý/Yêu cầu bổ sung/Từ chối.</td></tr>
             <tr><td><b>📄 Hợp đồng &amp; hồ sơ rừng</b></td><td>HD_RUNG, BaoCao_KiemTra</td><td>Xem từng hợp đồng: hồ sơ đủ/thiếu gì, bấm <b>"📎 Chi tiết"</b> xem pháp lý rừng + tọa độ Google Maps + ảnh. Ghi <b>kết luận giám sát FSC</b> ở form cuối trang.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3: Khảo sát &amp; tham vấn</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 3: Khảo sát &amp; tham vấn</td></tr>
             <tr><td><b>📋 Khảo sát &amp; Tham vấn</b></td><td>4 sub-tab: bảng Có/Chưa (nhập mới) + Báo cáo khảo sát (nhập mới, có ảnh) + BB Giám sát khai thác (nhập mới) + Tham vấn bên liên quan (nhập mới)</td><td>"Bảng theo dõi" xem nhanh HĐ nào thiếu loại hồ sơ nào; 3 sub-tab còn lại là nơi gõ/xem NỘI DUNG THẬT của từng loại hồ sơ, kể cả tải ảnh khảo sát.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3–4: Khai thác, cân, nghiệm thu</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 3–4: Khai thác, cân, nghiệm thu</td></tr>
             <tr><td><b>📦 Lô hàng mua vào</b></td><td>HoSoKeo_DN</td><td>200 lô nhập gần nhất (phân trang 20/trang), lọc mã HĐ/chủ rừng/ngày, tổng khối lượng &amp; tổng tiền (toàn bộ + theo trang).</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 5–6: Vận chuyển &amp; chế biến</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 5–6: Vận chuyển &amp; chế biến</td></tr>
             <tr><td><b>🚛 Lệnh điều động vận chuyển</b></td><td>Nhập mới (BM-FSC-05)</td><td>Lệnh điều động vận chuyển nội bộ — điểm đi/đến, biển số, số phiếu cân, ngày lập phiếu xuất kho.</td></tr>
             <tr><td><b>🏭 Tiêu hao chế biến</b></td><td>Nhập mới (BM-FSC-06)</td><td>Theo dõi định mức tiêu hao chế biến dăm gỗ theo từng kỳ, so sánh định mức công bố vs thực tế.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 7–8: Xuất bán &amp; báo cáo Nhà nước</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 7–8: Xuất bán &amp; báo cáo Nhà nước</td></tr>
             <tr><td><b>🚚 Xuất hàng</b></td><td>NL_PC_XH</td><td>200 lô xuất gần nhất (phân trang), lọc theo số TKHQ/ngày, tổng khối lượng (chưa có cột tiền trong sheet nguồn).</td></tr>
             <tr><td><b>📤 Đơn hàng xuất bán</b></td><td>NL_DH_XB</td><td>Đơn hàng khách mua — bổ sung thông tin còn thiếu ở BM-FSC-07 (giá USD, khách hàng, khối lượng theo đơn).</td></tr>
             <tr><td><b>🗓️ Báo cáo Nhà nước</b></td><td>Nhập mới (BM-FSC-08)</td><td>Theo dõi hạn nộp/ngày nộp thực tế Mẫu số 29 (năm) và Mẫu số 14 (quý) cho cơ quan Kiểm lâm.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 9 &amp; MỤC 8.3: Giám sát rủi ro</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 9 &amp; MỤC 8.3: Giám sát rủi ro</td></tr>
             <tr><td><b>⚠️ Rủi ro CNRA</b></td><td>Nhập mới (BM-FSC-09, chọn rừng từ dropdown)</td><td>Đánh giá rủi ro theo Bộ CNRA Việt Nam cho từng lô rừng — Không đáng kể/Đáng kể, kèm biện pháp giảm thiểu (RMM).</td></tr>
             <tr><td><b>🔍 Giám sát định kỳ</b></td><td>Nhập mới (BM-FSC-10)</td><td>Báo cáo giám sát — đối chiếu đủ 5 mục tiêu giám sát của QT-FSC-01, ra kết luận ĐẠT/ĐẠT CÓ ĐIỀU KIỆN/KHÔNG ĐẠT.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">KH-FSC-01: Triển khai</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">KH-FSC-01: Triển khai</td></tr>
             <tr><td><b>📈 Tiến độ triển khai</b></td><td>Nhập mới (BM-KH-01)</td><td>Cập nhật tiến độ 5 giai đoạn theo KH-FSC-01, so sánh mốc kế hoạch với ngày thực tế.</td></tr>
             <tr><td><b>✅ Nghiệm thu giai đoạn</b></td><td>Nhập mới (BM-KH-02)</td><td>Đối chiếu đầu ra kỳ vọng từng giai đoạn với bằng chứng thực nhận, ra kết luận Nghiệm thu/Có điều kiện/Chưa.</td></tr>
             <tr><td><b>⚠️ Rủi ro triển khai</b></td><td>Nhập mới (BM-KH-03)</td><td>Ghi nhận rủi ro/vướng mắc phát sinh khi triển khai — mức độ, biện pháp, người phụ trách, hạn xử lý.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">ĐÁNH GIÁ NỘI BỘ HỆ THỐNG DDS (theo FSC-STD-40-005 Ver.3.1, riêng biệt với QT-FSC-01)</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">ĐÁNH GIÁ NỘI BỘ HỆ THỐNG DDS (theo FSC-STD-40-005 Ver.3.1, riêng biệt với QT-FSC-01)</td></tr>
             <tr><td><b>📅 Kế hoạch đánh giá nội bộ</b></td><td>Nhập mới</td><td>Lập kế hoạch đánh giá nội bộ hằng năm (tối thiểu 1 lần/năm) — nhập tổng số nhà cung cấp, hệ thống tự tính số mẫu theo công thức y = 0.8×√x.</td></tr>
             <tr><td><b>📝 Phiếu yêu cầu khắc phục</b></td><td>Nhập mới (BM.05)</td><td>Ghi nhận điểm không phù hợp phát hiện khi đánh giá nội bộ, phân tích nguyên nhân, hành động khắc phục, theo dõi đến khi đóng (thời hạn 3–12 tháng).</td></tr>
             <tr><td><b>📋 Xem xét hệ thống DDS</b></td><td>Nhập mới (BM.07)</td><td>Biên bản xem xét hệ thống thẩm định định kỳ hằng năm, sau khi có kết quả đánh giá nội bộ — ghi nhận có/không cần cập nhật DDS.</td></tr>
@@ -1327,11 +1350,11 @@
       const w = window.open('', '_blank');
       w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>
         body{font-family:Arial,sans-serif;padding:24px;color:#222;}
-        h1{font-size:16px;color:#1F3864;margin-bottom:4px;}
+        h1{font-size:16px;color:#1f2937;margin-bottom:4px;}
         .meta{font-size:11px;color:#666;margin-bottom:16px;}
         table{width:100%;border-collapse:collapse;font-size:11px;}
         th,td{border:1px solid #999;padding:5px 7px;text-align:left;}
-        th{background:#D9E2F3;}
+        th{background:#e5e7eb;}
         @media print { body{padding:0;} }
       </style></head><body>
         <h1>HAK GROUP — ${title}</h1>
@@ -1356,11 +1379,11 @@
         if (!d) return;
         let html = `<p><b>Số hợp đồng:</b> ${soHopDong} &nbsp; <span style="color:#666;">(${d.rungList.length} lô rừng thuộc hợp đồng này)</span></p>`;
         if (!d.rungList.length) {
-          html += `<p style="color:#A32D2D;">⚠ Không tìm thấy dòng nào trong HD_RUNG cho hợp đồng này.</p>`;
+          html += `<p style="color:#dc2626;">⚠ Không tìm thấy dòng nào trong HD_RUNG cho hợp đồng này.</p>`;
         }
         d.rungList.forEach((rung, idx) => {
           html += `<div style="border:1px solid #ddd; border-radius:8px; padding:12px; margin-bottom:12px;">
-            <h3 style="color:#1F3864;font-size:14px;margin-top:0;">🌲 Lô rừng ${idx + 1} — Mã: ${fmt(rung.MaRung)}</h3>
+            <h3 style="color:#1f2937;font-size:14px;margin-top:0;">🌲 Lô rừng ${idx + 1} — Mã: ${fmt(rung.MaRung)}</h3>
             <p><b>Chủ rừng:</b> ${fmt(rung.HoVaTenChuRung)} &nbsp; <b>CCCD:</b> ${fmt(rung.SoCCCD)}</p>
             <p><b>Thường trú:</b> ${fmt(rung.ThuongTru)}</p>
             <p><b>Địa chỉ rừng trồng:</b> ${fmt(rung.DiaChiRungTrong)} &nbsp; <b>Diện tích:</b> ${fmtNum(rung.DienTich_m2)} m²</p>
@@ -1370,19 +1393,19 @@
             const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(rung.Gps.Lat)},${encodeURIComponent(rung.Gps.Lng)}`;
             html += `<p><b>📍 Tọa độ:</b> ${fmt(rung.Gps.Lat)}, ${fmt(rung.Gps.Lng)} — <a href="${escapeHtml(mapUrl)}" target="_blank">Mở Google Maps</a></p>`;
           } else {
-            html += `<p style="color:#A32D2D;">⚠ Chưa có tọa độ GPS cho lô rừng này.</p>`;
+            html += `<p style="color:#dc2626;">⚠ Chưa có tọa độ GPS cho lô rừng này.</p>`;
           }
           if (rung.SoAnh > 0) {
             html += `<p><b>📷 Ảnh đính kèm (${rung.SoAnh} ảnh):</b></p><ul style="margin:4px 0;">` +
               rung.AnhFiles.map((f) => `<li><code>${escapeHtml(f)}</code></li>`).join('') + `</ul>
               <p style="color:#888;font-size:12px;">Đây là đường dẫn nội bộ trong Drive gắn với Google Form — mở trực tiếp trong sheet HD_Picture (hoặc thư mục Drive tương ứng) để xem ảnh thật.</p>`;
           } else {
-            html += `<p style="color:#A32D2D;">⚠ Chưa có ảnh nào cho lô rừng này trong HD_Picture.</p>`;
+            html += `<p style="color:#dc2626;">⚠ Chưa có ảnh nào cho lô rừng này trong HD_Picture.</p>`;
           }
           html += `</div>`;
         });
         if (d.stk) {
-          html += `<h3 style="color:#1F3864;font-size:14px;">💳 Thanh toán / Ủy quyền (HD_STK)</h3>
+          html += `<h3 style="color:#1f2937;font-size:14px;">💳 Thanh toán / Ủy quyền (HD_STK)</h3>
             <p><b>Người được ủy quyền:</b> ${fmt(d.stk.NguoiUyQuyen)}</p>
             <p><b>Số TK nhận tiền:</b> ${fmt(d.stk.SoTKNhanTien)} — ${fmt(d.stk.NganHang)}</p>
             <p><b>Có ủy quyền thanh toán:</b> ${fmt(d.stk.UyQuyenThanhToan)}</p>`;
@@ -1566,7 +1589,7 @@
       const trangKL = sumField(pageRows, 'KhoiLuongTan');
       const trangTT = sumField(pageRows, 'ThanhToan');
       document.getElementById('loHangFoot').innerHTML =
-        `<tr style="font-weight:bold;background:#EAF0FB;"><td colspan="6">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangKL)} tấn</td><td></td><td>${fmtNum(trangTT)} đồng</td></tr>`;
+        `<tr style="font-weight:bold;background:#eff6ff;"><td colspan="6">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangKL)} tấn</td><td></td><td>${fmtNum(trangTT)} đồng</td></tr>`;
 
       document.getElementById('fLoHangCount').textContent = `${filtered.length} / ${CACHE.loHang.length} dòng (200 gần nhất)`;
       document.getElementById('fLoHangPageInfo').textContent = `Trang ${pageLoHang} / ${totalPages}`;
@@ -1623,7 +1646,7 @@
       const trangTan = sumField(pageRows, 'KhoiLuongTan');
       const trangM3 = sumField(pageRows, 'KhoiLuongM3');
       document.getElementById('xuatHangFoot').innerHTML =
-        `<tr style="font-weight:bold;background:#EAF0FB;"><td colspan="3">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangTan)} tấn</td><td>${fmtNum(trangM3)} m³</td><td colspan="3"></td></tr>`;
+        `<tr style="font-weight:bold;background:#eff6ff;"><td colspan="3">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangTan)} tấn</td><td>${fmtNum(trangM3)} m³</td><td colspan="3"></td></tr>`;
 
       document.getElementById('fXuatHangCount').textContent = `${filtered.length} / ${CACHE.xuatHang.length} dòng (200 gần nhất)`;
       document.getElementById('fXuatHangPageInfo').textContent = `Trang ${pageXuatHang} / ${totalPages}`;
@@ -1996,7 +2019,7 @@
     function renderMauWordFull() {
       loadMauWordLinks((files) => {
         const el = document.getElementById('mauWordList');
-        if (!files.length) { el.innerHTML = '<p style="color:#A32D2D;">Không tìm thấy file nào trong thư mục Drive, hoặc chưa có quyền đọc thư mục.</p>'; return; }
+        if (!files.length) { el.innerHTML = '<p style="color:#dc2626;">Không tìm thấy file nào trong thư mục Drive, hoặc chưa có quyền đọc thư mục.</p>'; return; }
         el.innerHTML = '<ul>' + files.map((f) => `<li><a href="${escapeHtml(f.url)}" target="_blank">📄 ${escapeHtml(f.name)}</a></li>`).join('') + '</ul>';
       });
     }
@@ -2182,10 +2205,10 @@
       grid.innerHTML = rows.map((r) => {
         const anhList = (r.AnhKhaoSat || '').split(',').map((s) => s.trim()).filter(Boolean);
         return `<div style="background:#fff;border-radius:8px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.1);font-size:12px;">
-          <div style="font-weight:bold;color:#1F3864;">${fmt(r.NgayKhaoSat)} — HĐ ${fmt(r.SoHopDong)}</div>
+          <div style="font-weight:bold;color:#1f2937;">${fmt(r.NgayKhaoSat)} — HĐ ${fmt(r.SoHopDong)}</div>
           <div>👤 ${fmt(r.NguoiKhaoSat)}</div>
           <div style="color:#666;margin:4px 0;">${truncateText(r.DiaChiRungTrong, 60)}</div>
-          ${anhList.length ? anhList.map((u) => `<a href="${escapeHtml(u)}" target="_blank" class="btnmini" style="display:inline-block;margin:2px 4px 0 0;">📷 Ảnh</a>`).join('') : '<span style="color:#A32D2D;">⚠ Chưa có ảnh</span>'}
+          ${anhList.length ? anhList.map((u) => `<a href="${escapeHtml(u)}" target="_blank" class="btnmini" style="display:inline-block;margin:2px 4px 0 0;">📷 Ảnh</a>`).join('') : '<span style="color:#dc2626;">⚠ Chưa có ảnh</span>'}
         </div>`;
       }).join('') || '<p style="color:#888;grid-column:1/-1;">Chưa có khảo sát nào.</p>';
       document.getElementById('fAnhKSCount').textContent = `${rows.length} / ${(CACHE.baoCaoKhaoSat || []).length} khảo sát`;
@@ -2255,7 +2278,7 @@
         return `<tr>
         <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.NgayKhaoSat)}</td><td>${fmt(r.NguoiKhaoSat)}</td>
         <td>${truncateText(r.DiaChiRungTrong, 40)}</td><td>${fmt(r.PhapLyThuaDat)}</td>
-        <td>${soAnh > 0 ? '📷 ' + soAnh : '<span style="color:#A32D2D;">chưa có</span>'}</td>
+        <td>${soAnh > 0 ? '📷 ' + soAnh : '<span style="color:#dc2626;">chưa có</span>'}</td>
         <td><button class="btnmini" onclick="xemChiTietKhaoSat(${idx})">📎 Chi tiết</button> <button class="btnmini" onclick="printSinglePhieu('bcks', window._bcksFiltered[${idx}])">🖨</button></td>
       </tr>`;
       }).join('') || '<tr><td colspan="7">Chưa có báo cáo khảo sát nào.</td></tr>';
@@ -2269,16 +2292,16 @@
       let html = '<table style="width:100%;"><tbody>';
       Object.keys(BCKS_LABELS).forEach((k) => {
         if (k === 'GhiChu') return; // hiện sau cùng
-        html += `<tr><td style="font-weight:bold;width:38%;color:#1F3864;">${BCKS_LABELS[k]}</td><td>${fmt(r[k]) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
+        html += `<tr><td style="font-weight:bold;width:38%;color:#1f2937;">${BCKS_LABELS[k]}</td><td>${fmt(r[k]) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
       });
-      html += `<tr><td style="font-weight:bold;color:#1F3864;">Ghi chú</td><td>${fmt(r.GhiChu) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
+      html += `<tr><td style="font-weight:bold;color:#1f2937;">Ghi chú</td><td>${fmt(r.GhiChu) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
       html += '</tbody></table>';
       const anhList = (r.AnhKhaoSat || '').split(',').map((s) => s.trim()).filter(Boolean);
       if (anhList.length) {
-        html += '<h3 style="color:#1F3864;font-size:14px;margin-top:14px;">📷 Ảnh khảo sát (' + anhList.length + ' ảnh)</h3>';
+        html += '<h3 style="color:#1f2937;font-size:14px;margin-top:14px;">📷 Ảnh khảo sát (' + anhList.length + ' ảnh)</h3>';
         html += '<div style="display:flex;gap:8px;flex-wrap:wrap;">' + anhList.map((u) => `<a href="${escapeHtml(u)}" target="_blank" class="btnmini">Xem ảnh</a>`).join('') + '</div>';
       } else {
-        html += '<p style="color:#A32D2D;margin-top:10px;">⚠ Chưa có ảnh khảo sát nào cho lượt này.</p>';
+        html += '<p style="color:#dc2626;margin-top:10px;">⚠ Chưa có ảnh khảo sát nào cho lượt này.</p>';
       }
       document.getElementById('ksChiTietModalBody').innerHTML = html;
     }
