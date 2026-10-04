@@ -7,91 +7,114 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    /* Giao diện đồng bộ MAIN_HAK (Portal) và các app con HAK: menu tối #1f2937, xanh #2563eb,
+       vàng #b45309, nền #f3f4f6, viền #e5e7eb, font Be Vietnam Pro. */
+    :root {
+      --hak-sidebar-bg: #1f2937;
+      --hak-sidebar-text: #cbd5e1;
+      --hak-sidebar-dim: #8b98ab;
+      --hak-blue: #2563eb;
+      --hak-blue-dark: #1d4ed8;
+      --hak-gold: #b45309;
+      --hak-page-bg: #f3f4f6;
+      --hak-card-bg: #ffffff;
+      --hak-border: #e5e7eb;
+      --hak-input-border: #d1d5db;
+      --hak-text: #1f2937;
+      --hak-text-muted: #6b7280;
+      --hak-danger: #dc2626;
+    }
     * { box-sizing: border-box; }
-    body { font-family: 'Be Vietnam Pro', -apple-system, "Segoe UI", Arial, sans-serif; margin: 0; background: #f4f5f7; color: #222; }
-    header { background: #1F3864; color: #fff; padding: 14px 20px; }
+    body { font-family: 'Be Vietnam Pro', -apple-system, "Segoe UI", Roboto, Arial, sans-serif; margin: 0; background: var(--hak-page-bg); color: var(--hak-text); }
+    input, select, textarea, button { font-family: inherit; }
+    header { background: var(--hak-sidebar-bg); color: #fff; padding: 14px 20px; }
     header h1 { margin: 0; font-size: 18px; }
-    nav { display: flex; gap: 4px; background: #2E5395; padding: 0 16px; flex-wrap: wrap; }
-    nav button { background: none; border: none; color: #e6ecfa; padding: 10px 14px; cursor: pointer; font-size: 14px; }
-    nav button.active { background: #f4f5f7; color: #1F3864; font-weight: bold; border-radius: 6px 6px 0 0; }
+    nav { display: flex; gap: 4px; background: var(--hak-sidebar-bg); padding: 0 16px; flex-wrap: wrap; }
+    nav button { background: none; border: none; color: var(--hak-sidebar-text); padding: 10px 14px; cursor: pointer; font-size: 14px; }
+    nav button.active { background: var(--hak-page-bg); color: var(--hak-text); font-weight: 600; border-radius: 6px 6px 0 0; }
     main { padding: 20px; max-width: 1200px; margin: 0 auto; }
     .cards { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
-    .card { background: #fff; border-radius: 8px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.1); min-width: 140px; flex: 1; }
-    .card .num { font-size: 26px; font-weight: bold; color: #1F3864; }
-    .card .lbl { font-size: 12px; color: #666; margin-top: 2px; }
-    .card.warn .num { color: #A32D2D; }
-    .card.ok .num { color: #27500A; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.1); font-size: 12px; }
-    th, td { padding: 7px 9px; border-bottom: 1px solid #eee; text-align: left; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
+    .card { background: var(--hak-card-bg); border: 1px solid var(--hak-border); border-radius: 14px; padding: 18px 20px; min-width: 140px; flex: 1; }
+    .card .num { font-size: 28px; font-weight: 700; letter-spacing: -.02em; color: var(--hak-text); }
+    .card .lbl { font-size: 13px; font-weight: 500; color: var(--hak-text-muted); margin-top: 2px; }
+    .card.warn .num { color: var(--hak-danger); }
+    .card.ok .num { color: #15803d; }
+    table { width: 100%; border-collapse: collapse; background: var(--hak-card-bg); border-radius: 14px; overflow: hidden; border: 1px solid var(--hak-border); font-size: 13px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #eef0f3; text-align: left; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
     .tablewrap table th, .tablewrap table td { white-space: nowrap; }
     code { word-break: break-all; white-space: pre-wrap; }
-    th { background: #D9E2F3; position: sticky; top: 0; }
-    tr:hover { background: #f9fafc; }
-    .tablewrap { max-height: 520px; overflow: auto; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-    .badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; white-space: nowrap; }
-    .badge.dat { background: #EAF3DE; color: #27500A; }
-    .badge.dieukien { background: #FAEEDA; color: #854F0B; }
-    .badge.khongdat { background: #FCEBEB; color: #791F1F; }
-    .badge.chua { background: #eee; color: #666; }
-    .badge.ok2 { background: #EAF3DE; color: #27500A; }
-    .badge.thieu { background: #FCEBEB; color: #791F1F; }
+    th { background: var(--hak-sidebar-bg); color: #fff; font-size: 12px; font-weight: 600; position: sticky; top: 0; }
+    tr:hover td { background: #f9fafb; }
+    .tablewrap { max-height: 520px; overflow: auto; border-radius: 14px; border: 1px solid var(--hak-border); }
+    .tablewrap table { border: none; border-radius: 0; }
+    .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .badge.dat, .badge.ok2 { background: #dcfce7; color: #166534; }
+    .badge.dieukien { background: #fef3c7; color: #92400e; }
+    .badge.khongdat, .badge.thieu { background: #fee2e2; color: #991b1b; }
+    .badge.chua { background: var(--hak-page-bg); color: var(--hak-text-muted); }
     section { display: none; }
     section.active { display: block; }
-    form { background: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-    form label { display: flex; flex-direction: column; font-size: 12px; color: #555; gap: 4px; }
-    form input, form select, form textarea { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; font-family: inherit; }
+    form { background: var(--hak-card-bg); padding: 20px 22px; border: 1px solid var(--hak-border); border-radius: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; margin-bottom: 20px; }
+    form label { display: flex; flex-direction: column; font-size: 12.5px; font-weight: 600; color: #374151; gap: 6px; }
+    form input, form select, form textarea { padding: 9px 12px; border: 1px solid var(--hak-input-border); border-radius: 9px; font-size: 14px; font-weight: 400; min-height: 40px; background-color: var(--hak-card-bg); color: var(--hak-text); }
+    form input[type="checkbox"], form input[type="radio"], form input[type="file"] { min-height: 0; padding: 0; border: none; }
+    form input:focus, form select:focus, form textarea:focus { border-color: var(--hak-blue); box-shadow: 0 0 0 3px rgba(37,99,235,.15); outline: none; }
     form textarea { resize: vertical; }
     form .full { grid-column: 1 / -1; }
-    form button { grid-column: 1 / -1; padding: 10px; background: #1F3864; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
-    h2 { font-size: 16px; color: #1F3864; font-weight: 600; }
-    .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; }
-    .msg.ok { background: #EAF3DE; color: #27500A; }
-    .msg.err { background: #FCEBEB; color: #791F1F; }
+    form button { grid-column: 1 / -1; padding: 11px 16px; background: var(--hak-blue); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background-color .15s; }
+    form button:hover:not(:disabled) { background: var(--hak-blue-dark); }
+    form button:disabled { opacity: .6; cursor: wait; }
+    h2 { font-size: 16px; color: var(--hak-text); font-weight: 700; }
+    .msg { padding: 12px 14px; border-radius: 10px; margin-bottom: 10px; font-size: 13px; }
+    .msg.ok { background: #dcfce7; color: #166534; }
+    .msg.err { background: #fee2e2; color: #991b1b; }
     .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .toolbar button { padding: 6px 12px; border: 1px solid #1F3864; background: #fff; color: #1F3864; border-radius: 6px; cursor: pointer; font-size: 12px; }
-    .note { font-size: 12px; color: #777; margin-bottom: 10px; }
-    .filterbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-    .filterbar input[type="text"], .filterbar input:not([type]), .filterbar input[type="date"], .filterbar select { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+    .toolbar button { padding: 7px 12px; border: 1px solid var(--hak-input-border); background: var(--hak-card-bg); color: var(--hak-text); border-radius: 8px; cursor: pointer; font-size: 12.5px; font-weight: 500; }
+    .toolbar button:hover { background: var(--hak-blue); border-color: var(--hak-blue); color: #fff; }
+    .note { font-size: 12.5px; line-height: 1.5; color: var(--hak-text-muted); margin-bottom: 10px; }
+    .filterbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; background: var(--hak-card-bg); padding: 10px 12px; border: 1px solid var(--hak-border); border-radius: 12px; }
+    .filterbar input[type="text"], .filterbar input:not([type]), .filterbar input[type="date"], .filterbar select { padding: 7px 10px; border: 1px solid var(--hak-input-border); border-radius: 8px; font-size: 13px; }
+    .filterbar input:focus, .filterbar select:focus { border-color: var(--hak-blue); box-shadow: 0 0 0 3px rgba(37,99,235,.15); outline: none; }
     .filterbar input[placeholder] { flex: 1; min-width: 200px; }
-    .filterbar label.inline { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #555; }
-    .filterbar .count { font-size: 12px; color: #666; margin-left: auto; white-space: nowrap; }
-    .btnmini { padding: 6px 10px; border: 1px solid #1F3864; background: #fff; color: #1F3864; border-radius: 6px; cursor: pointer; font-size: 12px; white-space: nowrap; }
-    .btnmini:hover { background: #1F3864; color: #fff; }
-    .pagebar { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 10px; font-size: 12px; color: #555; }
-    .totalbox { background: #EAF0FB; border: 1px solid #C7D6F0; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; font-size: 13px; color: #1F3864; }
-    .subnav { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 2px solid #E5E1D2; flex-wrap: wrap; }
-    .subnav .subtab { padding: 8px 14px; background: none; border: none; border-bottom: 3px solid transparent; color: #7A7563; font-size: 13px; cursor: pointer; font-weight: 500; }
-    .subnav .subtab:hover { color: #1F3864; }
-    .subnav .subtab.active { color: #1F3864; border-bottom-color: #C97A3D; font-weight: bold; }
+    .filterbar label.inline { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--hak-text-muted); }
+    .filterbar .count { font-size: 12px; color: var(--hak-text-muted); margin-left: auto; white-space: nowrap; }
+    .btnmini { padding: 6px 10px; border: 1px solid var(--hak-input-border); background: var(--hak-card-bg); color: var(--hak-text); border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; white-space: nowrap; }
+    .btnmini:hover { background: var(--hak-blue); border-color: var(--hak-blue); color: #fff; }
+    .pagebar { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 10px; font-size: 12px; color: var(--hak-text-muted); }
+    .totalbox { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; font-size: 13px; color: #1e40af; }
+    .subnav { display: flex; gap: 20px; margin-bottom: 16px; border-bottom: 1px solid var(--hak-border); flex-wrap: wrap; }
+    .subnav .subtab { padding: 12px 2px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--hak-text-muted); font-size: 14px; cursor: pointer; font-weight: 500; }
+    .subnav .subtab:hover { color: var(--hak-text); }
+    .subnav .subtab.active { color: var(--hak-blue); border-bottom-color: var(--hak-blue); font-weight: 600; }
     .subpanel { display: none; }
     .subpanel.active { display: block; }
 
     /* ===== Layout dạng sidebar ===== */
-    body { background: #F5F1E8; }
     .app-shell { display: flex; min-height: 100vh; align-items: stretch; }
-    .sidebar { width: 260px; flex-shrink: 0; background: #22301F; color: #E7E3D4; display: flex; flex-direction: column; padding: 18px 0; }
-    .brand { display: flex; align-items: center; gap: 12px; padding: 0 18px 18px; border-bottom: 1px solid rgba(255,255,255,.12); margin-bottom: 12px; }
-    .brand .logo { width: 40px; height: 40px; border-radius: 8px; background: #C97A3D; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; color: #fff; flex-shrink: 0; }
-    .brand-title { font-weight: bold; font-size: 15px; color: #fff; }
-    .brand-sub { font-size: 11px; color: #B7C4AE; margin-top: 2px; }
-    .sidenav { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; flex: 1; overflow-y: auto; }
-    .sidenav .tab { display: flex; align-items: center; gap: 10px; text-align: left; background: none; border: none; color: #D7D3C4; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; width: 100%; text-transform: uppercase; letter-spacing: 0.01em; }
-    .sidenav .tab:hover { background: rgba(255,255,255,.06); }
-    .sidenav .tab.active { background: #3E5233; color: #fff; font-weight: bold; }
-    .sidenav .tab .navbadge { margin-left: auto; background: #C97A3D; color: #fff; font-size: 10px; font-weight: bold; padding: 1px 7px; border-radius: 10px; }
-    .sidenav hr { border: none; border-top: 1px solid rgba(255,255,255,.12); margin: 10px 4px; width: calc(100% - 8px); }
-    .navgroup { font-size: 10px; letter-spacing: .04em; color: #8A9782; text-transform: uppercase; padding: 12px 12px 4px; font-weight: bold; }
-    .sidebar-tools { padding: 10px 14px 0; border-top: 1px solid rgba(255,255,255,.12); margin-top: 10px; }
-    .sidebar-tools button { width: 100%; margin-bottom: 6px; padding: 7px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,.25); background: transparent; color: #D7D3C4; font-size: 11.5px; cursor: pointer; }
-    .sidebar-tools button:hover { background: rgba(255,255,255,.08); }
-    .content { flex: 1; padding: 26px 32px; overflow-y: auto; overflow-x: hidden; max-width: 100%; box-sizing: border-box; }
-    .page-header { margin-bottom: 18px; }
-    .page-header h1 { margin: 0; font-size: 24px; color: #2A2A20; font-weight: 700; letter-spacing: 0.01em; text-transform: uppercase; }
-    .page-header p { margin: 4px 0 0; color: #7A7563; font-size: 13.5px; }
+    .sidebar { width: 250px; flex-shrink: 0; background: var(--hak-sidebar-bg); color: var(--hak-sidebar-text); display: flex; flex-direction: column; padding: 20px 0; }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 0 18px 18px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 12px; }
+    .brand .logo { width: 38px; height: 38px; border-radius: 10px; background: var(--hak-blue); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; color: #fff; flex-shrink: 0; }
+    .brand-title { font-weight: 700; font-size: 15px; color: #fff; }
+    .brand-sub { font-size: 11.5px; color: var(--hak-sidebar-dim); margin-top: 2px; }
+    .sidenav { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; flex: 1; overflow-y: auto; }
+    .sidenav .tab { display: flex; align-items: center; gap: 10px; text-align: left; background: none; border: none; border-left: 3px solid transparent; color: var(--hak-sidebar-text); min-height: 38px; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 13.5px; font-weight: 500; width: 100%; }
+    .sidenav .tab:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .sidenav .tab.active { background: var(--hak-blue); color: #fff; border-left-color: var(--hak-gold); font-weight: 600; }
+    .sidenav .tab .navbadge { margin-left: auto; background: var(--hak-gold); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px; }
+    .sidenav hr { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 10px 4px; width: calc(100% - 8px); }
+    .navgroup { font-size: 10px; letter-spacing: .06em; color: var(--hak-sidebar-dim); text-transform: uppercase; padding: 14px 10px 6px; font-weight: 600; }
+    .sidebar-tools { padding: 10px 14px 0; border-top: 1px solid rgba(255,255,255,.08); margin-top: 10px; }
+    .sidebar-tools button { width: 100%; margin-bottom: 6px; padding: 7px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,.2); background: transparent; color: var(--hak-sidebar-text); font-size: 11.5px; cursor: pointer; }
+    .sidebar-tools button:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .content { flex: 1; padding: 28px 32px; overflow-y: auto; overflow-x: hidden; max-width: 100%; box-sizing: border-box; }
+    .page-header { margin-bottom: 20px; }
+    .page-header h1 { margin: 0; font-size: 24px; color: var(--hak-text); font-weight: 700; letter-spacing: -.01em; }
+    .page-header p { margin: 6px 0 0; color: var(--hak-text-muted); font-size: 14px; }
     @media (max-width: 900px) {
       .app-shell { flex-direction: column; }
       .sidebar { width: 100%; }
       .content { padding: 16px; }
+      form { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -152,47 +175,9 @@
       <div class="sidebar-tools">
         <button onclick="runCheckKetNoi()">🔍 Kiểm tra kết nối 5 file nguồn</button>
         <button onclick="runPingTest()">🏓 Test kết nối cơ bản</button>
-        <button onclick="openShareModal()">📤 Chia sẻ Google Sheet</button>
         <div id="checkResult" style="font-size:11px; color:#B7C4AE; margin-top:4px;"></div>
       </div>
     </aside>
-
-    <div id="shareModalBackdrop" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:100;" onclick="if(event.target===this) closeShareModal();">
-      <div style="background:#fff; max-width:520px; margin:60px auto; border-radius:10px; padding:20px; max-height:80vh; overflow:auto;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h2 style="margin:0;">📤 Chia sẻ Google Sheet cho email khác</h2>
-          <button class="btnmini" onclick="closeShareModal()">✕ Đóng</button>
-        </div>
-        <p class="note" style="margin-top:10px;">Cấp quyền truy cập trực tiếp trên Google Drive cho các Google Sheet mà hệ thống này đang dùng — người được chia sẻ sẽ mở được file gốc trên Google Sheets (không phải chỉ webapp).</p>
-        <div id="shareMsg"></div>
-        <form id="formShare" onsubmit="return false;">
-          <label style="display:flex; flex-direction:column; font-size:12px; color:#555; gap:4px; margin-bottom:12px;">
-            Email người nhận
-            <input type="email" id="shareEmail" required placeholder="ten@congty.com" style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px;">
-          </label>
-          <div style="font-size:12px; color:#555; margin-bottom:4px;">Chọn file cần chia sẻ</div>
-          <div id="shareTargetList" style="display:flex; flex-direction:column; gap:6px; margin-bottom:12px; font-size:13px;">Đang tải danh sách file...</div>
-          <label style="display:flex; flex-direction:column; font-size:12px; color:#555; gap:4px; margin-bottom:12px;">
-            Quyền truy cập
-            <select id="shareRole" style="padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px;">
-              <option value="viewer">Chỉ xem</option>
-              <option value="commenter">Xem &amp; bình luận</option>
-              <option value="editor">Chỉnh sửa</option>
-            </select>
-          </label>
-          <button type="button" id="btnSubmitShare" onclick="submitShare()" style="width:100%; padding:10px; background:#1F3864; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:14px;">Chia sẻ</button>
-        </form>
-        <div id="shareResultList" style="margin-top:12px; font-size:13px;"></div>
-
-        <hr style="margin:18px 0; border:none; border-top:1px solid #eee;">
-        <div style="font-weight:bold; font-size:13px; color:#1F3864; margin-bottom:8px;">👥 Xem / thu hồi quyền đã cấp</div>
-        <div style="display:flex; gap:8px; margin-bottom:10px;">
-          <select id="shareViewFileSelect" style="flex:1; padding:6px 8px; border:1px solid #ccc; border-radius:4px; font-size:13px;"></select>
-          <button class="btnmini" onclick="loadShareAccessList()">🔄 Tải danh sách</button>
-        </div>
-        <div id="shareAccessList" style="font-size:13px;"></div>
-      </div>
-    </div>
 
     <main class="content">
       <div class="page-header">
@@ -1023,7 +1008,7 @@
       <div class="filterbar">
         <label class="inline">Từ ngày <input type="date" id="fTonKhoTu"></label>
         <label class="inline">Đến ngày <input type="date" id="fTonKhoDen"></label>
-        <button class="btnmini" onclick="loadTonKho()" style="background:#1F3864;color:#fff;">🔍 Xem báo cáo</button>
+        <button class="btnmini" onclick="loadTonKho()" style="background:#2563eb;border-color:#2563eb;color:#fff;">🔍 Xem báo cáo</button>
         <button class="btnmini" onclick="document.getElementById('fTonKhoTu').value='';document.getElementById('fTonKhoDen').value='';loadTonKho();">✕ Bỏ lọc (xem toàn bộ)</button>
       </div>
       <div id="tonKhoBody">
@@ -1077,28 +1062,28 @@
           <thead><tr><th>Mục</th><th>Nguồn dữ liệu</th><th>Dùng để làm gì</th></tr></thead>
           <tbody>
             <tr><td><b>🏠 Dashboard</b></td><td>Tổng hợp từ tất cả sheet</td><td>Nhìn nhanh: bao nhiêu hợp đồng, tỷ lệ hồ sơ đầy đủ, số HĐ chưa đánh giá FSC, rừng rủi ro cao, HĐ chưa theo dõi khảo sát, tiến độ triển khai theo giai đoạn.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 1–2: Thẩm định &amp; ký hợp đồng</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 1–2: Thẩm định &amp; ký hợp đồng</td></tr>
             <tr><td><b>🧾 Thẩm định hợp đồng</b></td><td>Nhập mới (BM-FSC-01/02)</td><td>Checklist 8 tiêu chí trước khi ký HĐ (mục đích SDĐ, sổ đỏ, CCCD, rừng tự nhiên 2020, tranh chấp, khối lượng, thông báo giá) — ra kết luận Đồng ý/Yêu cầu bổ sung/Từ chối.</td></tr>
             <tr><td><b>📄 Hợp đồng &amp; hồ sơ rừng</b></td><td>HD_RUNG, BaoCao_KiemTra</td><td>Xem từng hợp đồng: hồ sơ đủ/thiếu gì, bấm <b>"📎 Chi tiết"</b> xem pháp lý rừng + tọa độ Google Maps + ảnh. Ghi <b>kết luận giám sát FSC</b> ở form cuối trang.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3: Khảo sát &amp; tham vấn</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 3: Khảo sát &amp; tham vấn</td></tr>
             <tr><td><b>📋 Khảo sát &amp; Tham vấn</b></td><td>4 sub-tab: bảng Có/Chưa (nhập mới) + Báo cáo khảo sát (nhập mới, có ảnh) + BB Giám sát khai thác (nhập mới) + Tham vấn bên liên quan (nhập mới)</td><td>"Bảng theo dõi" xem nhanh HĐ nào thiếu loại hồ sơ nào; 3 sub-tab còn lại là nơi gõ/xem NỘI DUNG THẬT của từng loại hồ sơ, kể cả tải ảnh khảo sát.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 3–4: Khai thác, cân, nghiệm thu</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 3–4: Khai thác, cân, nghiệm thu</td></tr>
             <tr><td><b>📦 Lô hàng mua vào</b></td><td>HoSoKeo_DN</td><td>200 lô nhập gần nhất (phân trang 20/trang), lọc mã HĐ/chủ rừng/ngày, tổng khối lượng &amp; tổng tiền (toàn bộ + theo trang).</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 5–6: Vận chuyển &amp; chế biến</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 5–6: Vận chuyển &amp; chế biến</td></tr>
             <tr><td><b>🚛 Lệnh điều động vận chuyển</b></td><td>Nhập mới (BM-FSC-05)</td><td>Lệnh điều động vận chuyển nội bộ — điểm đi/đến, biển số, số phiếu cân, ngày lập phiếu xuất kho.</td></tr>
             <tr><td><b>🏭 Tiêu hao chế biến</b></td><td>Nhập mới (BM-FSC-06)</td><td>Theo dõi định mức tiêu hao chế biến dăm gỗ theo từng kỳ, so sánh định mức công bố vs thực tế.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 7–8: Xuất bán &amp; báo cáo Nhà nước</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 7–8: Xuất bán &amp; báo cáo Nhà nước</td></tr>
             <tr><td><b>🚚 Xuất hàng</b></td><td>NL_PC_XH</td><td>200 lô xuất gần nhất (phân trang), lọc theo số TKHQ/ngày, tổng khối lượng (chưa có cột tiền trong sheet nguồn).</td></tr>
             <tr><td><b>📤 Đơn hàng xuất bán</b></td><td>NL_DH_XB</td><td>Đơn hàng khách mua — bổ sung thông tin còn thiếu ở BM-FSC-07 (giá USD, khách hàng, khối lượng theo đơn).</td></tr>
             <tr><td><b>🗓️ Báo cáo Nhà nước</b></td><td>Nhập mới (BM-FSC-08)</td><td>Theo dõi hạn nộp/ngày nộp thực tế Mẫu số 29 (năm) và Mẫu số 14 (quý) cho cơ quan Kiểm lâm.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">BƯỚC 9 &amp; MỤC 8.3: Giám sát rủi ro</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">BƯỚC 9 &amp; MỤC 8.3: Giám sát rủi ro</td></tr>
             <tr><td><b>⚠️ Rủi ro CNRA</b></td><td>Nhập mới (BM-FSC-09, chọn rừng từ dropdown)</td><td>Đánh giá rủi ro theo Bộ CNRA Việt Nam cho từng lô rừng — Không đáng kể/Đáng kể, kèm biện pháp giảm thiểu (RMM).</td></tr>
             <tr><td><b>🔍 Giám sát định kỳ</b></td><td>Nhập mới (BM-FSC-10)</td><td>Báo cáo giám sát — đối chiếu đủ 5 mục tiêu giám sát của QT-FSC-01, ra kết luận ĐẠT/ĐẠT CÓ ĐIỀU KIỆN/KHÔNG ĐẠT.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">KH-FSC-01: Triển khai</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">KH-FSC-01: Triển khai</td></tr>
             <tr><td><b>📈 Tiến độ triển khai</b></td><td>Nhập mới (BM-KH-01)</td><td>Cập nhật tiến độ 5 giai đoạn theo KH-FSC-01, so sánh mốc kế hoạch với ngày thực tế.</td></tr>
             <tr><td><b>✅ Nghiệm thu giai đoạn</b></td><td>Nhập mới (BM-KH-02)</td><td>Đối chiếu đầu ra kỳ vọng từng giai đoạn với bằng chứng thực nhận, ra kết luận Nghiệm thu/Có điều kiện/Chưa.</td></tr>
             <tr><td><b>⚠️ Rủi ro triển khai</b></td><td>Nhập mới (BM-KH-03)</td><td>Ghi nhận rủi ro/vướng mắc phát sinh khi triển khai — mức độ, biện pháp, người phụ trách, hạn xử lý.</td></tr>
-            <tr><td colspan="3" style="background:#F0EEE4;font-weight:bold;">ĐÁNH GIÁ NỘI BỘ HỆ THỐNG DDS (theo FSC-STD-40-005 Ver.3.1, riêng biệt với QT-FSC-01)</td></tr>
+            <tr><td colspan="3" style="background:#f3f4f6;font-weight:bold;">ĐÁNH GIÁ NỘI BỘ HỆ THỐNG DDS (theo FSC-STD-40-005 Ver.3.1, riêng biệt với QT-FSC-01)</td></tr>
             <tr><td><b>📅 Kế hoạch đánh giá nội bộ</b></td><td>Nhập mới</td><td>Lập kế hoạch đánh giá nội bộ hằng năm (tối thiểu 1 lần/năm) — nhập tổng số nhà cung cấp, hệ thống tự tính số mẫu theo công thức y = 0.8×√x.</td></tr>
             <tr><td><b>📝 Phiếu yêu cầu khắc phục</b></td><td>Nhập mới (BM.05)</td><td>Ghi nhận điểm không phù hợp phát hiện khi đánh giá nội bộ, phân tích nguyên nhân, hành động khắc phục, theo dõi đến khi đóng (thời hạn 3–12 tháng).</td></tr>
             <tr><td><b>📋 Xem xét hệ thống DDS</b></td><td>Nhập mới (BM.07)</td><td>Biên bản xem xét hệ thống thẩm định định kỳ hằng năm, sau khi có kết quả đánh giá nội bộ — ghi nhận có/không cần cập nhật DDS.</td></tr>
@@ -1242,17 +1227,6 @@
       });
     });
 
-    /** Nhiều hàm add* server-side trả về {ok:false, error} khi lỗi thay vì throw (xem _safe trong
-     * Code.gs) — withSuccessHandler vẫn được gọi trong trường hợp đó, nên PHẢI kiểm tra res.ok
-     * trước khi báo "Đã lưu thành công", nếu không lỗi sẽ bị nuốt và người dùng tưởng đã lưu. */
-    function checkAddResult(res, msgElId) {
-      if (res && res.ok === false) {
-        document.getElementById(msgElId).innerHTML = '<div class="msg err">Lỗi: ' + res.error + '</div>';
-        return false;
-      }
-      return true;
-    }
-
     function showError(msg) {
       const el = document.getElementById('globalError');
       el.style.display = 'block';
@@ -1295,6 +1269,41 @@
       runner[fnName].apply(runner, args || []);
     }
 
+    /** Gửi 1 form ghi dữ liệu tới server — dùng CHUNG cho mọi form "Lưu ..." trong app.
+     * Sửa lỗi nghiêm trọng: trước đây mỗi form tự viết withSuccessHandler() và LUÔN báo
+     * "Đã lưu thành công" bất kể server trả về {ok:false, error:...} hay không (vì không
+     * ai kiểm tra res.ok) — khiến lỗi ghi dữ liệu (sheet đổi tên, hết quyền, mất mạng giữa
+     * chừng...) bị nuốt âm thầm, người dùng tưởng đã lưu nhưng thực ra KHÔNG có trong Sheet.
+     * Hàm này luôn kiểm tra res.ok trước khi báo thành công, đồng thời khóa nút Lưu trong
+     * lúc đang gửi để tránh double-click tạo 2 bản ghi / 2 mã trùng nhau. */
+    function submitForm(formId, fnName, msgElId, successMsg, opts) {
+      opts = opts || {};
+      const form = document.getElementById(formId);
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const obj = formToObj(e.target);
+        const args = opts.buildArgs ? opts.buildArgs(obj) : [obj];
+        const btn = e.target.querySelector('button[type="submit"]');
+        const msgEl = document.getElementById(msgElId);
+        if (btn) btn.disabled = true;
+        google.script.run
+          .withSuccessHandler((res) => {
+            if (btn) btn.disabled = false;
+            if (!res || res.ok === false) {
+              msgEl.innerHTML = '<div class="msg err">Lỗi: ' + (res && res.error ? res.error : 'Không rõ nguyên nhân, vui lòng thử lại.') + '</div>';
+              return;
+            }
+            msgEl.innerHTML = '<div class="msg ok">' + successMsg + '</div>';
+            if (opts.noReset !== true) e.target.reset();
+            if (opts.afterSuccess) opts.afterSuccess();
+          })
+          .withFailureHandler((err) => {
+            if (btn) btn.disabled = false;
+            msgEl.innerHTML = '<div class="msg err">Lỗi: ' + (err && err.message ? err.message : err) + '</div>';
+          })[fnName].apply(null, args);
+      });
+    }
+
     function runPingTest() {
       alert('Đang gọi pingTest()... chờ kết quả (alert tiếp theo).');
       google.script.run
@@ -1320,108 +1329,6 @@
       }).checkKetNoi();
     }
 
-    // ---- Chia sẻ Google Sheet cho email khác ----
-    let shareTargetsCache = [];
-    function openShareModal() {
-      document.getElementById('shareModalBackdrop').style.display = 'block';
-      document.getElementById('shareResultList').innerHTML = '';
-      document.getElementById('shareMsg').innerHTML = '';
-      document.getElementById('shareAccessList').innerHTML = '';
-      if (shareTargetsCache.length) return;
-      google.script.run
-        .withSuccessHandler((res) => {
-          if (!res || res.ok === false) {
-            const errMsg = '⚠ Không tải được danh sách file: ' + (res ? res.error : 'lỗi không rõ');
-            document.getElementById('shareTargetList').innerHTML = '<span style="color:#A32D2D;">' + errMsg + '</span>';
-            return;
-          }
-          shareTargetsCache = res.data;
-          document.getElementById('shareTargetList').innerHTML = shareTargetsCache.map((t) => `<label style="display:flex; align-items:center; gap:6px; font-weight:normal;">
-            <input type="checkbox" class="shareTargetCheck" value="${t.key}" ${t.key === 'THIS' ? 'checked' : ''}> ${t.label}
-          </label>`).join('');
-          document.getElementById('shareViewFileSelect').innerHTML = shareTargetsCache.map((t) => `<option value="${t.key}">${t.label}</option>`).join('');
-        })
-        .withFailureHandler((err) => {
-          document.getElementById('shareTargetList').innerHTML = '<span style="color:#A32D2D;">⚠ Lỗi tải danh sách file: ' + (err && err.message ? err.message : err) + '</span>';
-        })
-        .getShareTargetList();
-    }
-    function closeShareModal() {
-      document.getElementById('shareModalBackdrop').style.display = 'none';
-    }
-    function loadShareAccessList() {
-      const key = document.getElementById('shareViewFileSelect').value;
-      const el = document.getElementById('shareAccessList');
-      if (!key) { el.innerHTML = ''; return; }
-      el.innerHTML = '⏳ Đang tải danh sách quyền...';
-      google.script.run
-        .withSuccessHandler((res) => {
-          if (!res || res.ok === false) {
-            el.innerHTML = '<span style="color:#A32D2D;">⚠ ' + (res ? res.error : 'Lỗi không rõ') + '</span>';
-            return;
-          }
-          const rows = res.data;
-          if (!rows.length) { el.innerHTML = '<span style="color:#888;">Chưa có ai được cấp quyền riêng (ngoài chủ sở hữu).</span>'; return; }
-          el.innerHTML = '<table style="width:100%; border-collapse:collapse;"><thead><tr>' +
-            '<th style="text-align:left;padding:4px;">Người / loại</th><th style="text-align:left;padding:4px;">Quyền</th><th></th></tr></thead><tbody>' +
-            rows.map((r) => `<tr>
-              <td style="padding:4px;border-bottom:1px solid #eee;">${fmt(r.email || r.displayName) || '(không rõ)'}</td>
-              <td style="padding:4px;border-bottom:1px solid #eee;">${fmt(r.roleLabel)}</td>
-              <td style="padding:4px;border-bottom:1px solid #eee;">${r.isOwner ? '' : `<button class="btnmini" onclick="revokeAccess('${key}','${r.id}')">🗑 Thu hồi</button>`}</td>
-            </tr>`).join('') + '</tbody></table>';
-        })
-        .withFailureHandler((err) => {
-          el.innerHTML = '<span style="color:#A32D2D;">⚠ ' + (err && err.message ? err.message : err) + '</span>';
-        })
-        .getShareAccessList(key);
-    }
-    function revokeAccess(targetKey, permissionId) {
-      if (!confirm('Thu hồi quyền truy cập này?')) return;
-      google.script.run
-        .withSuccessHandler((res) => {
-          if (!res || res.ok === false) { alert('Lỗi: ' + (res ? res.error : 'không rõ')); return; }
-          loadShareAccessList();
-        })
-        .withFailureHandler((err) => {
-          alert('Lỗi: ' + (err && err.message ? err.message : err));
-        })
-        .revokeShareAccess(targetKey, permissionId);
-    }
-    function submitShare() {
-      const email = document.getElementById('shareEmail').value.trim();
-      const role = document.getElementById('shareRole').value;
-      const targetKeys = Array.from(document.querySelectorAll('.shareTargetCheck:checked')).map((cb) => cb.value);
-      const msgEl = document.getElementById('shareMsg');
-      const resultEl = document.getElementById('shareResultList');
-      if (!email) { msgEl.innerHTML = '<div class="msg err">Vui lòng nhập email.</div>'; return; }
-      if (!targetKeys.length) { msgEl.innerHTML = '<div class="msg err">Vui lòng chọn ít nhất 1 file để chia sẻ.</div>'; return; }
-      const btn = document.getElementById('btnSubmitShare');
-      btn.disabled = true;
-      msgEl.innerHTML = '<div class="msg ok">⏳ Đang chia sẻ...</div>';
-      resultEl.innerHTML = '';
-      google.script.run
-        .withSuccessHandler((res) => {
-          btn.disabled = false;
-          if (!res || res.ok === false) {
-            msgEl.innerHTML = '<div class="msg err">Lỗi: ' + (res ? res.error : 'không rõ') + '</div>';
-            return;
-          }
-          const rows = res.data;
-          const soOk = rows.filter((r) => r.ok).length;
-          msgEl.innerHTML = soOk === rows.length
-            ? `<div class="msg ok">Đã chia sẻ thành công ${soOk}/${rows.length} file cho ${email}.</div>`
-            : `<div class="msg err">Chỉ chia sẻ thành công ${soOk}/${rows.length} file — xem chi tiết bên dưới.</div>`;
-          resultEl.innerHTML = rows.map((r) => r.ok
-            ? `<div>✅ ${r.label}</div>`
-            : `<div style="color:#A32D2D;">❌ ${r.label}: ${r.error}</div>`).join('');
-        })
-        .withFailureHandler((err) => {
-          btn.disabled = false;
-          msgEl.innerHTML = '<div class="msg err">Lỗi: ' + (err && err.message ? err.message : err) + '</div>';
-        })
-        .shareSheetsWithEmail(email, targetKeys, role);
-    }
-
     // ---- Xuất CSV / In báo cáo (áp dụng đúng dữ liệu đang hiển thị sau khi lọc) ----
     function exportCSV(tableId, filename) {
       const table = document.getElementById(tableId);
@@ -1443,11 +1350,11 @@
       const w = window.open('', '_blank');
       w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>
         body{font-family:Arial,sans-serif;padding:24px;color:#222;}
-        h1{font-size:16px;color:#1F3864;margin-bottom:4px;}
+        h1{font-size:16px;color:#1f2937;margin-bottom:4px;}
         .meta{font-size:11px;color:#666;margin-bottom:16px;}
         table{width:100%;border-collapse:collapse;font-size:11px;}
         th,td{border:1px solid #999;padding:5px 7px;text-align:left;}
-        th{background:#D9E2F3;}
+        th{background:#e5e7eb;}
         @media print { body{padding:0;} }
       </style></head><body>
         <h1>HAK GROUP — ${title}</h1>
@@ -1459,6 +1366,12 @@
       setTimeout(() => w.print(), 300);
     }
 
+    /** Tra theo chỉ số trong trang hiện tại thay vì nhúng thẳng SoHopDong vào chuỗi onclick —
+     * tránh lỗi/injection nếu SoHopDong chứa dấu nháy đơn hoặc ký tự đặc biệt khác. */
+    function xemChiTietByIdx(idx) {
+      const r = (window._hopDongPageFiltered || [])[idx];
+      if (r) xemChiTiet(r.SoHopDong);
+    }
     function xemChiTiet(soHopDong) {
       document.getElementById('chiTietModalBackdrop').style.display = 'block';
       document.getElementById('chiTietModalBody').innerHTML = '⏳ Đang tải...';
@@ -1466,33 +1379,33 @@
         if (!d) return;
         let html = `<p><b>Số hợp đồng:</b> ${soHopDong} &nbsp; <span style="color:#666;">(${d.rungList.length} lô rừng thuộc hợp đồng này)</span></p>`;
         if (!d.rungList.length) {
-          html += `<p style="color:#A32D2D;">⚠ Không tìm thấy dòng nào trong HD_RUNG cho hợp đồng này.</p>`;
+          html += `<p style="color:#dc2626;">⚠ Không tìm thấy dòng nào trong HD_RUNG cho hợp đồng này.</p>`;
         }
         d.rungList.forEach((rung, idx) => {
           html += `<div style="border:1px solid #ddd; border-radius:8px; padding:12px; margin-bottom:12px;">
-            <h3 style="color:#1F3864;font-size:14px;margin-top:0;">🌲 Lô rừng ${idx + 1} — Mã: ${fmt(rung.MaRung)}</h3>
+            <h3 style="color:#1f2937;font-size:14px;margin-top:0;">🌲 Lô rừng ${idx + 1} — Mã: ${fmt(rung.MaRung)}</h3>
             <p><b>Chủ rừng:</b> ${fmt(rung.HoVaTenChuRung)} &nbsp; <b>CCCD:</b> ${fmt(rung.SoCCCD)}</p>
             <p><b>Thường trú:</b> ${fmt(rung.ThuongTru)}</p>
             <p><b>Địa chỉ rừng trồng:</b> ${fmt(rung.DiaChiRungTrong)} &nbsp; <b>Diện tích:</b> ${fmtNum(rung.DienTich_m2)} m²</p>
             <p><b>Hồ sơ nguồn gốc:</b> ${fmt(rung.HoSoNguonGoc) || '<i>(chưa có)</i>'} &nbsp; <b>Số giấy tờ:</b> ${fmt(rung.SoGiayTo)} (${fmt(rung.NgayGiayTo)})</p>
-            <p><b>File giấy tờ đính kèm:</b> ${rung.DinhKemGiayTo ? ('<code>' + rung.DinhKemGiayTo + '</code>') : '<i>(chưa có)</i>'}</p>`;
+            <p><b>File giấy tờ đính kèm:</b> ${rung.DinhKemGiayTo ? ('<code>' + escapeHtml(rung.DinhKemGiayTo) + '</code>') : '<i>(chưa có)</i>'}</p>`;
           if (rung.Gps) {
-            const mapUrl = `https://www.google.com/maps?q=${rung.Gps.Lat},${rung.Gps.Lng}`;
-            html += `<p><b>📍 Tọa độ:</b> ${fmt(rung.Gps.Lat)}, ${fmt(rung.Gps.Lng)} — <a href="${mapUrl}" target="_blank">Mở Google Maps</a></p>`;
+            const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(rung.Gps.Lat)},${encodeURIComponent(rung.Gps.Lng)}`;
+            html += `<p><b>📍 Tọa độ:</b> ${fmt(rung.Gps.Lat)}, ${fmt(rung.Gps.Lng)} — <a href="${escapeHtml(mapUrl)}" target="_blank">Mở Google Maps</a></p>`;
           } else {
-            html += `<p style="color:#A32D2D;">⚠ Chưa có tọa độ GPS cho lô rừng này.</p>`;
+            html += `<p style="color:#dc2626;">⚠ Chưa có tọa độ GPS cho lô rừng này.</p>`;
           }
           if (rung.SoAnh > 0) {
             html += `<p><b>📷 Ảnh đính kèm (${rung.SoAnh} ảnh):</b></p><ul style="margin:4px 0;">` +
-              rung.AnhFiles.map((f) => `<li><code>${f}</code></li>`).join('') + `</ul>
+              rung.AnhFiles.map((f) => `<li><code>${escapeHtml(f)}</code></li>`).join('') + `</ul>
               <p style="color:#888;font-size:12px;">Đây là đường dẫn nội bộ trong Drive gắn với Google Form — mở trực tiếp trong sheet HD_Picture (hoặc thư mục Drive tương ứng) để xem ảnh thật.</p>`;
           } else {
-            html += `<p style="color:#A32D2D;">⚠ Chưa có ảnh nào cho lô rừng này trong HD_Picture.</p>`;
+            html += `<p style="color:#dc2626;">⚠ Chưa có ảnh nào cho lô rừng này trong HD_Picture.</p>`;
           }
           html += `</div>`;
         });
         if (d.stk) {
-          html += `<h3 style="color:#1F3864;font-size:14px;">💳 Thanh toán / Ủy quyền (HD_STK)</h3>
+          html += `<h3 style="color:#1f2937;font-size:14px;">💳 Thanh toán / Ủy quyền (HD_STK)</h3>
             <p><b>Người được ủy quyền:</b> ${fmt(d.stk.NguoiUyQuyen)}</p>
             <p><b>Số TK nhận tiền:</b> ${fmt(d.stk.SoTKNhanTien)} — ${fmt(d.stk.NganHang)}</p>
             <p><b>Có ủy quyền thanh toán:</b> ${fmt(d.stk.UyQuyenThanhToan)}</p>`;
@@ -1501,6 +1414,13 @@
       });
     }
 
+    /** Thoát ký tự HTML đặc biệt trước khi chèn dữ liệu (từ Sheet hoặc form người dùng nhập)
+     * vào innerHTML — chống HTML/script lọt vào bảng và phá cấu trúc hoặc chạy mã lạ.
+     * CHỈ dùng cho DỮ LIỆU THẬT, không dùng cho khung HTML do chính ứng dụng tạo ra (template). */
+    function escapeHtml(v) {
+      if (v === null || v === undefined) return '';
+      return String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
     function badge(kl) {
       if (kl === 'ĐẠT') return '<span class="badge dat">ĐẠT</span>';
       if (kl === 'ĐẠT CÓ ĐIỀU KIỆN') return '<span class="badge dieukien">ĐẠT CÓ ĐK</span>';
@@ -1508,10 +1428,10 @@
       return '<span class="badge chua">Chưa đánh giá</span>';
     }
     function hoSoBadge(kq) {
-      if (String(kq).indexOf('Đầy đủ') > -1) return '<span class="badge ok2">' + kq + '</span>';
-      return '<span class="badge thieu">' + (kq || '') + '</span>';
+      if (String(kq).indexOf('Đầy đủ') > -1) return '<span class="badge ok2">' + escapeHtml(kq) + '</span>';
+      return '<span class="badge thieu">' + escapeHtml(kq || '') + '</span>';
     }
-    function fmt(v) { return v === null || v === undefined ? '' : v; }
+    function fmt(v) { return escapeHtml(v); }
     function fmtNum(v) {
       const n = Number(v);
       return isNaN(n) ? '0' : n.toLocaleString('vi-VN', { maximumFractionDigits: 2 });
@@ -1584,7 +1504,7 @@
         const sel = document.getElementById('selectHopDong');
         if (sel) {
           sel.innerHTML = '<option value="">-- chọn hợp đồng --</option>' +
-            rows.map((r) => `<option value="${r.SoHopDong}">${r.SoHopDong} — ${r.ChuRung || ''}</option>`).join('');
+            rows.map((r) => `<option value="${escapeHtml(r.SoHopDong)}">${escapeHtml(r.SoHopDong)} — ${escapeHtml(r.ChuRung)}</option>`).join('');
         }
         renderHopDong();
       });
@@ -1612,11 +1532,12 @@
         `${filtered.filter((r) => r.KetLuanGiamSat === 'ĐẠT').length} ĐẠT · ` +
         `${filtered.filter((r) => r.KetLuanGiamSat === 'KHÔNG ĐẠT').length} KHÔNG ĐẠT`;
       const tb = document.querySelector('#hopDongTable tbody');
-      tb.innerHTML = pageRows.map((r) => `<tr>
+      window._hopDongPageFiltered = pageRows;
+      tb.innerHTML = pageRows.map((r, idx) => `<tr>
         <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.MaRung)}</td><td>${fmt(r.ChuRung)}</td>
         <td>${hoSoBadge(r.KetQuaHoSo)}</td><td>${fmt(r.HoSoConThieu)}</td>
         <td>${badge(r.KetLuanGiamSat)}</td>
-        <td><button class="btnmini" onclick="xemChiTiet('${r.SoHopDong}')">📎 Chi tiết</button></td>
+        <td><button class="btnmini" onclick="xemChiTietByIdx(${idx})">📎 Chi tiết</button></td>
       </tr>`).join('') || '<tr><td colspan="7">Không có dòng nào khớp bộ lọc.</td></tr>';
       document.getElementById('fHopDongCount').textContent = `${filtered.length} / ${CACHE.hopDong.length} dòng`;
       document.getElementById('fHopDongPageInfo').textContent = `Trang ${pageHopDong} / ${totalPages}`;
@@ -1668,7 +1589,7 @@
       const trangKL = sumField(pageRows, 'KhoiLuongTan');
       const trangTT = sumField(pageRows, 'ThanhToan');
       document.getElementById('loHangFoot').innerHTML =
-        `<tr style="font-weight:bold;background:#EAF0FB;"><td colspan="6">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangKL)} tấn</td><td></td><td>${fmtNum(trangTT)} đồng</td></tr>`;
+        `<tr style="font-weight:bold;background:#eff6ff;"><td colspan="6">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangKL)} tấn</td><td></td><td>${fmtNum(trangTT)} đồng</td></tr>`;
 
       document.getElementById('fLoHangCount').textContent = `${filtered.length} / ${CACHE.loHang.length} dòng (200 gần nhất)`;
       document.getElementById('fLoHangPageInfo').textContent = `Trang ${pageLoHang} / ${totalPages}`;
@@ -1685,7 +1606,7 @@
         pageXuatHang = 1;
         const tkhqSet = [...new Set(rows.map((r) => r.SoTKHQ).filter(Boolean))].sort();
         document.getElementById('fXuatHangTKHQ').innerHTML = '<option value="">-- Số TKHQ: Tất cả --</option>' +
-          tkhqSet.map((v) => `<option value="${v}">${v}</option>`).join('');
+          tkhqSet.map((v) => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
         renderXuatHang();
       });
     }
@@ -1725,7 +1646,7 @@
       const trangTan = sumField(pageRows, 'KhoiLuongTan');
       const trangM3 = sumField(pageRows, 'KhoiLuongM3');
       document.getElementById('xuatHangFoot').innerHTML =
-        `<tr style="font-weight:bold;background:#EAF0FB;"><td colspan="3">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangTan)} tấn</td><td>${fmtNum(trangM3)} m³</td><td colspan="3"></td></tr>`;
+        `<tr style="font-weight:bold;background:#eff6ff;"><td colspan="3">Tổng trang này (${pageRows.length} dòng)</td><td>${fmtNum(trangTan)} tấn</td><td>${fmtNum(trangM3)} m³</td><td colspan="3"></td></tr>`;
 
       document.getElementById('fXuatHangCount').textContent = `${filtered.length} / ${CACHE.xuatHang.length} dòng (200 gần nhất)`;
       document.getElementById('fXuatHangPageInfo').textContent = `Trang ${pageXuatHang} / ${totalPages}`;
@@ -1744,14 +1665,14 @@
           CACHE.rungList = rows;
           const sel = document.getElementById('selectRungRuiRo');
           sel.innerHTML = '<option value="">-- chọn rừng --</option>' +
-            rows.map((r, i) => `<option value="${r.MaRung}" data-sohd="${r.SoHopDong}" data-idx="${i}">${r.MaRung || '(không có mã)'} — HĐ ${r.SoHopDong} — ${r.ChuRung}</option>`).join('');
+            rows.map((r, i) => `<option value="${escapeHtml(r.MaRung)}" data-sohd="${escapeHtml(r.SoHopDong)}" data-idx="${i}">${escapeHtml(r.MaRung || '(không có mã)')} — HĐ ${escapeHtml(r.SoHopDong)} — ${escapeHtml(r.ChuRung)}</option>`).join('');
           // Đổ dữ liệu vào 2 dropdown lọc (loại trùng)
           const hopDongSet = [...new Set(rows.map((r) => r.SoHopDong).filter(Boolean))];
           const rungSet = [...new Set(rows.map((r) => r.MaRung).filter(Boolean))];
           document.getElementById('fRuiRoHopDong').innerHTML = '<option value="">-- Lọc theo hợp đồng: Tất cả --</option>' +
-            hopDongSet.map((v) => `<option value="${v}">${v}</option>`).join('');
+            hopDongSet.map((v) => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
           document.getElementById('fRuiRoRung').innerHTML = '<option value="">-- Lọc theo rừng: Tất cả --</option>' +
-            rungSet.map((v) => `<option value="${v}">${v}</option>`).join('');
+            rungSet.map((v) => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
         });
       }
     }
@@ -1803,7 +1724,7 @@
     function fillSelectHopDongKhaoSat() {
       const sel = document.getElementById('selectHopDongKhaoSat');
       sel.innerHTML = '<option value="">-- chọn hợp đồng --</option>' +
-        CACHE.hopDong.map((r) => `<option value="${r.SoHopDong}">${r.SoHopDong} — ${r.ChuRung || ''}</option>`).join('');
+        CACHE.hopDong.map((r) => `<option value="${escapeHtml(r.SoHopDong)}">${escapeHtml(r.SoHopDong)} — ${escapeHtml(r.ChuRung)}</option>`).join('');
     }
     const KS_FIELDS = ['CoBaoCaoKhaoSat', 'CoBBGiamSatTrongKhaiThac', 'CoBBGiamSatSauKhaiThac', 'ThamVanUBNDXa', 'ThamVanKiemLam', 'ThamVanChuRungLanCan', 'ThamVanNguoiDanDiaPhuong', 'ThamVanCongNhanKhaiThac', 'ThamVanNguoiVanChuyen'];
     function ksBadge(v) {
@@ -1858,17 +1779,7 @@
       document.getElementById('fTDHDCount').textContent = `${filtered.length} / ${CACHE.tieuChiThamDinh.length} dòng`;
       window._tdhdFiltered = filtered;
     }
-    document.getElementById('formTieuChiThamDinh').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'tdhdMsg')) return;
-        document.getElementById('tdhdMsg').innerHTML = '<div class="msg ok">Đã lưu kết quả thẩm định.</div>';
-        e.target.reset(); loadTieuChiThamDinh();
-      }).withFailureHandler((err) => {
-        document.getElementById('tdhdMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addTieuChiThamDinh(obj);
-    });
+    submitForm('formTieuChiThamDinh', 'addTieuChiThamDinh', 'tdhdMsg', 'Đã lưu kết quả thẩm định.', { afterSuccess: loadTieuChiThamDinh });
 
     // ---- BM-FSC-05: Lệnh điều động vận chuyển ----
     function loadLenhDieuDong() {
@@ -1890,17 +1801,7 @@
       document.getElementById('fDDCount').textContent = `${filtered.length} / ${CACHE.lenhDieuDong.length} dòng`;
       window._ddFiltered = filtered;
     }
-    document.getElementById('formLenhDieuDong').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'ddMsg')) return;
-        document.getElementById('ddMsg').innerHTML = '<div class="msg ok">Đã lưu lệnh điều động.</div>';
-        e.target.reset(); loadLenhDieuDong();
-      }).withFailureHandler((err) => {
-        document.getElementById('ddMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addLenhDieuDong(obj);
-    });
+    submitForm('formLenhDieuDong', 'addLenhDieuDong', 'ddMsg', 'Đã lưu lệnh điều động.', { afterSuccess: loadLenhDieuDong });
 
     // ---- BM-FSC-06: Tiêu hao chế biến ----
     function loadTieuHao() {
@@ -1922,17 +1823,7 @@
       document.getElementById('fTHCount').textContent = `${filtered.length} / ${CACHE.tieuHao.length} dòng`;
       window._thFiltered = filtered;
     }
-    document.getElementById('formTieuHao').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'thMsg')) return;
-        document.getElementById('thMsg').innerHTML = '<div class="msg ok">Đã lưu kỳ tiêu hao.</div>';
-        e.target.reset(); loadTieuHao();
-      }).withFailureHandler((err) => {
-        document.getElementById('thMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addTieuHaoCheBien(obj);
-    });
+    submitForm('formTieuHao', 'addTieuHaoCheBien', 'thMsg', 'Đã lưu kỳ tiêu hao.', { afterSuccess: loadTieuHao });
 
     // ---- Đơn hàng xuất bán (NL_DH_XB, chỉ đọc) ----
     function loadDonHangXB() {
@@ -1943,7 +1834,7 @@
         pageDHXB = 1;
         if (rows.length) {
           const cols = Object.keys(rows[0]).filter((k) => k !== 'Timestamp' && k !== 'Email Address');
-          document.querySelector('#dhxbTable thead tr').innerHTML = cols.map((c) => `<th>${c}</th>`).join('');
+          document.querySelector('#dhxbTable thead tr').innerHTML = cols.map((c) => `<th>${escapeHtml(c)}</th>`).join('');
           window._dhxbCols = cols;
         }
         renderDonHangXB();
@@ -1987,17 +1878,7 @@
       document.getElementById('fBCNNCount').textContent = `${filtered.length} / ${CACHE.baoCaoNN.length} dòng`;
       window._bcnnFiltered = filtered;
     }
-    document.getElementById('formBaoCaoNN').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'bcnnMsg')) return;
-        document.getElementById('bcnnMsg').innerHTML = '<div class="msg ok">Đã lưu bản ghi báo cáo.</div>';
-        e.target.reset(); loadBaoCaoNN();
-      }).withFailureHandler((err) => {
-        document.getElementById('bcnnMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addSoTheoDoiBaoCao(obj);
-    });
+    submitForm('formBaoCaoNN', 'addSoTheoDoiBaoCao', 'bcnnMsg', 'Đã lưu bản ghi báo cáo.', { afterSuccess: loadBaoCaoNN });
 
     // ---- BM-KH-02: Nghiệm thu giai đoạn ----
     function loadNghiemThuGD() {
@@ -2019,17 +1900,7 @@
       document.getElementById('fNTGDCount').textContent = `${filtered.length} / ${CACHE.nghiemThuGD.length} dòng`;
       window._ntgdFiltered = filtered;
     }
-    document.getElementById('formNghiemThuGD').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'nttdMsg')) return;
-        document.getElementById('nttdMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản nghiệm thu.</div>';
-        e.target.reset(); loadNghiemThuGD();
-      }).withFailureHandler((err) => {
-        document.getElementById('nttdMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addNghiemThuGiaiDoan(obj);
-    });
+    submitForm('formNghiemThuGD', 'addNghiemThuGiaiDoan', 'nttdMsg', 'Đã lưu biên bản nghiệm thu.', { afterSuccess: loadNghiemThuGD });
 
     // ---- BM-KH-03: Rủi ro/vướng mắc triển khai ----
     function loadRuiRoTK() {
@@ -2056,17 +1927,7 @@
       document.getElementById('fRRTKCount').textContent = `${filtered.length} / ${CACHE.ruiRoTK.length} dòng`;
       window._rrtkFiltered = filtered;
     }
-    document.getElementById('formRuiRoTK').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'rrtkMsg')) return;
-        document.getElementById('rrtkMsg').innerHTML = '<div class="msg ok">Đã lưu rủi ro/vướng mắc.</div>';
-        e.target.reset(); loadRuiRoTK();
-      }).withFailureHandler((err) => {
-        document.getElementById('rrtkMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addRuiRoTrienKhai(obj);
-    });
+    submitForm('formRuiRoTK', 'addRuiRoTrienKhai', 'rrtkMsg', 'Đã lưu rủi ro/vướng mắc.', { afterSuccess: loadRuiRoTK });
 
     // ---- In 1 phiếu đơn (định dạng như mẫu Word gốc, có khối ký tên — để in ra ký tay) ----
     const BCKS_LABELS = {
@@ -2146,40 +2007,29 @@
     }
 
     // ---- Thư viện mẫu Word gốc (Google Drive) ----
-    // Cố ý KHÔNG dùng callServer() ở đây: đây là tính năng phụ (link tham khảo), lỗi của nó
-    // (VD: chưa cấp quyền Drive cho script) không nên chiếm dụng banner lỗi toàn trang mỗi khi
-    // mở tab Hướng dẫn hay các sub-tab Khảo sát/Tham vấn — chỉ báo lỗi cục bộ ngay tại chỗ hiện link.
     let mauWordCache = null;
     function loadMauWordLinks(cb) {
-      if (mauWordCache) { cb(mauWordCache, null); return; }
-      google.script.run
-        .withSuccessHandler((res) => {
-          if (res && res.ok === false) { cb([], res.error); return; }
-          const rows = (res && res.data) || [];
-          mauWordCache = rows;
-          cb(rows, null);
-        })
-        .withFailureHandler((err) => {
-          cb([], err && err.message ? err.message : String(err));
-        })
-        .getMauWordLinks();
+      if (mauWordCache) { cb(mauWordCache); return; }
+      callServer('getMauWordLinks', [], (rows) => {
+        if (!rows) { rows = []; }
+        mauWordCache = rows;
+        cb(rows);
+      });
     }
     function renderMauWordFull() {
-      loadMauWordLinks((files, err) => {
+      loadMauWordLinks((files) => {
         const el = document.getElementById('mauWordList');
-        if (err) { el.innerHTML = '<p style="color:#A32D2D;">⚠ Không tải được danh sách mẫu Word: ' + err + '</p>'; return; }
-        if (!files.length) { el.innerHTML = '<p style="color:#A32D2D;">Không tìm thấy file nào trong thư mục Drive, hoặc chưa có quyền đọc thư mục.</p>'; return; }
-        el.innerHTML = '<ul>' + files.map((f) => `<li><a href="${f.url}" target="_blank">📄 ${f.name}</a></li>`).join('') + '</ul>';
+        if (!files.length) { el.innerHTML = '<p style="color:#dc2626;">Không tìm thấy file nào trong thư mục Drive, hoặc chưa có quyền đọc thư mục.</p>'; return; }
+        el.innerHTML = '<ul>' + files.map((f) => `<li><a href="${escapeHtml(f.url)}" target="_blank">📄 ${escapeHtml(f.name)}</a></li>`).join('') + '</ul>';
       });
     }
     function renderMauWordQuick(elId, keyword) {
-      loadMauWordLinks((files, err) => {
+      loadMauWordLinks((files) => {
         const el = document.getElementById(elId);
         if (!el) return;
-        if (err) { el.innerHTML = ''; return; }
         const match = files.filter((f) => f.name.toLowerCase().includes(keyword.toLowerCase()));
         if (!match.length) { el.innerHTML = ''; return; }
-        el.innerHTML = '<div class="totalbox">📄 Mẫu tham khảo: ' + match.map((f) => `<a href="${f.url}" target="_blank">${f.name}</a>`).join(' &nbsp;|&nbsp; ') + '</div>';
+        el.innerHTML = '<div class="totalbox">📄 Mẫu tham khảo: ' + match.map((f) => `<a href="${escapeHtml(f.url)}" target="_blank">${escapeHtml(f.name)}</a>`).join(' &nbsp;|&nbsp; ') + '</div>';
       });
     }
 
@@ -2209,17 +2059,7 @@
       document.getElementById('fKHDGNBCount').textContent = `${filtered.length} / ${CACHE.keHoachDGNB.length} dòng`;
       window._khdgnbFiltered = filtered;
     }
-    document.getElementById('formKeHoachDGNB').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'khdgnbMsg')) return;
-        document.getElementById('khdgnbMsg').innerHTML = '<div class="msg ok">Đã lưu kế hoạch đánh giá.</div>';
-        e.target.reset(); loadKeHoachDGNB();
-      }).withFailureHandler((err) => {
-        document.getElementById('khdgnbMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addKeHoachDanhGia(obj);
-    });
+    submitForm('formKeHoachDGNB', 'addKeHoachDanhGia', 'khdgnbMsg', 'Đã lưu kế hoạch đánh giá.', { afterSuccess: loadKeHoachDGNB });
 
     // ---- Phiếu yêu cầu hành động khắc phục (BM.05) ----
     function loadPhieuKhacPhuc() {
@@ -2246,17 +2086,7 @@
       document.getElementById('fPKPCount').textContent = `${filtered.length} / ${CACHE.phieuKhacPhuc.length} dòng`;
       window._pkpFiltered = filtered;
     }
-    document.getElementById('formPhieuKhacPhuc').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'pkpMsg')) return;
-        document.getElementById('pkpMsg').innerHTML = '<div class="msg ok">Đã lưu phiếu yêu cầu khắc phục.</div>';
-        e.target.reset(); loadPhieuKhacPhuc();
-      }).withFailureHandler((err) => {
-        document.getElementById('pkpMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addPhieuKhacPhuc(obj);
-    });
+    submitForm('formPhieuKhacPhuc', 'addPhieuKhacPhuc', 'pkpMsg', 'Đã lưu phiếu yêu cầu khắc phục.', { afterSuccess: loadPhieuKhacPhuc });
 
     // ---- Biên bản xem xét hệ thống DDS (BM.07) ----
     function loadXemXetDDS() {
@@ -2276,17 +2106,7 @@
       document.getElementById('fXXDDSCount').textContent = `${filtered.length} / ${CACHE.xemXetDDS.length} dòng`;
       window._xxddsFiltered = filtered;
     }
-    document.getElementById('formXemXetDDS').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'xxddsMsg')) return;
-        document.getElementById('xxddsMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản xem xét.</div>';
-        e.target.reset(); loadXemXetDDS();
-      }).withFailureHandler((err) => {
-        document.getElementById('xxddsMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addBienBanXemXetDDS(obj);
-    });
+    submitForm('formXemXetDDS', 'addBienBanXemXetDDS', 'xxddsMsg', 'Đã lưu biên bản xem xét.', { afterSuccess: loadXemXetDDS });
 
     // ---- Phê duyệt năng lực đánh giá viên nội bộ (BM.08) ----
     function loadPheDuyetDGV() {
@@ -2310,17 +2130,7 @@
       document.getElementById('fPDDGVCount').textContent = `${filtered.length} / ${CACHE.pheDuyetDGV.length} dòng`;
       window._pddgvFiltered = filtered;
     }
-    document.getElementById('formPheDuyetDGV').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'pddgvMsg')) return;
-        document.getElementById('pddgvMsg').innerHTML = '<div class="msg ok">Đã lưu phê duyệt đánh giá viên.</div>';
-        e.target.reset(); loadPheDuyetDGV();
-      }).withFailureHandler((err) => {
-        document.getElementById('pddgvMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addPheDuyetDanhGiaVien(obj);
-    });
+    submitForm('formPheDuyetDGV', 'addPheDuyetDanhGiaVien', 'pddgvMsg', 'Đã lưu phê duyệt đánh giá viên.', { afterSuccess: loadPheDuyetDGV });
 
     // ---- Báo cáo tồn kho nguyên liệu ----
     function loadTonKho() {
@@ -2395,10 +2205,10 @@
       grid.innerHTML = rows.map((r) => {
         const anhList = (r.AnhKhaoSat || '').split(',').map((s) => s.trim()).filter(Boolean);
         return `<div style="background:#fff;border-radius:8px;padding:12px;box-shadow:0 1px 3px rgba(0,0,0,.1);font-size:12px;">
-          <div style="font-weight:bold;color:#1F3864;">${fmt(r.NgayKhaoSat)} — HĐ ${fmt(r.SoHopDong)}</div>
+          <div style="font-weight:bold;color:#1f2937;">${fmt(r.NgayKhaoSat)} — HĐ ${fmt(r.SoHopDong)}</div>
           <div>👤 ${fmt(r.NguoiKhaoSat)}</div>
           <div style="color:#666;margin:4px 0;">${truncateText(r.DiaChiRungTrong, 60)}</div>
-          ${anhList.length ? anhList.map((u) => `<a href="${u}" target="_blank" class="btnmini" style="display:inline-block;margin:2px 4px 0 0;">📷 Ảnh</a>`).join('') : '<span style="color:#A32D2D;">⚠ Chưa có ảnh</span>'}
+          ${anhList.length ? anhList.map((u) => `<a href="${escapeHtml(u)}" target="_blank" class="btnmini" style="display:inline-block;margin:2px 4px 0 0;">📷 Ảnh</a>`).join('') : '<span style="color:#dc2626;">⚠ Chưa có ảnh</span>'}
         </div>`;
       }).join('') || '<p style="color:#888;grid-column:1/-1;">Chưa có khảo sát nào.</p>';
       document.getElementById('fAnhKSCount').textContent = `${rows.length} / ${(CACHE.baoCaoKhaoSat || []).length} khảo sát`;
@@ -2443,7 +2253,7 @@
       const sel = document.getElementById(selectId);
       if (!sel) return;
       sel.innerHTML = '<option value="">-- chọn hợp đồng --</option>' +
-        CACHE.hopDong.map((r) => `<option value="${r.SoHopDong}">${r.SoHopDong} — ${r.ChuRung || ''}</option>`).join('');
+        CACHE.hopDong.map((r) => `<option value="${escapeHtml(r.SoHopDong)}">${escapeHtml(r.SoHopDong)} — ${escapeHtml(r.ChuRung)}</option>`).join('');
     }
 
     // ---- Báo cáo khảo sát thực địa — nhập trực tiếp trong webapp (không dùng Google Form) ----
@@ -2455,7 +2265,7 @@
       });
       ensureHopDongLoaded(() => fillHopDongSelect('selectHopDongBCKS'));
     }
-    function truncateText(t, n) { t = String(t || ''); return t.length > n ? t.slice(0, n) + '…' : t; }
+    function truncateText(t, n) { t = String(t || ''); const s = t.length > n ? t.slice(0, n) + '…' : t; return escapeHtml(s); }
     function renderBaoCaoKhaoSat() {
       const kw = (document.getElementById('fBCKSSearch').value || '').toLowerCase();
       const filtered = (CACHE.baoCaoKhaoSat || []).filter((r) => {
@@ -2468,7 +2278,7 @@
         return `<tr>
         <td>${fmt(r.SoHopDong)}</td><td>${fmt(r.NgayKhaoSat)}</td><td>${fmt(r.NguoiKhaoSat)}</td>
         <td>${truncateText(r.DiaChiRungTrong, 40)}</td><td>${fmt(r.PhapLyThuaDat)}</td>
-        <td>${soAnh > 0 ? '📷 ' + soAnh : '<span style="color:#A32D2D;">chưa có</span>'}</td>
+        <td>${soAnh > 0 ? '📷 ' + soAnh : '<span style="color:#dc2626;">chưa có</span>'}</td>
         <td><button class="btnmini" onclick="xemChiTietKhaoSat(${idx})">📎 Chi tiết</button> <button class="btnmini" onclick="printSinglePhieu('bcks', window._bcksFiltered[${idx}])">🖨</button></td>
       </tr>`;
       }).join('') || '<tr><td colspan="7">Chưa có báo cáo khảo sát nào.</td></tr>';
@@ -2482,16 +2292,16 @@
       let html = '<table style="width:100%;"><tbody>';
       Object.keys(BCKS_LABELS).forEach((k) => {
         if (k === 'GhiChu') return; // hiện sau cùng
-        html += `<tr><td style="font-weight:bold;width:38%;color:#1F3864;">${BCKS_LABELS[k]}</td><td>${fmt(r[k]) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
+        html += `<tr><td style="font-weight:bold;width:38%;color:#1f2937;">${BCKS_LABELS[k]}</td><td>${fmt(r[k]) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
       });
-      html += `<tr><td style="font-weight:bold;color:#1F3864;">Ghi chú</td><td>${fmt(r.GhiChu) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
+      html += `<tr><td style="font-weight:bold;color:#1f2937;">Ghi chú</td><td>${fmt(r.GhiChu) || '<span style="color:#aaa;">(trống)</span>'}</td></tr>`;
       html += '</tbody></table>';
       const anhList = (r.AnhKhaoSat || '').split(',').map((s) => s.trim()).filter(Boolean);
       if (anhList.length) {
-        html += '<h3 style="color:#1F3864;font-size:14px;margin-top:14px;">📷 Ảnh khảo sát (' + anhList.length + ' ảnh)</h3>';
-        html += '<div style="display:flex;gap:8px;flex-wrap:wrap;">' + anhList.map((u) => `<a href="${u}" target="_blank" class="btnmini">Xem ảnh</a>`).join('') + '</div>';
+        html += '<h3 style="color:#1f2937;font-size:14px;margin-top:14px;">📷 Ảnh khảo sát (' + anhList.length + ' ảnh)</h3>';
+        html += '<div style="display:flex;gap:8px;flex-wrap:wrap;">' + anhList.map((u) => `<a href="${escapeHtml(u)}" target="_blank" class="btnmini">Xem ảnh</a>`).join('') + '</div>';
       } else {
-        html += '<p style="color:#A32D2D;margin-top:10px;">⚠ Chưa có ảnh khảo sát nào cho lượt này.</p>';
+        html += '<p style="color:#dc2626;margin-top:10px;">⚠ Chưa có ảnh khảo sát nào cho lượt này.</p>';
       }
       document.getElementById('ksChiTietModalBody').innerHTML = html;
     }
@@ -2628,94 +2438,22 @@
       document.getElementById('fTVCount').textContent = `${filtered.length} / ${(CACHE.thamVan || []).length} dòng`;
     }
 
-    document.getElementById('formBienBanGiamSat').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'bbgsMsg')) return;
-        document.getElementById('bbgsMsg').innerHTML = '<div class="msg ok">Đã lưu biên bản giám sát.</div>';
-        e.target.reset();
-        loadBienBanGiamSat();
-      }).withFailureHandler((err) => {
-        document.getElementById('bbgsMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addBienBanGiamSat(obj);
-    });
+    submitForm('formBienBanGiamSat', 'addBienBanGiamSat', 'bbgsMsg', 'Đã lưu biên bản giám sát.', { afterSuccess: loadBienBanGiamSat });
 
-    document.getElementById('formThamVan').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'tvMsg')) return;
-        document.getElementById('tvMsg').innerHTML = '<div class="msg ok">Đã lưu bản ghi tham vấn.</div>';
-        e.target.reset();
-        loadThamVan();
-      }).withFailureHandler((err) => {
-        document.getElementById('tvMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addThamVan(obj);
-    });
+    submitForm('formThamVan', 'addThamVan', 'tvMsg', 'Đã lưu bản ghi tham vấn.', { afterSuccess: loadThamVan });
 
-    document.getElementById('formKhaoSat').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'ksMsg')) return;
-        document.getElementById('ksMsg').innerHTML = '<div class="msg ok">Đã lưu tình trạng hồ sơ khảo sát/tham vấn.</div>';
-        e.target.reset();
-        loadKhaoSat();
-      }).withFailureHandler((err) => {
-        document.getElementById('ksMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addKhaoSat(obj);
-    });
+    submitForm('formKhaoSat', 'addKhaoSat', 'ksMsg', 'Đã lưu tình trạng hồ sơ khảo sát/tham vấn.', { afterSuccess: loadKhaoSat });
 
-    document.getElementById('formDanhGia').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'dgMsg')) return;
-        document.getElementById('dgMsg').innerHTML = '<div class="msg ok">Đã lưu kết luận giám sát.</div>';
-        e.target.reset();
-        loadHopDong();
-      }).withFailureHandler((err) => {
-        document.getElementById('dgMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addDanhGiaHopDong(obj);
-    });
+    submitForm('formDanhGia', 'addDanhGiaHopDong', 'dgMsg', 'Đã lưu kết luận giám sát.', { afterSuccess: loadHopDong });
 
-    document.getElementById('formRuiRo').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'rrMsg')) return;
-        document.getElementById('rrMsg').innerHTML = '<div class="msg ok">Đã lưu đánh giá rủi ro.</div>';
-        e.target.reset();
-        loadRuiRo();
-      }).withFailureHandler((err) => {
-        document.getElementById('rrMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addDanhGiaRuiRoRung(obj);
-    });
+    submitForm('formRuiRo', 'addDanhGiaRuiRoRung', 'rrMsg', 'Đã lưu đánh giá rủi ro.', { afterSuccess: loadRuiRo });
 
-    document.getElementById('formGiamSat').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'gsMsg')) return;
-        document.getElementById('gsMsg').innerHTML = '<div class="msg ok">Đã lưu báo cáo giám sát.</div>';
-        e.target.reset();
-        loadGiamSat();
-      }).withFailureHandler((err) => {
-        document.getElementById('gsMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).addGiamSat(obj);
-    });
+    submitForm('formGiamSat', 'addGiamSat', 'gsMsg', 'Đã lưu báo cáo giám sát.', { afterSuccess: loadGiamSat });
 
-    document.getElementById('formTienDo').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const obj = formToObj(e.target);
-      google.script.run.withSuccessHandler((res) => {
-        if (!checkAddResult(res, 'tdMsg')) return;
-        document.getElementById('tdMsg').innerHTML = '<div class="msg ok">Đã cập nhật tiến độ.</div>';
-        loadDashboard();
-      }).withFailureHandler((err) => {
-        document.getElementById('tdMsg').innerHTML = '<div class="msg err">Lỗi: ' + err.message + '</div>';
-      }).updateTienDo(obj.GiaiDoan, obj.NgayThucTe, obj.DanhGia, obj.GhiChu);
+    submitForm('formTienDo', 'updateTienDo', 'tdMsg', 'Đã cập nhật tiến độ.', {
+      noReset: true,
+      buildArgs: (obj) => [obj.GiaiDoan, obj.NgayThucTe, obj.DanhGia, obj.GhiChu],
+      afterSuccess: loadDashboard,
     });
 
     loadDashboard();
