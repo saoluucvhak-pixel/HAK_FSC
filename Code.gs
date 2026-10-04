@@ -151,7 +151,19 @@ function _extReadLastN(ssKey, sheetName, n) {
 
 // ============ TIỆN ÍCH SHEET RIÊNG (đọc/ghi) ============
 function _own(name) { return SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name); }
-function _ownReadAll(name) { return _toObjRows(_own(name).getDataRange().getValues()); }
+// Sheets tự đổi chuỗi ngày (vd "2026-10-04") thành kiểu Date khi lưu, mà google.script.run trả null cho
+// CẢ phản hồi nếu bên trong có Date — nên đổi Date sang chuỗi trước khi trả dữ liệu về trình duyệt.
+function _ownReadAll(name) {
+  return _toObjRows(_own(name).getDataRange().getValues()).map((r) => {
+    Object.keys(r).forEach((k) => { r[k] = _dateToText(r[k]); });
+    return r;
+  });
+}
+function _dateToText(v) {
+  if (Object.prototype.toString.call(v) !== '[object Date]') return v;
+  const tz = Session.getScriptTimeZone();
+  return Utilities.formatDate(v, tz, Utilities.formatDate(v, tz, 'HH:mm') === '00:00' ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm');
+}
 /** Chặn formula injection: nếu giá trị người dùng nhập bắt đầu bằng =, +, -, @ thì Google Sheets
  * có thể hiểu nhầm thành công thức khi ghi qua API — thêm dấu nháy đơn phía trước để ép kiểu text,
  * giống hành vi khi gõ tay trực tiếp trong Sheets. */

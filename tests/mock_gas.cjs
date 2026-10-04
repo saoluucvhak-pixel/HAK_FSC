@@ -1,4 +1,6 @@
 'use strict';
+// Google Sheets tự đổi chuỗi dạng yyyy-mm-dd thành ô kiểu Ngày khi ghi vào.
+const toSheetValue = (v) => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? new Date(v + 'T00:00:00') : v);
 class MockSheet {
   constructor(name, rows) {
     this.name = name;
@@ -36,14 +38,14 @@ class MockSheet {
       setValue(val) {
         const rIdx = row - 1;
         while (self.rows.length <= rIdx) self.rows.push([]);
-        self.rows[rIdx][col - 1] = val;
+        self.rows[rIdx][col - 1] = toSheetValue(val);
       },
       setFontWeight() { return this; },
       setBackground() { return this; },
     };
   }
   setFrozenRows() {}
-  appendRow(arr) { this.rows.push(arr.slice()); }
+  appendRow(arr) { this.rows.push(arr.map(toSheetValue)); }
 }
 
 class MockSpreadsheet {
@@ -97,7 +99,8 @@ function buildMockEnv() {
     formatDate: (date, tz, fmt) => {
       const d = new Date(date);
       const pad = (n) => String(n).padStart(2, '0');
-      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      return fmt.replace('yyyy', d.getFullYear()).replace('MM', pad(d.getMonth() + 1)).replace('dd', pad(d.getDate()))
+        .replace('HH', pad(d.getHours())).replace('mm', pad(d.getMinutes())).replace('ss', pad(d.getSeconds()));
     },
     base64Decode: (str) => {
       if (!/^[A-Za-z0-9+/]*={0,2}$/.test(str)) {

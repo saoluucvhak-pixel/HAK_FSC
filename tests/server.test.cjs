@@ -210,5 +210,17 @@ section('10) PHASE 3 — CacheService: giảm đọc chéo sheet ngoài + tự x
   check('getDashboardData sau khi cache bị xóa tính lại đúng (chuaKhaoSat giảm)', d3.ok && d3.data.chuaKhaoSat < d1.data.chuaKhaoSat, JSON.stringify({ truoc: d1.data.chuaKhaoSat, sau: d3.data.chuaKhaoSat }));
 }
 
+section('11) Không hàm nào trả kiểu Date về trình duyệt (google.script.run sẽ biến cả phản hồi thành null)');
+{
+  const hasDate = (v) => v instanceof Date || (v && typeof v === 'object' && Object.values(v).some(hasDate));
+  mod.addTieuChiThamDinh({ SoHopDong: 'HD001', NgayThamDinh: '2026-10-04' });
+  mod.updateTienDo('1. Đào tạo & Thí điểm', '2026-09-15', 'Đúng tiến độ', '');
+  const coDate = Object.keys(mod).filter((f) => /^get\w*List$|^getDashboardData$/.test(f))
+    .filter((f) => { const r = mod[f](); return !r || !r.ok || hasDate(r); });
+  check('Mọi hàm get...List và getDashboardData trả {ok:true} và không chứa Date', coDate.length === 0, coDate.join(', '));
+  const ngays = mod.getTieuChiThamDinhList().data.map((r) => r.NgayThamDinh);
+  check('Ngày thẩm định hiển thị dạng "2026-10-04"', ngays.includes('2026-10-04'), JSON.stringify(ngays));
+}
+
 console.log(`\n===== TỔNG KẾT: ${pass} PASS / ${fail} FAIL =====`);
 process.exit(fail > 0 ? 1 : 0);

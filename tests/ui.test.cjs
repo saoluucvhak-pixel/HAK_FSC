@@ -42,6 +42,9 @@ SS('XUATHANG')._addSheet('NL_DH_XB', [['STT', XSS_IMG], [1, 'ABC']]);
 SS('PHIEUCAN')._addSheet('PhieuCan_DN', [['STT'], [1]]);
 SS('KHAOSAT_FORM')._addSheet('KhaoSat_FSC', [['Timestamp'], ['2026-08-01']]);
 mod.initOwnSheets();
+// Bản ghi có cột ngày (Sheets lưu thành kiểu Date) — trước đây làm danh sách trả về null.
+mod.addTieuChiThamDinh({ SoHopDong: 'HD003', NgayThamDinh: '2026-10-04', KetLuanThamDinh: 'Đạt' });
+mod.updateTienDo('0. Chuẩn bị', '2026-09-01', 'Đúng tiến độ', '');
 
 let pass = 0, fail = 0;
 const check = (n, c, d) => { if (c) { pass++; console.log('✅ ' + n); } else { fail++; console.log('❌ ' + n + (d ? ' — ' + d : '')); } };
@@ -60,7 +63,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await page.exposeFunction('__gas', (fn, args) => {
     calls.push([fn, args]);
     if (typeof mod[fn] !== 'function') return { __throw: 'Script function not found: ' + fn };
-    try { const r = mod[fn](...args); return r === undefined ? null : JSON.parse(JSON.stringify(r)); }
+    // google.script.run thật trả null cho CẢ phản hồi nếu bên trong có giá trị kiểu Date.
+    const hasDate = (v) => v instanceof Date || (v && typeof v === 'object' && Object.values(v).some(hasDate));
+    try { const r = mod[fn](...args); return r === undefined || hasDate(r) ? null : JSON.parse(JSON.stringify(r)); }
     catch (e) { return { __throw: e.message }; }
   });
   // Giả lập google.script.run (bất đồng bộ, chuỗi withSuccessHandler/withFailureHandler như GAS thật).
@@ -124,6 +129,17 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await page.waitForSelector('#dgMsg .msg', { timeout: 3000 });
   const vmsg = await page.innerHTML('#dgMsg');
   check('Bỏ qua kiểm tra trình duyệt, gửi thiếu Số HĐ -> server từ chối "Thiếu trường bắt buộc"', /Thiếu trường bắt buộc/.test(vmsg), vmsg);
+
+  console.log('\n=== Danh sách có cột ngày (Sheets lưu kiểu Date) ===');
+  await page.click('.tab[data-t="thamdinh"]');
+  await page.waitForTimeout(2500);
+  const tdText = await page.textContent('#tdhdTable tbody');
+  const tdErr = await page.$eval('#globalError', (e) => (getComputedStyle(e).display !== 'none' ? e.textContent : '')).catch(() => '');
+  check('Tab Thẩm định tải được bản ghi có ngày, không báo "Phản hồi bất thường"', !tdErr && tdText.includes('HD003') && tdText.includes('2026-10-04'), (tdErr || tdText).slice(0, 200));
+  await page.click('.tab[data-t="dashboard"]');
+  await page.waitForTimeout(2500);
+  const dbErr = await page.$eval('#globalError', (e) => (getComputedStyle(e).display !== 'none' ? e.textContent : '')).catch(() => '');
+  check('Dashboard tải được khi Tiến độ có ngày thực tế', !dbErr, dbErr.slice(0, 200));
 
   console.log('\n=== Duyệt toàn bộ tab ===');
   const tabs = await page.$$eval('.tab[data-t]', (t) => t.map((x) => x.dataset.t));
