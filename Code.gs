@@ -159,10 +159,11 @@ function _ownReadAll(name) {
     return r;
   });
 }
+/** Ngày kiểu Việt Nam "dd/MM/yyyy"; chỉ kèm giờ "HH:mm" khi ô thật sự có giờ (khác 00:00). */
 function _dateToText(v) {
   if (Object.prototype.toString.call(v) !== '[object Date]') return v;
   const tz = Session.getScriptTimeZone();
-  return Utilities.formatDate(v, tz, Utilities.formatDate(v, tz, 'HH:mm') === '00:00' ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm');
+  return Utilities.formatDate(v, tz, Utilities.formatDate(v, tz, 'HH:mm') === '00:00' ? 'dd/MM/yyyy' : 'dd/MM/yyyy HH:mm');
 }
 /** Chặn formula injection: nếu giá trị người dùng nhập bắt đầu bằng =, +, -, @ thì Google Sheets
  * có thể hiểu nhầm thành công thức khi ghi qua API — thêm dấu nháy đơn phía trước để ép kiểu text,
@@ -414,7 +415,7 @@ function getHoSoChiTiet(soHopDong) {
 function _safeStr(v) {
   if (v === null || v === undefined) return '';
   if (Object.prototype.toString.call(v) === '[object Date]') {
-    try { return Utilities.formatDate(v, Session.getScriptTimeZone(), 'yyyy-MM-dd HH:mm'); }
+    try { return _dateToText(v); }
     catch (e) { return String(v); }
   }
   return v;
