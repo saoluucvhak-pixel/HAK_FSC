@@ -219,7 +219,9 @@ section('11) Không hàm nào trả kiểu Date về trình duyệt (google.scri
     .filter((f) => { const r = mod[f](); return !r || !r.ok || hasDate(r); });
   check('Mọi hàm get...List và getDashboardData trả {ok:true} và không chứa Date', coDate.length === 0, coDate.join(', '));
   const ngays = mod.getTieuChiThamDinhList().data.map((r) => r.NgayThamDinh);
-  check('Ngày thẩm định hiển thị dạng "2026-10-04"', ngays.includes('2026-10-04'), JSON.stringify(ngays));
+  check('Ngày thẩm định hiển thị kiểu Việt Nam "04/10/2026"', ngays.includes('04/10/2026'), JSON.stringify(ngays));
+  const lo = mod.getLoHangGanDay(200).data.map((r) => r.NgayNhap);
+  check('Ngày nhập lô hàng hiển thị "dd/MM/yyyy", không kèm "00:00"', lo.length > 0 && lo.every((d) => /^\d{2}\/\d{2}\/\d{4}$/.test(d)), JSON.stringify(lo.slice(0, 3)));
 }
 
 console.log(`\n===== TỔNG KẾT: ${pass} PASS / ${fail} FAIL =====`);

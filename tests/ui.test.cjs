@@ -135,11 +135,23 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await page.waitForTimeout(2500);
   const tdText = await page.textContent('#tdhdTable tbody');
   const tdErr = await page.$eval('#globalError', (e) => (getComputedStyle(e).display !== 'none' ? e.textContent : '')).catch(() => '');
-  check('Tab Thẩm định tải được bản ghi có ngày, không báo "Phản hồi bất thường"', !tdErr && tdText.includes('HD003') && tdText.includes('2026-10-04'), (tdErr || tdText).slice(0, 200));
+  check('Tab Thẩm định tải được bản ghi có ngày, không báo "Phản hồi bất thường"', !tdErr && tdText.includes('HD003') && tdText.includes('04/10/2026'), (tdErr || tdText).slice(0, 200));
   await page.click('.tab[data-t="dashboard"]');
   await page.waitForTimeout(2500);
   const dbErr = await page.$eval('#globalError', (e) => (getComputedStyle(e).display !== 'none' ? e.textContent : '')).catch(() => '');
   check('Dashboard tải được khi Tiến độ có ngày thực tế', !dbErr, dbErr.slice(0, 200));
+
+  console.log('\n=== Lô hàng mua vào: định dạng ngày + lọc theo ngày ===');
+  await page.click('.tab[data-t="lohang"]');
+  await page.waitForTimeout(800);
+  const lhText = await page.textContent('#lohangTable tbody').catch(() => page.textContent('section#lohang'));
+  check('Cột Ngày nhập hiện "01/08/2026", không có "00:00"', lhText.includes('01/08/2026') && !lhText.includes('00:00'), lhText.slice(0, 200));
+  await page.fill('#fLoHangTu', '2026-08-02');
+  await page.fill('#fLoHangDen', '2026-08-03');
+  await page.evaluate(() => renderLoHang());
+  const lhLoc = await page.textContent('section#lohang');
+  check('Lọc 02/08–03/08 giữ đúng 2 ngày đó (không hiểu nhầm ngày/tháng)', lhLoc.includes('02/08/2026') && lhLoc.includes('03/08/2026') && !lhLoc.includes('01/08/2026') && !lhLoc.includes('04/08/2026'), lhLoc.slice(0, 300));
+  await page.fill('#fLoHangTu', ''); await page.fill('#fLoHangDen', '');
 
   console.log('\n=== Duyệt toàn bộ tab ===');
   const tabs = await page.$$eval('.tab[data-t]', (t) => t.map((x) => x.dataset.t));
